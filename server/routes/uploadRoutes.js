@@ -7,49 +7,64 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default async function uploadRoutes(fastify, options) {
-  fastify.post('/', { preValidation: [fastify.requireAdmin] }, async (request, reply) => {
+  // Use preHandler for authentication
+  fastify.post('/', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
-      const data = await request.file();
-      if (!data) return reply.code(400).send({ error: 'No file uploaded' });
+      const parts = request.files();
+      const urls = [];
 
-      // Generate secure filename
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(data.filename).toLowerCase();
-      
-      // Basic validation (images only)
-      if (!['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
-        return reply.code(400).send({ error: 'Only image files are allowed' });
+      for await (const part of parts) {
+        if (part.file) {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          const ext = path.extname(part.filename).toLowerCase();
+          
+          if (!['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+            continue;
+          }
+
+          const filename = `image-${uniqueSuffix}${ext}`;
+          const uploadPath = path.join(__dirname, '../uploads', filename);
+
+          // Save file
+          await pipeline(part.file, fs.createWriteStream(uploadPath));
+
+          // Generate URL
+          const host = request.headers.host || 'localhost:3000';
+          // Ensure host has port if it's localhost and port is missing
+          const cleanHost = (host === 'localhost') ? 'localhost:3000' : host;
+          const fileUrl = `${request.protocol}://${cleanHost}/uploads/${filename}`;
+          urls.push(fileUrl);
+        }
       }
 
-      const filename = `image-${uniqueSuffix}${ext}`;
-      const uploadPath = path.join(__dirname, '../uploads', filename);
+      if (urls.length === 0) {
+        return reply.code(400).send({ error: 'No valid images uploaded' });
+      }
 
-      // Save file
-      await pipeline(data.file, fs.createWriteStream(uploadPath));
-
-      // Return local URL ensuring port is properly captured
-      const host = request.headers.host || 'localhost:3000';
-      const fileUrl = `${request.protocol}://${host}/uploads/${filename}`;
-      reply.code(200).send({ url: fileUrl });
+      return reply.code(200).send({ 
+        urls, 
+        url: urls[0], // backward compatibility
+        success: true 
+      });
     } catch (error) {
-      console.error(error);
-      reply.code(500).send({ error: 'File upload failed' });
+      console.error('Upload Error:', error);
+      return reply.code(500).send({ error: 'File upload failed' });
     }
   });
 
-  fastify.delete('/:filename', { preValidation: [fastify.requireAdmin] }, async (request, reply) => {
+  fastify.delete('/:filename', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
       const { filename } = request.params;
       const filePath = path.join(__dirname, '../uploads', filename);
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
-        reply.code(200).send({ success: true, message: 'File deleted' });
+        return reply.code(200).send({ success: true, message: 'File deleted' });
       } else {
-        reply.code(404).send({ error: 'File not found' });
+        return reply.code(404).send({ error: 'File not found' });
       }
     } catch (error) {
-      reply.code(500).send({ error: 'Failed to delete file' });
+      return reply.code(500).send({ error: 'Failed to delete file' });
     }
   });
 }

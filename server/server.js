@@ -13,6 +13,7 @@ import bookingRoutes from './routes/bookingRoutes.js'
 import eventRoutes from './routes/eventRoutes.js'
 import contentRoutes from './routes/contentRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import heroRoutes from './routes/heroRoutes.js'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
@@ -60,6 +61,7 @@ app.register(bookingRoutes, { prefix: '/api/bookings' })
 app.register(eventRoutes, { prefix: '/api/events' })
 app.register(contentRoutes, { prefix: '/api/content' })
 app.register(uploadRoutes, { prefix: '/api/upload' })
+app.register(heroRoutes, { prefix: '/api/hero' })
 
 // Test route
 app.get('/', async (req, reply) => {

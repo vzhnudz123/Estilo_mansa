@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { format } from 'date-fns';
+import HeroManager from '../components/HeroManager';
+import EventManager from '../components/EventManager';
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState('bookings');
@@ -17,10 +19,6 @@ const AdminDashboard = () => {
   const [currentImage, setCurrentImage] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
 
-  // Event Form State
-  const [eventForm, setEventForm] = useState({
-    title: '', description: '', offerPrice: '', startDate: '', endDate: ''
-  });
 
   const fetchData = async () => {
     try {
@@ -126,30 +124,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleCreateEvent = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post('/events', {
-        ...eventForm,
-        offerPrice: parseFloat(eventForm.offerPrice) || undefined,
-        startDate: new Date(eventForm.startDate).toISOString(),
-        endDate: new Date(eventForm.endDate).toISOString(),
-      });
-      setEventForm({ title: '', description: '', offerPrice: '', startDate: '', endDate: '' });
-      fetchData();
-    } catch (error) {
-      alert('Failed to create event. Check inputs.');
-    }
-  };
-
-  const handleDeleteEvent = async (id) => {
-    try {
-      await api.delete(`/events/${id}`);
-      fetchData();
-    } catch(err) {
-      alert("Failed to delete event");
-    }
-  };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
@@ -173,6 +147,12 @@ const AdminDashboard = () => {
             Manage Events
           </button>
           <button 
+            className={`py-3 px-6 font-bold text-lg border-b-4 transition-colors ${tab === 'hero' ? 'border-luxury-gold text-luxury-dark' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+            onClick={() => setTab('hero')}
+          >
+            Manage Hero
+          </button>
+          <button 
             className={`py-3 px-6 font-bold text-lg border-b-4 transition-colors ${tab === 'cms' ? 'border-luxury-gold text-luxury-dark' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
             onClick={() => { setTab('cms'); fetchCmsData('home_hero'); }}
           >
@@ -181,6 +161,8 @@ const AdminDashboard = () => {
         </div>
 
         {/* Tab contents are identical from earlier, but CMS tab is new */}
+        {tab === 'hero' && <HeroManager />}
+
         {tab === 'cms' && (
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold mb-6">Website Content Manager</h2>
@@ -249,24 +231,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {tab === 'events' && (
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-             <form onSubmit={handleCreateEvent} className="mb-10 grid grid-cols-2 gap-4">
-                <input required placeholder="Title" value={eventForm.title} onChange={e => setEventForm({...eventForm, title: e.target.value})} className="input-field"/>
-                <input required placeholder="Description" value={eventForm.description} onChange={e => setEventForm({...eventForm, description: e.target.value})} className="input-field"/>
-                <input type="datetime-local" value={eventForm.startDate} onChange={e => setEventForm({...eventForm, startDate: e.target.value})} className="input-field"/>
-                <input type="datetime-local" value={eventForm.endDate} onChange={e => setEventForm({...eventForm, endDate: e.target.value})} className="input-field"/>
-                <button type="submit" className="btn-primary col-span-2 py-3">Create Event</button>
-             </form>
-             <h3 className="font-bold mb-4">Active Events</h3>
-             {events.map(e => (
-               <div key={e._id} className="flex justify-between border-b py-2">
-                 <span>{e.title} - {e.description}</span>
-                 <button onClick={() => handleDeleteEvent(e._id)} className="text-red-500">Delete</button>
-               </div>
-             ))}
-          </div>
-        )}
+        {tab === 'events' && <EventManager />}
 
       </div>
     </div>

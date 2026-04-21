@@ -7,7 +7,6 @@ import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import ScrollToTop from './components/ScrollToTop';
 
-// Pages
 import Home from './pages/Home';
 import Rooms from './pages/Rooms';
 import RoomDetails from './pages/RoomDetails';
@@ -20,46 +19,41 @@ import Contact from './pages/Contact';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) return null;
   return user ? children : <Navigate to="/login" />;
 };
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  return user && user.role === 'admin' ? children : <Navigate to="/" />;
+  if (loading) return null;
+  return user?.role === 'admin' ? children : <Navigate to="/" />;
 };
 
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
+      <div className="flex flex-col min-h-screen bg-luxury-bg">
         <Navbar />
-        <main className="flex-grow pt-20">
+        <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/rooms" element={<Rooms />} />
+            <Route path="/"         element={<Home />} />
+            <Route path="/rooms"    element={<Rooms />} />
             <Route path="/rooms/:id" element={<RoomDetails />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/gallery"  element={<Gallery />} />
+            <Route path="/contact"  element={<Contact />} />
+            <Route path="/login"    element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             <Route path="/my-bookings" element={
-              <ProtectedRoute>
-                <MyBookings />
-              </ProtectedRoute>
+              <ProtectedRoute><MyBookings /></ProtectedRoute>
             } />
-            
             <Route path="/admin" element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
+              <AdminRoute><AdminDashboard /></AdminRoute>
             } />
           </Routes>
         </main>
         <FloatingWhatsApp />
-        <ScrollToTop />
         <Footer />
       </div>
     </Router>
