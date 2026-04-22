@@ -18,11 +18,12 @@ export default async function uploadRoutes(fastify, options) {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           const ext = path.extname(part.filename).toLowerCase();
           
-          if (!['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+          if (!['.png', '.jpg', '.jpeg', '.webp', '.mp4', '.mov', '.avi'].includes(ext)) {
             continue;
           }
 
-          const filename = `image-${uniqueSuffix}${ext}`;
+          const prefix = ['.mp4', '.mov', '.avi'].includes(ext) ? 'video' : 'image';
+          const filename = `${prefix}-${uniqueSuffix}${ext}`;
           const uploadPath = path.join(__dirname, '../uploads', filename);
 
           // Save file
@@ -30,7 +31,6 @@ export default async function uploadRoutes(fastify, options) {
 
           // Generate URL
           const host = request.headers.host || 'localhost:3000';
-          // Ensure host has port if it's localhost and port is missing
           const cleanHost = (host === 'localhost') ? 'localhost:3000' : host;
           const fileUrl = `${request.protocol}://${cleanHost}/uploads/${filename}`;
           urls.push(fileUrl);
@@ -38,7 +38,7 @@ export default async function uploadRoutes(fastify, options) {
       }
 
       if (urls.length === 0) {
-        return reply.code(400).send({ error: 'No valid images uploaded' });
+        return reply.code(400).send({ error: 'No valid files uploaded' });
       }
 
       return reply.code(200).send({ 

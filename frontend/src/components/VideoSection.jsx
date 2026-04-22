@@ -93,8 +93,18 @@ const VideoSection = () => {
   useEffect(() => {
     api.get('/videos/active')
       .then(res => {
-        if (res.data?.length > 0) setVideos(res.data);
-        else setVideos(DEFAULT_VIDEOS);
+        const fetched = Array.isArray(res.data) && res.data.length > 0 ? res.data : DEFAULT_VIDEOS;
+        
+        // Filter: ONLY show YouTube links in the Reels/Shorts area
+        // AND exclude anything explicitly tagged with 'jeep'
+        const filtered = fetched.filter(v => {
+          const isYouTube = v.url.includes('youtube.com') || v.url.includes('youtu.be');
+          const isJeep = v.title?.toLowerCase().includes('jeep');
+          return isYouTube && !isJeep;
+        });
+
+        // If filtering leaves nothing, show the defaults
+        setVideos(filtered.length > 0 ? filtered : DEFAULT_VIDEOS);
       })
       .catch(() => setVideos(DEFAULT_VIDEOS));
   }, []);

@@ -1,104 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Tag, ArrowRight, MessageCircle } from 'lucide-react';
 import api from '../api/axios';
 import Hero from '../components/Hero';
-import { ScrollReveal, SectionHeader } from '../components/ui';
 import StorySection from '../components/StorySection';
+import ImmersiveSection from '../components/ImmersiveSection';
+import JeepExperience from '../components/JeepExperience';
 import GallerySection from '../components/GallerySection';
 import VideoSection from '../components/VideoSection';
 import FeedbackSection from '../components/FeedbackSection';
-import SpecialImagesSection from '../components/SpecialImagesSection';
+import { ScrollReveal, SectionHeader } from '../components/ui';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const WHATSAPP_NUMBER = '919876543210';
 
-// ── Marquee strip ───────────────────────────────────────────────────────────
-const MarqueeStrip = ({ events }) => {
-  const items = [...events, ...events];
-  return (
-    <div className="relative overflow-hidden py-5 border-y border-luxury-gold/10 bg-luxury-surface">
-      <div className="marquee-wrapper">
-        <div className="marquee-track">
-          {items.map((ev, i) => (
-            <span key={i} className="inline-flex items-center gap-4 mr-16 text-sm text-luxury-text/60">
-              <Tag size={12} className="text-luxury-gold" />
-              <span className="font-medium text-luxury-cream">{ev.title}</span>
-              {ev.offerPrice && (
-                <span className="text-luxury-gold text-xs tracking-widest">₹{ev.offerPrice}</span>
-              )}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Home = () => {
-  const [events, setEvents] = useState([]);
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    Promise.allSettled([
-      api.get('/events/active'),
-      api.get('/rooms'),
-    ]).then(([evRes, rmRes]) => {
-      if (evRes.status === 'fulfilled') setEvents(evRes.value.data);
-      if (rmRes.status === 'fulfilled') setRooms(rmRes.value.data.slice(0, 3));
-    });
+    api.get('/rooms')
+      .then(res => setRooms(res.data.slice(0, 3)))
+      .catch(err => console.error(err));
   }, []);
 
   return (
-    <div className="bg-luxury-bg overflow-hidden">
-      {/* 1. HERO SECTION (Dynamic Carousel) */}
+    <div className="bg-luxury-bg text-luxury-text selection:bg-luxury-gold selection:text-luxury-bg">
+      
+      {/* 1. HERO SECTION (Impact) */}
       <Hero />
 
-      {/* Events Marquee Strip */}
-      {events.length > 0 && <MarqueeStrip events={events} />}
-
-      {/* 2. OUR STORY (Dynamic Content + 3D Parallax) */}
+      {/* 2. STORY SECTION (Emotion) */}
       <StorySection />
 
-      {/* 6. SPECIAL IMAGES SECTION (Highlight Premium Images) */}
-      <SpecialImagesSection />
+      {/* 3. IMMERSIVE SECTION (Advanced Scroll) */}
+      <ImmersiveSection />
 
-      {/* 3. STORY IMAGE GALLERY (Premium Masonry) */}
-      <GallerySection />
+      {/* 4. OFF-ROAD JEEP (Adventure) */}
+      <JeepExperience />
 
-      {/* 4. YOUTUBE VIDEO SECTION (SHORTS) */}
-      <VideoSection />
+      {/* 5. GALLERY & FILMS */}
+      <div className="bg-luxury-surface/30 backdrop-blur-3xl">
+        <GallerySection />
+        <VideoSection />
+      </div>
 
       {/* ── Rooms Preview ────────────────── */}
       {rooms.length > 0 && (
-        <section className="py-24 md:py-40">
+        <section className="py-32 md:py-48 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <SectionHeader
-              label="Accommodations"
-              title="Our Curated Spaces"
-              subtitle="Thoughtfully designed rooms that open onto the forest canopy."
+              label="The Retreat"
+              title="Signature Sanctuaries"
+              subtitle="Each room is an invitation to witness the valley's changing moods through expansive vistas."
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-20">
               {rooms.map((room, i) => (
-                <ScrollReveal key={room._id} delay={i * 100}>
-                  <Link to={`/rooms/${room._id}`} className="group block">
-                    <div className="relative h-72 rounded-3xl overflow-hidden mb-5">
+                <ScrollReveal key={room._id} delay={i * 150}>
+                  <Link to={`/rooms/${room._id}`} className="group block relative">
+                    <div className="relative h-[500px] rounded-[32px] overflow-hidden mb-8 shadow-2xl transition-transform duration-700 group-hover:-translate-y-4">
                       <img
                         src={room.images?.[0] || 'https://images.unsplash.com/photo-1618773928120-2c15c328de8e?auto=format&fit=crop&q=80&w=800'}
                         alt={room.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                      <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
-                        <h3 className="font-serif text-xl text-luxury-cream">{room.name}</h3>
-                        <span className="glass-card-light px-3 py-1 rounded-full text-luxury-gold text-sm font-medium">
-                          ₹{room.price}<span className="text-white/50 text-xs">/night</span>
-                        </span>
+                      <div className="absolute inset-0 bg-gradient-to-t from-luxury-bg via-black/20 to-transparent" />
+                      
+                      <div className="absolute top-8 right-8">
+                        <div className="glass-card-light px-6 py-3 rounded-2xl backdrop-blur-xl border-white/10">
+                          <p className="text-[10px] uppercase tracking-widest text-white/50 mb-1 font-bold">Per Night</p>
+                          <p className="text-luxury-gold font-serif text-xl">₹{room.price}</p>
+                        </div>
                       </div>
-                    </div>
-                    <p className="text-luxury-text/60 text-sm line-clamp-2 leading-relaxed px-1">{room.description}</p>
-                    <div className="flex items-center gap-2 mt-3 text-luxury-gold text-xs tracking-widest uppercase px-1 group-hover:gap-3 transition-all">
-                      View Details <ArrowRight size={12} />
+
+                      <div className="absolute bottom-10 left-10 right-10">
+                        <h3 className="font-serif text-3xl text-luxury-cream mb-4">{room.name}</h3>
+                        <div className="flex items-center gap-4 text-luxury-gold text-[10px] tracking-[0.3em] uppercase font-bold group-hover:gap-6 transition-all">
+                          Explore Room <ArrowRight size={14} />
+                        </div>
+                      </div>
                     </div>
                   </Link>
                 </ScrollReveal>
@@ -108,32 +87,33 @@ const Home = () => {
         </section>
       )}
 
-      {/* 5. FEEDBACK SYSTEM (Dynamic Slider + Submission Form) */}
+      {/* 6. FEEDBACK (Social Proof) */}
       <FeedbackSection />
 
-      {/* ── CTA Banner ────────────────────── */}
-      <section className="py-24 md:py-32 relative">
-        <div className="absolute inset-0 bg-luxury-dark/30 backdrop-blur-3xl" />
+      {/* 7. BOOKING CTA */}
+      <section className="py-40 md:py-60 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-luxury-gold/5 rounded-full blur-[150px] pointer-events-none" />
+        
         <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
           <ScrollReveal>
-            <p className="section-label mb-4">Begin Your Journey</p>
-            <h2 className="font-serif text-4xl md:text-6xl text-luxury-cream mb-6 leading-tight">
-              Ready to Escape<br />
-              <span className="font-script text-luxury-gold">to the Mist?</span>
+            <p className="section-label mb-8 tracking-[1em] text-luxury-gold-light">YOUR JOURNEY AWAITS</p>
+            <h2 className="font-serif text-5xl md:text-[7rem] text-luxury-cream mb-16 leading-tight">
+              Escape to the <br />
+              <span className="font-script text-luxury-gold italic">Hidden Valley</span>
             </h2>
-            <p className="text-luxury-text/60 max-w-xl mx-auto mb-10 leading-relaxed">
-              Availability is limited. Message us directly on WhatsApp for instant confirmation and tailored packages.
-            </p>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi, I want to book a stay at Estilo Mansa')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary text-base group"
-            >
-              <MessageCircle size={18} />
-              <span>Book via WhatsApp</span>
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-10">
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi, I want to book a stay at Estilo Mansa')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary !px-16 !py-8 text-xl group shadow-[0_20px_50px_rgba(200,169,110,0.1)]"
+              >
+                <MessageCircle size={24} className="mr-4" />
+                <span>Secure Your Sanctuary</span>
+                <ArrowRight size={22} className="ml-4 group-hover:translate-x-4 transition-transform" />
+              </a>
+            </div>
           </ScrollReveal>
         </div>
       </section>

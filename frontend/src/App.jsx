@@ -16,6 +16,7 @@ import MyBookings from './pages/MyBookings';
 import AdminDashboard from './pages/AdminDashboard';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
+import SmoothScroll from './components/SmoothScroll';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -33,29 +34,31 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-luxury-bg">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/"         element={<Home />} />
-            <Route path="/rooms"    element={<Rooms />} />
-            <Route path="/rooms/:id" element={<RoomDetails />} />
-            <Route path="/gallery"  element={<Gallery />} />
-            <Route path="/contact"  element={<Contact />} />
-            <Route path="/login"    element={<Login />} />
-            <Route path="/register" element={<Register />} />
+      <SmoothScroll>
+        <div className="flex flex-col min-h-screen bg-luxury-bg">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/"         element={<Home />} />
+              <Route path="/rooms"    element={<Rooms />} />
+              <Route path="/rooms/:id" element={<RoomDetails />} />
+              <Route path="/gallery"  element={<Gallery />} />
+              <Route path="/contact"  element={<Contact />} />
+              <Route path="/login"    element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
-            <Route path="/my-bookings" element={
-              <ProtectedRoute><MyBookings /></ProtectedRoute>
-            } />
-            <Route path="/admin" element={
-              <AdminRoute><AdminDashboard /></AdminRoute>
-            } />
-          </Routes>
-        </main>
-        <FloatingWhatsApp />
-        <Footer />
-      </div>
+              <Route path="/my-bookings" element={
+                <ProtectedRoute><MyBookings /></ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <AdminRoute><AdminDashboard /></AdminRoute>
+              } />
+            </Routes>
+          </main>
+          <FloatingWhatsApp />
+          <Footer />
+        </div>
+      </SmoothScroll>
     </Router>
   );
 }

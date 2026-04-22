@@ -40,7 +40,7 @@ app.register(cors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
 })
-app.register(fastifyMultipart, { limits: { fileSize: 15 * 1024 * 1024 } }) // 15 MB
+app.register(fastifyMultipart, { limits: { fileSize: 500 * 1024 * 1024 } }) // 500 MB
 app.register(fastifyStatic, {
   root: path.join(__dirname, 'uploads'),
   prefix: '/uploads/',
