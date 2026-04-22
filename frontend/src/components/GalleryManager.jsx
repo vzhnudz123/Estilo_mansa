@@ -2,6 +2,35 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { Plus, Trash2, Star, CheckCircle2, Grid } from 'lucide-react';
 
+const getServerOrigin = () => {
+  try {
+    return new URL(api.defaults.baseURL).origin;
+  } catch {
+    return '';
+  }
+};
+
+const getManagedUploadFilename = (url) => {
+  if (!url) return '';
+
+  try {
+    const parsed = new URL(url);
+    const serverOrigin = getServerOrigin();
+
+    if (serverOrigin && parsed.origin !== serverOrigin) {
+      return '';
+    }
+
+    if (!parsed.pathname.startsWith('/uploads/')) {
+      return '';
+    }
+
+    return parsed.pathname.split('/').pop() || '';
+  } catch {
+    return '';
+  }
+};
+
 const GalleryManager = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,13 +81,26 @@ const GalleryManager = () => {
 
   const deleteImage = async (id, url) => {
     if (!window.confirm('Are you sure you want to delete this image?')) return;
+
     try {
-      const filename = url.split('/').pop();
-      await api.delete(`/upload/${filename}`);
+      const filename = getManagedUploadFilename(url);
+
+      if (filename) {
+        try {
+          await api.delete(`/upload/${filename}`);
+        } catch (err) {
+          const status = err.response?.status;
+          if (status !== 404) {
+            throw err;
+          }
+        }
+      }
+
       await api.delete(`/gallery/${id}`);
       fetchImages();
     } catch (err) {
-      alert('Delete failed');
+      const message = err.response?.data?.error || 'Delete failed';
+      alert(message);
     }
   };
 
