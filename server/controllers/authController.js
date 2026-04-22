@@ -1,11 +1,15 @@
 import User from '../models/User.js'
 import { registerSchema, loginSchema } from '../validators/authValidator.js'
 
+const escapeRegExp = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 export const register = async (request, reply) => {
   try {
     const data = registerSchema.parse(request.body)
     
-    const existingUser = await User.findOne({ email: data.email })
+    const existingUser = await User.findOne({
+      email: { $regex: `^${escapeRegExp(data.email)}$`, $options: 'i' },
+    })
     if (existingUser) {
       return reply.code(400).send({ error: 'Email already exists' })
     }
@@ -25,7 +29,9 @@ export const login = async (request, reply) => {
   try {
     const data = loginSchema.parse(request.body)
     
-    const user = await User.findOne({ email: data.email })
+    const user = await User.findOne({
+      email: { $regex: `^${escapeRegExp(data.email)}$`, $options: 'i' },
+    })
     if (!user) {
       return reply.code(401).send({ error: 'Invalid credentials' })
     }

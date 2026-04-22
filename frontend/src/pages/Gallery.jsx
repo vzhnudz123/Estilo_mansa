@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { ScrollReveal, SectionHeader } from '../components/ui';
+import { ScrollReveal } from '../components/ui';
+import api from '../api/axios';
 
 import img13 from '../assets/IMG_8813.jpeg';
 import img14 from '../assets/IMG_8814.jpeg';
@@ -17,7 +18,7 @@ import img23 from '../assets/IMG_8823.jpeg';
 import img24 from '../assets/IMG_8824.jpeg';
 import img25 from '../assets/IMG_8825.jpeg';
 
-const allImages = [
+const fallbackImages = [
   { src: img13, label: 'The Estate' },
   { src: img14, label: 'Lakkidi Pass View' },
   { src: img15, label: 'Forest Edge' },
@@ -98,15 +99,40 @@ const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
 );
 
 const Gallery = () => {
+  const [images, setImages] = useState(fallbackImages);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  useEffect(() => {
+    const loadGallery = async () => {
+      try {
+        const res = await api.get('/gallery/active');
+        const dbImages = Array.isArray(res.data)
+          ? res.data
+            .filter(item => item?.url)
+            .map((item, index) => ({
+              src: item.url,
+              label: item.caption || `Gallery ${index + 1}`,
+            }))
+          : [];
+
+        if (dbImages.length > 0) {
+          setImages(dbImages);
+        }
+      } catch (error) {
+        console.error('Error fetching gallery:', error);
+      }
+    };
+
+    loadGallery();
+  }, []);
 
   const openLightbox = i => setLightboxIndex(i);
   const closeLightbox = () => setLightboxIndex(null);
-  const goPrev = () => setLightboxIndex(i => (i - 1 + allImages.length) % allImages.length);
-  const goNext = () => setLightboxIndex(i => (i + 1) % allImages.length);
+  const goPrev = () => setLightboxIndex(i => (i - 1 + images.length) % images.length);
+  const goNext = () => setLightboxIndex(i => (i + 1) % images.length);
 
   // Masonry-style layout (varying row spans)
-  const spans = [2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1];
+  const spans = useMemo(() => [2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1], []);
 
   return (
     <div className="bg-luxury-bg min-h-screen pt-28 pb-28 overflow-hidden">
@@ -131,13 +157,12 @@ const Gallery = () => {
 
         {/* Masonry Grid */}
         <div
-          className="grid gap-4"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           style={{
-            gridTemplateColumns: 'repeat(3, 1fr)',
             gridAutoRows: '220px',
           }}
         >
-          {allImages.map((img, i) => (
+          {images.map((img, i) => (
             <ScrollReveal key={i} delay={(i % 3) * 80}>
               <div
                 className="group relative overflow-hidden rounded-2xl cursor-pointer"
@@ -165,7 +190,7 @@ const Gallery = () => {
       <AnimatePresence>
         {lightboxIndex !== null && (
           <Lightbox
-            images={allImages}
+            images={images}
             currentIndex={lightboxIndex}
             onClose={closeLightbox}
             onPrev={goPrev}

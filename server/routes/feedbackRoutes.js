@@ -8,10 +8,10 @@ async function feedbackRoutes(app) {
   app.get('/approved', getApprovedFeedback);
   app.post('/', submitFeedback);
   // Admin protected
-  app.get('/', { onRequest: [app.authenticate] }, getAllFeedback);
-  app.put('/:id/approve', { onRequest: [app.authenticate] }, approveFeedback);
-  app.put('/:id/reject', { onRequest: [app.authenticate] }, rejectFeedback);
-  app.delete('/:id', { onRequest: [app.authenticate] }, deleteFeedback);
+  app.get('/', { onRequest: [app.requireAdmin] }, getAllFeedback);
+  app.put('/:id/approve', { onRequest: [app.requireAdmin] }, approveFeedback);
+  app.put('/:id/reject', { onRequest: [app.requireAdmin] }, rejectFeedback);
+  app.delete('/:id', { onRequest: [app.requireAdmin] }, deleteFeedback);
 }
 
 export default feedbackRoutes;

@@ -10,13 +10,12 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import connectDB from './db.js';
 import Gallery from './models/Gallery.js';
+import { buildUploadUrl } from './config/runtime.js';
 
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const BASE_URL = process.env.BASE_URL || 'https://estilo-mansa.onrender.com';
-
 await connectDB();
 
 const files = fs.readdirSync(UPLOADS_DIR).filter(f => /\.(jpe?g|png|webp)$/i.test(f));
@@ -24,7 +23,7 @@ console.log(`Found ${files.length} image(s) in uploads/`);
 
 let added = 0;
 for (const [i, file] of files.entries()) {
-  const url = `${BASE_URL}/uploads/${file}`;
+  const url = buildUploadUrl(file);
   const exists = await Gallery.findOne({ url });
   if (!exists) {
     await Gallery.create({ url, caption: '', order: i, isFeatured: i < 6, isActive: true });

@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import Hero from './models/Hero.js';
 import dotenv from 'dotenv';
+import { MONGO_URI } from './config/runtime.js';
 dotenv.config();
 
 async function check() {
-  await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/estilo-mansa');
+  await mongoose.connect(MONGO_URI);
   const heroes = await Hero.find();
   console.log(JSON.stringify(heroes, null, 2));
   process.exit();
