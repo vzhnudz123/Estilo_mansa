@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { ScrollReveal, SectionHeader } from '../components/ui';
+import { ScrollReveal } from '../components/ui';
 
 import img13 from '../assets/IMG_8813.jpeg';
 import img14 from '../assets/IMG_8814.jpeg';
@@ -33,66 +33,60 @@ const allImages = [
   { src: img25, label: 'Sunrise' },
 ];
 
-// Lightbox
 const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
   <motion.div
-    className="fixed inset-0 z-[200] flex items-center justify-center"
-    style={{ background: 'rgba(5,8,7,0.97)', backdropFilter: 'blur(20px)' }}
+    className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 px-4 backdrop-blur-xl"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     onClick={onClose}
   >
-    {/* Close */}
     <button
-      className="absolute top-6 right-6 text-luxury-text/60 hover:text-luxury-cream transition-colors z-10 p-2"
+      className="absolute top-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-luxury-text/70 transition-colors hover:text-luxury-cream"
       onClick={onClose}
     >
-      <X size={24} />
+      <X size={20} />
     </button>
 
-    {/* Counter */}
-    <div className="absolute top-6 left-1/2 -translate-x-1/2 text-luxury-text/40 text-sm tracking-widest">
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 text-sm tracking-[0.3em] text-luxury-text/40">
       {String(currentIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
     </div>
 
-    {/* Prev */}
     <button
-      className="absolute left-4 md:left-10 text-luxury-text/40 hover:text-luxury-gold transition-colors z-10 p-3 rounded-full border border-white/10 hover:border-luxury-gold/40"
+      className="absolute left-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-luxury-text/60 transition-colors hover:text-luxury-gold md:left-8"
       onClick={e => { e.stopPropagation(); onPrev(); }}
     >
-      <ChevronLeft size={22} />
+      <ChevronLeft size={20} />
     </button>
 
-    {/* Image */}
     <AnimatePresence mode="wait">
       <motion.div
         key={currentIndex}
-        className="max-w-5xl max-h-[80vh] px-20 w-full"
-        initial={{ opacity: 0, scale: 0.94 }}
+        className="w-full max-w-6xl px-10"
+        initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.94 }}
-        transition={{ duration: 0.35 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.28 }}
         onClick={e => e.stopPropagation()}
       >
-        <img
-          src={images[currentIndex].src}
-          alt={images[currentIndex].label}
-          className="w-full h-full object-contain rounded-2xl"
-          style={{ maxHeight: '75vh' }}
-        />
-        <p className="text-center text-luxury-text/50 text-sm mt-4 tracking-widest">
-          {images[currentIndex].label}
-        </p>
+        <div className="panel overflow-hidden rounded-[2rem] bg-black/80 p-3 sm:p-4">
+          <img
+            src={images[currentIndex].src}
+            alt={images[currentIndex].label}
+            className="max-h-[75vh] w-full rounded-[1.5rem] object-contain"
+          />
+          <p className="pt-4 text-center text-sm tracking-[0.24em] text-luxury-text/45">
+            {images[currentIndex].label}
+          </p>
+        </div>
       </motion.div>
     </AnimatePresence>
 
-    {/* Next */}
     <button
-      className="absolute right-4 md:right-10 text-luxury-text/40 hover:text-luxury-gold transition-colors z-10 p-3 rounded-full border border-white/10 hover:border-luxury-gold/40"
+      className="absolute right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-luxury-text/60 transition-colors hover:text-luxury-gold md:right-8"
       onClick={e => { e.stopPropagation(); onNext(); }}
     >
-      <ChevronRight size={22} />
+      <ChevronRight size={20} />
     </button>
   </motion.div>
 );
@@ -105,42 +99,36 @@ const Gallery = () => {
   const goPrev = () => setLightboxIndex(i => (i - 1 + allImages.length) % allImages.length);
   const goNext = () => setLightboxIndex(i => (i + 1) % allImages.length);
 
-  // Masonry-style layout (varying row spans)
   const spans = [2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1];
 
   return (
-    <div className="bg-luxury-bg min-h-screen pt-28 pb-28 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <div className="page-shell overflow-hidden">
+      <div className="page-hero">
         <motion.div
-          className="text-center mb-16"
+          className="page-hero-panel text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <p className="section-label mb-4">Visual Journey</p>
-          <h1 className="font-serif text-5xl md:text-7xl text-luxury-cream mb-6">The Gallery</h1>
-          <div className="flex items-center justify-center gap-4">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-luxury-gold opacity-60" />
-            <div className="w-1.5 h-1.5 rounded-full bg-luxury-gold" />
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-luxury-gold opacity-60" />
+          <div className="mx-auto max-w-3xl">
+            <span className="eyebrow-pill mb-5">Visual Journey</span>
+            <h1 className="premium-h2 text-luxury-cream">A curated portrait of the retreat</h1>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-luxury-text/58 md:text-lg">
+              A visual portrait of life at Estilo Mansa — where mist meets stone, forest meets luxury.
+            </p>
           </div>
-          <p className="text-luxury-text/50 max-w-xl mx-auto mt-6 leading-relaxed">
-            A visual portrait of life at Estilo Mansa — where mist meets stone, forest meets luxury.
-          </p>
         </motion.div>
+      </div>
 
-        {/* Masonry Grid */}
+      <div className="page-container pb-20 md:pb-28">
         <div
-          className="grid gap-4"
-          style={{
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gridAutoRows: '220px',
-          }}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          style={{ gridAutoRows: '220px' }}
         >
           {allImages.map((img, i) => (
             <ScrollReveal key={i} delay={(i % 3) * 80}>
               <div
-                className="group relative overflow-hidden rounded-2xl cursor-pointer"
+                className="group panel card-hover relative cursor-pointer overflow-hidden rounded-[1.75rem]"
                 style={{ gridRow: `span ${spans[i] || 1}` }}
                 onClick={() => openLightbox(i)}
               >
@@ -148,12 +136,18 @@ const Gallery = () => {
                   src={img.src}
                   alt={img.label}
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-500" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  <ZoomIn size={28} className="text-luxury-gold mb-2" />
-                  <span className="text-luxury-cream text-xs tracking-widest uppercase">{img.label}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-5 py-5">
+                  <div>
+                    <p className="section-label mb-2">Gallery</p>
+                    <span className="text-sm tracking-[0.24em] text-luxury-cream/86">{img.label}</span>
+                  </div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/10 text-luxury-gold opacity-0 transition-all duration-500 group-hover:opacity-100">
+                    <ZoomIn size={18} />
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
@@ -161,7 +155,6 @@ const Gallery = () => {
         </div>
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightboxIndex !== null && (
           <Lightbox

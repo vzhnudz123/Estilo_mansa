@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import api from '../api/axios';
 
 import 'swiper/css';
@@ -99,9 +98,9 @@ const Hero = () => {
                     </motion.div>
 
                     {/* Handwriting Title */}
-                    <div className="overflow-hidden mb-4">
+                    <div className="mb-5 overflow-hidden">
                       <motion.h1
-                        className="font-script text-6xl md:text-8xl lg:text-9xl text-luxury-cream leading-none"
+                        className="font-script text-5xl leading-none text-luxury-cream sm:text-6xl md:text-8xl lg:text-9xl"
                         style={{ textShadow: '0 0 60px rgba(200,169,110,0.2)' }}
                         initial={{ y: 100, opacity: 0 }}
                         animate={isActive ? { y: 0, opacity: 1 } : {}}
@@ -113,7 +112,7 @@ const Hero = () => {
 
                     {/* Subtitle */}
                     <motion.p
-                      className="text-luxury-text/80 text-lg md:text-xl font-light leading-relaxed mb-10 max-w-xl"
+                      className="mb-10 max-w-2xl text-base font-light leading-8 text-luxury-text/80 sm:text-lg md:text-xl"
                       initial={{ opacity: 0, y: 20 }}
                       animate={isActive ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.9, delay: 0.8 }}
@@ -123,7 +122,7 @@ const Hero = () => {
 
                     {/* CTAs */}
                     <motion.div
-                      className="flex flex-col sm:flex-row gap-4"
+                      className="flex flex-col gap-4 sm:flex-row"
                       initial={{ opacity: 0, y: 20 }}
                       animate={isActive ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.9, delay: 1.1 }}

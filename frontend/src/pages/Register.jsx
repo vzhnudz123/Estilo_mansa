@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api/axios';
-import { ArrowRight, Lock, Mail, User } from 'lucide-react';
+import { ArrowRight, Lock, Mail, User, Sparkles, Leaf } from 'lucide-react';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -25,37 +25,62 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-obsidian px-6 py-28 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-25">
-        <img
-          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1600"
-          alt=""
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian/80 via-obsidian/90 to-obsidian" />
-      </div>
-
+    <div className="page-shell flex min-h-screen items-center justify-center px-4 py-28 sm:px-6">
       <motion.div
-        className="max-w-md w-full glass-panel rounded-md p-8 md:p-10 relative z-10"
+        className="panel relative grid w-full max-w-6xl overflow-hidden lg:grid-cols-[0.96fr_1.04fr]"
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="text-center mb-10">
-          <div className="flex items-baseline justify-center gap-1 mb-5">
-            <span className="font-serif text-2xl text-ivory">Estilo</span>
-            <span className="font-script text-3xl text-gold italic">Mansa</span>
+        <div className="relative hidden border-r border-white/8 lg:block">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,17,14,0.92),rgba(8,11,10,0.86)),radial-gradient(circle_at_bottom_right,rgba(200,169,110,0.18),transparent_32%)]" />
+          <div className="relative flex h-full flex-col justify-between p-10 xl:p-14">
+            <div>
+              <span className="eyebrow-pill mb-5">Guest Access</span>
+              <h1 className="premium-h2 max-w-xl text-luxury-cream">
+                Begin your
+                {' '}
+                <span className="italic-serif text-luxury-gold">private escape</span>
+              </h1>
+              <p className="mt-6 max-w-md text-base leading-8 text-luxury-text/58">
+                Create your account to unlock reservations, personalized communication, and a smoother stay.
+              </p>
+            </div>
+            <div className="grid gap-4">
+              {[
+                { icon: Sparkles, title: 'Premium flow', copy: 'A simpler, more polished path from discovery to booking.' },
+                { icon: Leaf, title: 'Nature-first calm', copy: 'A digital experience that feels as relaxed as the property itself.' },
+              ].map(item => (
+                <div key={item.title} className="panel-soft flex items-start gap-4 px-4 py-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-luxury-gold/12 text-luxury-gold">
+                    <item.icon size={18} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-luxury-cream">{item.title}</p>
+                    <p className="mt-1 text-sm leading-7 text-luxury-text/50">{item.copy}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="section-label mb-4">Guest Access</p>
-          <h2 className="font-serif text-3xl text-ivory mb-3">Create Account</h2>
-          <p className="text-cream/50 text-sm">Begin your private booking journey.</p>
         </div>
+
+        <div className="relative p-6 sm:p-8 lg:p-10 xl:p-12">
+          <div className="mb-10 text-center lg:text-left">
+            <div className="mb-5 flex items-baseline justify-center gap-1 lg:justify-start">
+              <span className="font-serif text-2xl text-ivory">Estilo</span>
+              <span className="font-script text-3xl text-gold italic">Mansa</span>
+            </div>
+            <p className="section-label mb-4">Guest Access</p>
+            <h2 className="font-serif text-3xl text-ivory sm:text-4xl">Create your account</h2>
+            <p className="mt-3 text-sm leading-7 text-cream/48 sm:text-base">Begin your private booking journey with a calm, premium experience.</p>
+          </div>
         
-        {error && <div className="bg-red-500/10 text-red-300 p-3 rounded-[2px] border border-red-400/15 mb-6 text-sm">{error}</div>}
+          {error && <div className="mb-6 rounded-[1.25rem] border border-red-400/15 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
         
-        <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-[10px] text-gold/60 mb-2 tracking-[0.3em] uppercase font-bold">Full Name</label>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-gold/60">Full Name</label>
             <div className="relative">
               <User size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/50" />
               <input 
@@ -68,7 +93,7 @@ const Register = () => {
             </div>
           </div>
           <div>
-            <label className="block text-[10px] text-gold/60 mb-2 tracking-[0.3em] uppercase font-bold">Email</label>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-gold/60">Email</label>
             <div className="relative">
               <Mail size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/50" />
               <input 
@@ -81,7 +106,7 @@ const Register = () => {
             </div>
           </div>
           <div>
-            <label className="block text-[10px] text-gold/60 mb-2 tracking-[0.3em] uppercase font-bold">Password</label>
+              <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-gold/60">Password</label>
             <div className="relative">
               <Lock size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/50" />
               <input 
@@ -93,16 +118,17 @@ const Register = () => {
               />
             </div>
           </div>
-          <button type="submit" className="w-full btn-primary py-4 group">
+            <button type="submit" className="btn-primary w-full justify-center py-4 text-[11px]">
             <span>Register</span>
-            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
           </button>
         </form>
         
-        <div className="gold-divider mt-8" />
-        <p className="text-center mt-6 text-cream/45 text-sm">
-          Already have an account? <Link to="/login" className="text-gold hover:text-gold-light transition-colors font-medium">Log in</Link>
+          <div className="gold-divider mt-8" />
+          <p className="mt-6 text-center text-sm text-cream/45">
+            Already have an account? <Link to="/login" className="font-medium text-gold transition-colors hover:text-gold-light">Log in</Link>
         </p>
+        </div>
       </motion.div>
     </div>
   );

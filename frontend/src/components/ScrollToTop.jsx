@@ -29,12 +29,12 @@ const ScrollToTop = () => {
     <button
       type="button"
       onClick={scrollToTop}
-      className={`fixed bottom-24 right-6 p-3 rounded-full bg-luxury-dark text-white shadow-lg transition-all duration-500 z-50 hover:bg-luxury-gold hover:scale-110 hover:shadow-2xl ${
+      className={`fixed bottom-24 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-luxury-gold/16 bg-[#0c120fcc] text-luxury-cream shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-luxury-gold/34 hover:text-luxury-gold sm:right-6 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
       }`}
       aria-label="Scroll to top"
     >
-      <ArrowUp size={24} />
+      <ArrowUp size={18} />
     </button>
   );
 };

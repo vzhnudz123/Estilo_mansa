@@ -31,7 +31,7 @@ const RoomVideo = ({ url, title }) => {
   const embed = isYouTube(url) ? toYouTubeEmbed(url) : '';
 
   return (
-    <div className="overflow-hidden rounded-[2px] border border-white/10 bg-black shadow-2xl">
+    <div className="panel overflow-hidden rounded-[1.75rem] bg-black/80">
       <div className="aspect-video">
         {embed ? (
           <iframe
@@ -69,37 +69,43 @@ const RoomDetails = () => {
 
   if (loading) return <LoadingScreen />;
   if (!room) return (
-    <div className="flex min-h-screen items-center justify-center bg-obsidian">
-      <p className="font-serif text-2xl text-cream/50">Room not found</p>
+    <div className="page-shell flex min-h-screen items-center justify-center">
+      <div className="panel px-8 py-10 text-center">
+        <p className="font-serif text-2xl text-cream/50">Room not found</p>
+      </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-obsidian pt-28 text-cream">
-      <main className="mx-auto max-w-7xl px-6 pb-28 md:px-12">
+    <div className="page-shell text-cream">
+      <main className="page-container pt-28 pb-20 md:pt-32 md:pb-28">
         <button
           onClick={() => navigate('/rooms')}
-          className="group mb-10 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.36em] text-cream/45 transition-colors hover:text-gold"
+          className="group mb-8 inline-flex items-center gap-3 rounded-full border border-white/8 bg-white/[0.025] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.36em] text-cream/45 transition-colors hover:border-gold/18 hover:text-gold"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
           Back to Rooms
         </button>
 
-        <section className="mb-14 max-w-4xl">
-          <span className="section-label mb-6 block">Room Gallery</span>
-          <h1 className="premium-h2 text-ivory">{room.name}</h1>
-          <p className="mt-8 text-lg font-light leading-relaxed text-cream/68 md:text-xl">
-            {room.description}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3 text-[10px] font-bold uppercase tracking-[0.28em] text-gold/80">
-            <span className="inline-flex items-center gap-2 border border-gold/20 px-4 py-2">
-              <Images size={13} />
-              {room.images?.length || 0} Images
-            </span>
-            <span className="inline-flex items-center gap-2 border border-gold/20 px-4 py-2">
-              <Video size={13} />
-              {room.videos?.length || 0} Videos
-            </span>
+        <section className="page-hero-panel mb-10">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div className="max-w-4xl">
+              <span className="eyebrow-pill mb-5">Room Gallery</span>
+              <h1 className="premium-h2 text-ivory">{room.name}</h1>
+              <p className="mt-8 text-lg font-light leading-relaxed text-cream/68 md:text-xl">
+                {room.description}
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <span className="status-pill justify-center px-4 py-3">
+                <Images size={13} />
+                {room.images?.length || 0} Images
+              </span>
+              <span className="status-pill justify-center px-4 py-3">
+                <Video size={13} />
+                {room.videos?.length || 0} Videos
+              </span>
+            </div>
           </div>
         </section>
 
@@ -109,7 +115,7 @@ const RoomDetails = () => {
               navigation
               pagination={{ clickable: true }}
               modules={[Navigation, Pagination]}
-              className="h-[60vh] overflow-hidden rounded-[2px] border border-white/10 shadow-[0_50px_130px_rgba(0,0,0,0.48)] md:h-[76vh]"
+              className="panel h-[50vh] overflow-hidden rounded-[2rem] md:h-[76vh]"
             >
               {images.map((img, index) => (
                 <SwiperSlide key={img + index}>
@@ -124,7 +130,7 @@ const RoomDetails = () => {
               ))}
             </Swiper>
           ) : (
-            <div className="h-[60vh] overflow-hidden rounded-[2px] border border-white/10 shadow-[0_50px_130px_rgba(0,0,0,0.48)] md:h-[76vh]">
+            <div className="panel h-[50vh] overflow-hidden rounded-[2rem] md:h-[76vh]">
               <img src={images[0]} alt={room.name} className="h-full w-full object-cover" />
             </div>
           )}
