@@ -1,15 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream/promises';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { UPLOAD_DIR, buildUploadUrl, ensureUploadDir } from '../config/uploads.js';
 
 export default async function uploadRoutes(fastify, options) {
   // Use preHandler for authentication
   fastify.post('/', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
+      ensureUploadDir();
       const parts = request.files();
       const urls = [];
 
@@ -24,19 +22,13 @@ export default async function uploadRoutes(fastify, options) {
 
           const prefix = ['.mp4', '.mov', '.avi'].includes(ext) ? 'video' : 'image';
           const filename = `${prefix}-${uniqueSuffix}${ext}`;
-          const uploadPath = path.join(__dirname, '../uploads', filename);
+          const uploadPath = path.join(UPLOAD_DIR, filename);
 
           // Save file
           await pipeline(part.file, fs.createWriteStream(uploadPath));
 
           // Generate URL
-          const baseUrl = process.env.BASE_URL || 'https://estilo-mansa.onrender.com';
-          const host = request.headers.host;
-          const protocol = request.headers['x-forwarded-proto'] || request.protocol || 'https';
-          const requestBaseUrl = host && host === new URL(baseUrl).host
-            ? `${protocol}://${host}`
-            : baseUrl;
-          const fileUrl = `${requestBaseUrl}/uploads/${filename}`;
+          const fileUrl = buildUploadUrl(request, filename);
           urls.push(fileUrl);
         }
       }
@@ -59,7 +51,7 @@ export default async function uploadRoutes(fastify, options) {
   fastify.delete('/:filename', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
       const { filename } = request.params;
-      const filePath = path.join(__dirname, '../uploads', filename);
+      const filePath = path.join(UPLOAD_DIR, filename);
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);

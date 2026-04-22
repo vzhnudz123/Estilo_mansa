@@ -4,6 +4,7 @@ import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight } from 'lucide-react';
 import api from '../api/axios';
+import { resolveMediaUrl } from '../utils/media';
 
 import 'swiper/css';
 import 'swiper/css/effect-fade';
@@ -11,6 +12,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 const WHATSAPP_NUMBER = '919876543210';
+const FALLBACK_HERO_IMAGE = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=2070';
 
 const Hero = () => {
   const [slides, setSlides] = useState([]);
@@ -27,7 +29,7 @@ const Hero = () => {
         setSlides([{
           title: 'Welcome to Estilo Mansa',
           subtitle: 'Your Luxury Sanctuary in the Mists of Lakkidi, Wayanad',
-          images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=2070'],
+          images: [FALLBACK_HERO_IMAGE],
           ctaTextPrimary: 'Book Now',
           ctaTextSecondary: 'Explore Rooms',
         }]);
@@ -65,12 +67,17 @@ const Hero = () => {
                   transition={{ duration: 7, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                   <img
-                    src={slide.images?.[0]}
+                    src={resolveMediaUrl(slide.images?.[0]) || FALLBACK_HERO_IMAGE}
                     alt={slide.title}
                     className="w-full h-full object-cover"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
                     fetchPriority={index === 0 ? 'high' : 'auto'}
+                    onError={(event) => {
+                      if (event.currentTarget.src !== FALLBACK_HERO_IMAGE) {
+                        event.currentTarget.src = FALLBACK_HERO_IMAGE;
+                      }
+                    }}
                   />
                 </motion.div>
 

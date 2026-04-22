@@ -1,5 +1,7 @@
+import { PUBLIC_ORIGIN } from '../config/uploads.js';
+
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0']);
-const APP_ORIGIN = (process.env.BASE_URL || 'https://estilo-mansa.onrender.com').replace(/\/+$/, '');
+const APP_ORIGIN = PUBLIC_ORIGIN;
 
 export const normalizeMediaUrl = (value) => {
   if (typeof value !== 'string') return value;
@@ -47,5 +49,16 @@ export const normalizeVideoPayload = (video) => {
   return {
     ...plain,
     url: normalizeMediaUrl(plain.url),
+  };
+};
+
+export const normalizeHeroPayload = (hero) => {
+  if (!hero) return hero;
+
+  const plain = typeof hero.toObject === 'function' ? hero.toObject() : hero;
+
+  return {
+    ...plain,
+    images: normalizeMediaList(plain.images),
   };
 };

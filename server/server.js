@@ -22,6 +22,7 @@ import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { ensureUploadDir, UPLOAD_DIR } from './config/uploads.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -29,6 +30,7 @@ const __dirname = path.dirname(__filename)
 dotenv.config()
 
 connectDB()
+ensureUploadDir()
 
 const app = Fastify({ logger: true })
 
@@ -42,7 +44,7 @@ app.register(cors, {
 })
 app.register(fastifyMultipart, { limits: { fileSize: 500 * 1024 * 1024 } }) // 500 MB
 app.register(fastifyStatic, {
-  root: path.join(__dirname, 'uploads'),
+  root: UPLOAD_DIR,
   prefix: '/uploads/',
 })
 app.register(rateLimit, { max: 100, timeWindow: '1 minute' })

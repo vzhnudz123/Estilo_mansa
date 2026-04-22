@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { Plus, Trash2, ArrowUp, ArrowDown, Image as ImageIcon, Save, X } from 'lucide-react';
+import { resolveMediaUrl } from '../utils/media';
 
 const HeroManager = () => {
   const [heroes, setHeroes] = useState([]);
@@ -273,7 +274,7 @@ const HeroManager = () => {
             <div key={hero._id} className={`flex flex-col md:flex-row gap-6 p-6 rounded-3xl border transition shadow-sm ${hero.isActive ? 'bg-white border-gray-100' : 'bg-gray-50 border-gray-200 opacity-75'}`}>
               <div className="flex-shrink-0 space-y-2">
                 <div className="w-full md:w-64 h-40 rounded-2xl overflow-hidden relative group">
-                  <img src={hero.images[0]} alt="" className="w-full h-full object-cover" />
+                  <img src={resolveMediaUrl(hero.images[0])} alt="" className="w-full h-full object-cover" />
                   {!hero.isActive && (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                       <span className="text-white font-bold bg-red-500 px-3 py-1 rounded-full text-xs uppercase">Inactive</span>
@@ -284,7 +285,7 @@ const HeroManager = () => {
                 <div className="flex gap-2 overflow-x-auto max-w-[256px] pb-1">
                   {hero.images.map((img, i) => (
                     <div key={i} className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 group">
-                      <img src={img} className="w-full h-full object-cover" />
+                      <img src={resolveMediaUrl(img)} className="w-full h-full object-cover" />
                       <button 
                         onClick={() => handleRemoveImage(hero._id, img)}
                         className="absolute top-0 right-0 bg-red-500 text-white p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
