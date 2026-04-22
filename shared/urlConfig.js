@@ -1,6 +1,6 @@
 const stripTrailingSlashes = (value = '') => String(value).replace(/\/+$/, '');
 
-export const URL_MODE = 'auto';
+export const URL_MODE = 'production';
 
 export const URLS = {
   development: {
