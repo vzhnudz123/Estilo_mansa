@@ -65,9 +65,9 @@ const StorySection = () => {
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }}
           >
-            {data.title.split(' ').slice(0, 4).join(' ')}{' '}
+            {(data?.title || '').split(' ').slice(0, 4).join(' ')}{' '}
             <em className="font-script text-luxury-gold not-italic">
-              {data.title.split(' ').slice(4).join(' ')}
+              {(data?.title || '').split(' ').slice(4).join(' ')}
             </em>
           </motion.h2>
           <motion.p
@@ -95,7 +95,7 @@ const StorySection = () => {
           }}
         >
           <div className="flex gap-6 px-6 lg:px-12 w-max">
-            {data.images.map((src, i) => (
+            {data?.images?.map((src, i) => (
               <StoryImage key={i} src={src} index={i} />
             ))}
           </div>

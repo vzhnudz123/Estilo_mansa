@@ -20,8 +20,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
-  return user.role === 'admin' ? children : <Navigate to="/" replace />;
+  return user?.role === 'admin' ? children : <Navigate to="/" />;
 };
 
 function App() {

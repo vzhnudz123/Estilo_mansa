@@ -5,7 +5,6 @@ import rateLimit from '@fastify/rate-limit'
 import jwt from '@fastify/jwt'
 import dotenv from 'dotenv'
 import connectDB from './db.js'
-import { ensureAdminUser } from './bootstrapAdmin.js'
 
 import authMiddleware from './middlewares/auth.js'
 import authRoutes from './routes/authRoutes.js'
@@ -23,12 +22,13 @@ import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { APP_ORIGIN } from './config/runtime.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 dotenv.config()
+
+connectDB()
 
 const app = Fastify({ logger: true })
 
@@ -70,10 +70,8 @@ app.get('/', async () => ({ message: 'Estilo Mansa API Server Running 🚀' }))
 
 const start = async () => {
   try {
-    await connectDB()
-    await ensureAdminUser(app.log)
     await app.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' })
-    console.log(`🚀 Server running on ${APP_ORIGIN}`)
+    console.log(`🚀 Server running on ${process.env.BASE_URL || 'https://estilo-mansa.onrender.com'}`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)

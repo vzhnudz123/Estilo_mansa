@@ -18,8 +18,17 @@ const Home = () => {
 
   useEffect(() => {
     api.get('/rooms')
-      .then(res => setRooms(res.data.slice(0, 3)))
-      .catch(err => console.error(err));
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setRooms(res.data.slice(0, 3));
+        } else {
+          setRooms([]);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch rooms:', err);
+        setRooms([]);
+      });
   }, []);
 
   return (

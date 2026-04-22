@@ -13,7 +13,13 @@ const Rooms = () => {
 
   useEffect(() => {
     api.get('/rooms')
-      .then(res => setRooms(res.data))
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setRooms(res.data);
+        } else {
+          setRooms([]);
+        }
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);

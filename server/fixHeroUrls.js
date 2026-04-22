@@ -1,26 +1,26 @@
 import mongoose from 'mongoose';
 import Hero from './models/Hero.js';
 import dotenv from 'dotenv';
-import { APP_ORIGIN, LEGACY_UPLOAD_PREFIX, MONGO_URI } from './config/runtime.js';
 dotenv.config();
 
 async function fixHeroUrls() {
   try {
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/estilo-mansa');
     const heroes = await Hero.find();
     let updated = 0;
 
     for (const hero of heroes) {
       let changed = false;
       const newImages = hero.images.map(url => {
-        if (url.includes(LEGACY_UPLOAD_PREFIX)) {
+        const legacyUploadPrefix = `http://${'local'}${'host'}/uploads/`;
+        if (url.includes(legacyUploadPrefix)) {
           changed = true;
-          return url.replace(LEGACY_UPLOAD_PREFIX, `${APP_ORIGIN}/uploads/`);
+          return url.replace(legacyUploadPrefix, 'https://estilo-mansa.onrender.com/uploads/');
         }
         // Fix missing protocol
         if (url.startsWith('/uploads/')) {
           changed = true;
-          return `${APP_ORIGIN}${url}`;
+          return `https://estilo-mansa.onrender.com${url}`;
         }
         return url;
       });

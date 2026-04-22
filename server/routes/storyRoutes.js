@@ -2,10 +2,10 @@ import { getActiveStory, getAllStories, createStory, updateStory, deleteStory } 
 
 async function storyRoutes(app) {
   app.get('/active', getActiveStory);
-  app.get('/', { onRequest: [app.requireAdmin] }, getAllStories);
-  app.post('/', { onRequest: [app.requireAdmin] }, createStory);
-  app.put('/:id', { onRequest: [app.requireAdmin] }, updateStory);
-  app.delete('/:id', { onRequest: [app.requireAdmin] }, deleteStory);
+  app.get('/', { onRequest: [app.authenticate] }, getAllStories);
+  app.post('/', { onRequest: [app.authenticate] }, createStory);
+  app.put('/:id', { onRequest: [app.authenticate] }, updateStory);
+  app.delete('/:id', { onRequest: [app.authenticate] }, deleteStory);
 }
 
 export default storyRoutes;

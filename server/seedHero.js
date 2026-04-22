@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
 import Hero from './models/Hero.js';
 import dotenv from 'dotenv';
-import { MONGO_URI } from './config/runtime.js';
 dotenv.config();
 
 async function createTestHero() {
   try {
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/estilo-mansa');
     
     const count = await Hero.countDocuments();
     if (count > 0) {

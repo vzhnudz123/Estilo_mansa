@@ -114,8 +114,11 @@ const GallerySection = () => {
   useEffect(() => {
     api.get('/gallery/active')
       .then(res => {
-        if (res.data?.length > 0) setImages(res.data);
-        else setImages(FALLBACK.map(url => ({ url })));
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setImages(res.data);
+        } else {
+          setImages(FALLBACK.map(url => ({ url })));
+        }
       })
       .catch(() => setImages(FALLBACK.map(url => ({ url }))));
   }, []);

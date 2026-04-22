@@ -2,14 +2,13 @@ import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream/promises';
 import { fileURLToPath } from 'url';
-import { APP_ORIGIN } from '../config/runtime.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default async function uploadRoutes(fastify, options) {
-  // Admin-only uploads for CMS media
-  fastify.post('/', { preHandler: [fastify.requireAdmin] }, async (request, reply) => {
+  // Use preHandler for authentication
+  fastify.post('/', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
       const parts = request.files();
       const urls = [];
@@ -31,7 +30,7 @@ export default async function uploadRoutes(fastify, options) {
           await pipeline(part.file, fs.createWriteStream(uploadPath));
 
           // Generate URL
-          const baseUrl = APP_ORIGIN;
+          const baseUrl = process.env.BASE_URL || 'https://estilo-mansa.onrender.com';
           const host = request.headers.host;
           const protocol = request.headers['x-forwarded-proto'] || request.protocol || 'https';
           const requestBaseUrl = host && host === new URL(baseUrl).host
@@ -57,7 +56,7 @@ export default async function uploadRoutes(fastify, options) {
     }
   });
 
-  fastify.delete('/:filename', { preHandler: [fastify.requireAdmin] }, async (request, reply) => {
+  fastify.delete('/:filename', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
       const { filename } = request.params;
       const filePath = path.join(__dirname, '../uploads', filename);

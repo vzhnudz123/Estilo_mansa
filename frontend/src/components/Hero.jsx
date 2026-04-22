@@ -107,7 +107,7 @@ const Hero = () => {
                         animate={isActive ? { y: 0, opacity: 1 } : {}}
                         transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                       >
-                        {slide.title}
+                        {slide?.title || 'Welcome'}
                       </motion.h1>
                     </div>
 
@@ -118,7 +118,7 @@ const Hero = () => {
                       animate={isActive ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.9, delay: 0.8 }}
                     >
-                      {slide.subtitle}
+                      {slide?.subtitle}
                     </motion.p>
 
                     {/* CTAs */}
@@ -135,14 +135,14 @@ const Hero = () => {
                         className="btn-primary group"
                       >
                         <MessageCircle size={16} />
-                        <span>{slide.ctaTextPrimary || 'Book Now'}</span>
+                        <span>{slide?.ctaTextPrimary || 'Book Now'}</span>
                         <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                       </a>
                       <button 
                         onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                         className="btn-outline group"
                       >
-                        <span>{slide.ctaTextSecondary || 'Explore'}</span>
+                        <span>{slide?.ctaTextSecondary || 'Explore'}</span>
                         <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                       </button>
                     </motion.div>

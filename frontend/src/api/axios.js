@@ -1,9 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { API_BASE_URL } from '../config/runtime';
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: 'https://estilo-mansa.onrender.com/api',
 });
 
 api.interceptors.request.use((config) => {

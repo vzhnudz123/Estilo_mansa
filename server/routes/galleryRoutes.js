@@ -6,10 +6,10 @@ import {
 async function galleryRoutes(app) {
   app.get('/active', getActiveGallery);
   app.get('/featured', getFeaturedGallery);
-  app.get('/', { onRequest: [app.requireAdmin] }, getAllGallery);
-  app.post('/', { onRequest: [app.requireAdmin] }, addGalleryImage);
-  app.put('/:id', { onRequest: [app.requireAdmin] }, updateGalleryImage);
-  app.delete('/:id', { onRequest: [app.requireAdmin] }, deleteGalleryImage);
+  app.get('/', { onRequest: [app.authenticate] }, getAllGallery);
+  app.post('/', { onRequest: [app.authenticate] }, addGalleryImage);
+  app.put('/:id', { onRequest: [app.authenticate] }, updateGalleryImage);
+  app.delete('/:id', { onRequest: [app.authenticate] }, deleteGalleryImage);
 }
 
 export default galleryRoutes;

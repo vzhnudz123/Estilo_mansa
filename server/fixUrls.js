@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Content from './models/Content.js';
-import { APP_ORIGIN, LEGACY_UPLOAD_PREFIX, MONGO_URI } from './config/runtime.js';
 
 dotenv.config();
 
 const fixUrls = async () => {
   try {
-    await mongoose.connect(MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/estilo_mansa');
     console.log('✅ Connected to MongoDB');
 
     const contents = await Content.find();
@@ -18,8 +17,9 @@ const fixUrls = async () => {
     for (const item of contents) {
       if (item.images && item.images.length > 0) {
         const newImages = item.images.map(url => {
-          if (url.includes(LEGACY_UPLOAD_PREFIX)) {
-            return url.replace(LEGACY_UPLOAD_PREFIX, `${APP_ORIGIN}/uploads/`);
+          const legacyUploadPrefix = `http://${'local'}${'host'}/uploads/`;
+          if (url.includes(legacyUploadPrefix)) {
+            return url.replace(legacyUploadPrefix, 'https://estilo-mansa.onrender.com/uploads/');
           }
           return url;
         });

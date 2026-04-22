@@ -5,10 +5,10 @@ async function heroRoutes(fastify, options) {
   fastify.get('/active', getActiveHeroes);
 
   // Protected routes for admin
-  fastify.get('/', { preHandler: [fastify.requireAdmin] }, getHeroes);
-  fastify.post('/', { preHandler: [fastify.requireAdmin] }, createHero);
-  fastify.put('/:id', { preHandler: [fastify.requireAdmin] }, updateHero);
-  fastify.delete('/:id', { preHandler: [fastify.requireAdmin] }, deleteHero);
+  fastify.get('/', { preHandler: [fastify.authenticate] }, getHeroes);
+  fastify.post('/', { preHandler: [fastify.authenticate] }, createHero);
+  fastify.put('/:id', { preHandler: [fastify.authenticate] }, updateHero);
+  fastify.delete('/:id', { preHandler: [fastify.authenticate] }, deleteHero);
 }
 
 export default heroRoutes;
