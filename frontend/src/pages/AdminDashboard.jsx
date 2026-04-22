@@ -1,42 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { format } from 'date-fns';
 import HeroManager from '../components/HeroManager';
 import EventManager from '../components/EventManager';
+import StoryManager from '../components/StoryManager';
+import GalleryManager from '../components/GalleryManager';
+import FeedbackManager from '../components/FeedbackManager';
+import VideoManager from '../components/VideoManager';
+import { 
+  LayoutDashboard, 
+  Hotel, 
+  Calendar, 
+  Image as ImageIcon, 
+  Youtube, 
+  MessageSquare, 
+  BookOpen,
+  Settings
+} from 'lucide-react';
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState('bookings');
-  
-  // Data States
   const [bookings, setBookings] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [stats, setStats] = useState({ totalBookings: 0, revenue: 0 });
   const [loading, setLoading] = useState(true);
-
-  // CMS State
-  const [cmsKey, setCmsKey] = useState('home_hero');
-  const [cmsForm, setCmsForm] = useState({ title: '', description: '' });
-  const [currentImage, setCurrentImage] = useState(null);
-  const [uploadFile, setUploadFile] = useState(null);
-
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [bookingsRes, eventsRes] = await Promise.allSettled([
-        api.get('/bookings/all'),
-        api.get('/events')
-      ]);
-      
-      if (bookingsRes.status === 'fulfilled') {
-        const data = bookingsRes.value.data;
-        setBookings(data);
-        const rev = data.reduce((acc, curr) => acc + curr.totalPrice, 0);
-        setStats({ totalBookings: data.length, revenue: rev });
-      }
-      
-      if (eventsRes.status === 'fulfilled') setEvents(eventsRes.value.data);
-      
+      const res = await api.get('/bookings/all');
+      setBookings(res.data);
     } catch (error) {
       console.error("Error fetching admin data", error);
     } finally {
@@ -48,73 +38,6 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  const fetchCmsData = async (key) => {
-    setCmsKey(key);
-    try {
-      const res = await api.get(`/content/${key}`);
-      setCmsForm({ 
-        title: res.data.title || '', 
-        description: res.data.description || '' 
-      });
-      setCurrentImage(res.data.images?.[0] || null);
-    } catch {
-      setCmsForm({ title: '', description: '' });
-      setCurrentImage(null);
-    }
-  }
-
-  const handleDeleteCurrentImage = async () => {
-    if (!currentImage) return;
-    if (!window.confirm("Are you sure you want to delete this image permanently?")) return;
-
-    try {
-      // Extract filename from URL (e.g. image-123.jpg)
-      const filename = currentImage.split('/').pop();
-      
-      // Delete physical file
-      await api.delete(`/upload/${filename}`);
-      
-      // Update DB to remove image reference
-      await api.put(`/content/${cmsKey}`, {
-        ...cmsForm,
-        images: []
-      });
-
-      setCurrentImage(null);
-      alert("Image deleted successfully");
-    } catch (err) {
-      alert("Failed to delete image");
-    }
-  };
-
-  const handleCmsUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      let imageUrl = currentImage;
-
-      if (uploadFile) {
-        const formData = new FormData();
-        formData.append('image', uploadFile);
-        const uploadRes = await api.post('/upload', formData);
-        imageUrl = uploadRes.data.url;
-      }
-
-      const payload = {
-        key: cmsKey,
-        title: cmsForm.title,
-        description: cmsForm.description,
-        images: imageUrl ? [imageUrl] : []
-      };
-      
-      await api.put(`/content/${cmsKey}`, payload);
-      alert('Content updated successfully!');
-      setCurrentImage(imageUrl);
-      setUploadFile(null);
-    } catch (err) {
-      alert('Failed to update content');
-    }
-  };
-
   const handleStatusChange = async (id, newStatus) => {
     try {
       await api.put(`/bookings/${id}/status`, { status: newStatus });
@@ -124,116 +47,131 @@ const AdminDashboard = () => {
     }
   };
 
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="w-10 h-10 border-4 border-luxury-gold border-t-transparent rounded-full animate-spin" />
+  </div>;
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  const SidebarItem = ({ id, icon: Icon, label }) => (
+    <button
+      onClick={() => setTab(id)}
+      className={`w-full flex items-center gap-3 px-6 py-4 transition-all ${
+        tab === id 
+        ? 'bg-luxury-gold/10 text-luxury-gold border-r-4 border-luxury-gold font-bold' 
+        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+      }`}
+    >
+      <Icon size={20} />
+      <span>{label}</span>
+    </button>
+  );
 
   return (
-    <div className="bg-luxury-bg min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold mb-8 text-luxury-dark">Admin Dashboard</h1>
-        
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-4 mb-6 border-b border-gray-200">
-          <button 
-            className={`py-3 px-6 font-bold text-lg border-b-4 transition-colors ${tab === 'bookings' ? 'border-luxury-gold text-luxury-dark' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
-            onClick={() => setTab('bookings')}
-          >
-            Manage Bookings
-          </button>
-          <button 
-            className={`py-3 px-6 font-bold text-lg border-b-4 transition-colors ${tab === 'events' ? 'border-luxury-gold text-luxury-dark' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
-            onClick={() => setTab('events')}
-          >
-            Manage Events
-          </button>
-          <button 
-            className={`py-3 px-6 font-bold text-lg border-b-4 transition-colors ${tab === 'hero' ? 'border-luxury-gold text-luxury-dark' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
-            onClick={() => setTab('hero')}
-          >
-            Manage Hero
-          </button>
-          <button 
-            className={`py-3 px-6 font-bold text-lg border-b-4 transition-colors ${tab === 'cms' ? 'border-luxury-gold text-luxury-dark' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
-            onClick={() => { setTab('cms'); fetchCmsData('home_hero'); }}
-          >
-            CMS (Site Content)
-          </button>
+    <div className="bg-gray-50 min-h-screen flex">
+      {/* Sidebar Navigation */}
+      <aside className="w-72 bg-white border-r border-gray-100 min-h-screen sticky top-0 hidden lg:block shadow-sm">
+        <div className="p-8">
+          <h1 className="text-2xl font-serif text-luxury-dark font-bold">Estilo Mansa</h1>
+          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-1">Management Suite</p>
         </div>
+        
+        <nav className="mt-4 space-y-1">
+          <SidebarItem id="bookings" icon={Hotel} label="Bookings" />
+          <SidebarItem id="events" icon={Calendar} label="Events & Offers" />
+          <div className="px-8 py-4 text-[10px] uppercase tracking-widest text-gray-300 font-bold">Website Content</div>
+          <SidebarItem id="hero" icon={LayoutDashboard} label="Hero Carousel" />
+          <SidebarItem id="story" icon={BookOpen} label="Our Story" />
+          <SidebarItem id="gallery" icon={ImageIcon} label="Gallery & Highlights" />
+          <SidebarItem id="videos" icon={Youtube} label="YouTube Shorts" />
+          <SidebarItem id="feedback" icon={MessageSquare} label="Guest Reviews" />
+        </nav>
+      </aside>
 
-        {/* Tab contents are identical from earlier, but CMS tab is new */}
-        {tab === 'hero' && <HeroManager />}
-
-        {tab === 'cms' && (
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold mb-6">Website Content Manager</h2>
-            
-            <div className="flex gap-4 mb-8">
-              <button onClick={() => fetchCmsData('home_hero')} className={`px-4 py-2 rounded-full font-medium ${cmsKey === 'home_hero' ? 'bg-luxury-dark text-white' : 'bg-gray-100 text-gray-700'}`}>Hero Section</button>
-              <button onClick={() => fetchCmsData('home_features')} className={`px-4 py-2 rounded-full font-medium ${cmsKey === 'home_features' ? 'bg-luxury-dark text-white' : 'bg-gray-100 text-gray-700'}`}>Featured Info</button>
-              <button onClick={() => fetchCmsData('home_testimonials')} className={`px-4 py-2 rounded-full font-medium ${cmsKey === 'home_testimonials' ? 'bg-luxury-dark text-white' : 'bg-gray-100 text-gray-700'}`}>Testimonial</button>
+      {/* Main Content Area */}
+      <main className="flex-1 p-6 md:p-12 overflow-y-auto">
+        <div className="max-w-6xl mx-auto">
+          {/* Header Mobile Support */}
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-800 capitalize">{tab.replace('_', ' ')}</h2>
+              <p className="text-gray-500 mt-1">Administrative control panel for your homestay.</p>
             </div>
-
-            <form onSubmit={handleCmsUpdate} className="space-y-6 max-w-2xl">
-              <div>
-                <label className="block text-sm font-medium mb-1">Title</label>
-                <input required type="text" value={cmsForm.title} onChange={e => setCmsForm({...cmsForm, title: e.target.value})} className="input-field" />
+            <div className="flex items-center gap-3">
+              <div className="hidden md:block text-right">
+                <p className="text-sm font-bold text-gray-800">Administrator</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Master Access</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Description / Text</label>
-                <textarea rows="4" value={cmsForm.description} onChange={e => setCmsForm({...cmsForm, description: e.target.value})} className="input-field"></textarea>
+              <div className="w-12 h-12 bg-luxury-dark rounded-2xl flex items-center justify-center text-luxury-gold shadow-lg">
+                <Settings size={24} />
               </div>
+            </div>
+          </div>
 
-              {currentImage && (
-                <div className="relative w-48 h-32 rounded-lg overflow-hidden border border-gray-200 group">
-                  <img src={currentImage} alt="Current" className="w-full h-full object-cover" />
-                  <button 
-                    type="button"
-                    onClick={handleDeleteCurrentImage}
-                    className="absolute inset-0 bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold text-xs"
-                  >
-                    Delete Image
-                  </button>
+          {/* Dynamic Tab Content */}
+          <div className="animate-fade-in">
+            {tab === 'bookings' && (
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="p-8 border-b border-gray-50">
+                   <h3 className="text-xl font-bold text-gray-800">Reservation Requests</h3>
+                   <p className="text-sm text-gray-500">Manage incoming booking requests from your guests.</p>
                 </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  {currentImage ? 'Replace Image' : 'Upload Image'}
-                </label>
-                <input type="file" onChange={e => setUploadFile(e.target.files[0])} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-luxury-gold/10 file:text-luxury-gold hover:file:bg-luxury-gold/20" />
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/50 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
+                        <th className="px-8 py-5">Customer Details</th>
+                        <th className="px-8 py-5">Room Category</th>
+                        <th className="px-8 py-5">Total Price</th>
+                        <th className="px-8 py-5 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookings.map(b => (
+                        <tr key={b._id} className="border-t border-gray-50 hover:bg-gray-50/50 transition-colors">
+                          <td className="px-8 py-6">
+                            <div className="font-bold text-gray-800">{b.user?.name || 'Guest'}</div>
+                            <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                              {b.phone}
+                            </div>
+                          </td>
+                          <td className="px-8 py-6">
+                            <span className="inline-block bg-luxury-gold/10 text-luxury-gold text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider">
+                              {b.room?.name || 'Standard'}
+                            </span>
+                          </td>
+                          <td className="px-8 py-6 font-bold text-gray-800">
+                            ₹{b.totalPrice}
+                          </td>
+                          <td className="px-8 py-6 text-right">
+                            <select 
+                              className={`text-xs font-bold py-2 px-4 rounded-xl border-none outline-none cursor-pointer transition-all ${
+                                b.status === 'approved' ? 'bg-green-100 text-green-600' : 
+                                b.status === 'rejected' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
+                              }`} 
+                              value={b.status} 
+                              onChange={e => handleStatusChange(b._id, e.target.value)}
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="approved">Approved</option>
+                              <option value="rejected">Rejected</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <button type="submit" className="btn-primary py-3 px-8">Save Changes to Live Site</button>
-            </form>
+            )}
+
+            {tab === 'events' && <EventManager />}
+            {tab === 'hero' && <HeroManager />}
+            {tab === 'story' && <StoryManager />}
+            {tab === 'gallery' && <GalleryManager />}
+            {tab === 'videos' && <VideoManager />}
+            {tab === 'feedback' && <FeedbackManager />}
           </div>
-        )}
-
-        {/* Existing Tab Contents compressed for constraints */}
-        {tab === 'bookings' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead><tr className="bg-gray-50"><th className="p-4">Customer</th><th className="p-4">Room</th><th className="p-4">Status</th></tr></thead>
-                <tbody>
-                  {bookings.map(b => (
-                    <tr key={b._id} className="border-t">
-                      <td className="p-4">{b.user?.name} <br/><span className="text-xs text-gray-500">{b.phone}</span></td>
-                      <td className="p-4">{b.room?.name}</td>
-                      <td className="p-4">
-                        <select className="input-field py-1 px-3 text-sm" value={b.status} onChange={e => handleStatusChange(b._id, e.target.value)}>
-                          <option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {tab === 'events' && <EventManager />}
-
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

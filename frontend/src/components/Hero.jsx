@@ -127,7 +127,7 @@ const Hero = () => {
                       transition={{ duration: 0.9, delay: 1.1 }}
                     >
                       <a
-                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello! I would like to book a stay at Estilo Mansa, Lakkidi.')}`}
+                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi, I want to book a stay at Estilo Mansa')}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-primary group"
@@ -136,10 +136,13 @@ const Hero = () => {
                         <span>{slide.ctaTextPrimary || 'Book Now'}</span>
                         <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                       </a>
-                      <Link to="/rooms" className="btn-outline group">
-                        <span>{slide.ctaTextSecondary || 'Explore Rooms'}</span>
+                      <button 
+                        onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+                        className="btn-outline group"
+                      >
+                        <span>{slide.ctaTextSecondary || 'Explore'}</span>
                         <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-                      </Link>
+                      </button>
                     </motion.div>
                   </motion.div>
                 </div>

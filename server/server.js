@@ -14,6 +14,10 @@ import eventRoutes from './routes/eventRoutes.js'
 import contentRoutes from './routes/contentRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 import heroRoutes from './routes/heroRoutes.js'
+import storyRoutes from './routes/storyRoutes.js'
+import galleryRoutes from './routes/galleryRoutes.js'
+import feedbackRoutes from './routes/feedbackRoutes.js'
+import videoRoutes from './routes/videoRoutes.js'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
@@ -24,51 +28,46 @@ const __dirname = path.dirname(__filename)
 
 dotenv.config()
 
-// Connect to Database
 connectDB()
 
 const app = Fastify({ logger: true })
 
 // Security & Utility Plugins
-app.register(helmet, { crossOriginResourcePolicy: { policy: "cross-origin" } })
+app.register(helmet, { crossOriginResourcePolicy: { policy: 'cross-origin' } })
 app.register(cors, {
   origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
 })
-
-app.register(fastifyMultipart, { limits: { fileSize: 15 * 1024 * 1024 } }) // 15MB max
+app.register(fastifyMultipart, { limits: { fileSize: 15 * 1024 * 1024 } }) // 15 MB
 app.register(fastifyStatic, {
   root: path.join(__dirname, 'uploads'),
   prefix: '/uploads/',
 })
-app.register(rateLimit, {
-  max: 100,
-  timeWindow: '1 minute'
-})
+app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
 app.register(jwt, {
-  secret: process.env.JWT_SECRET || 'super-secret-key-estilo-mansa'
+  secret: process.env.JWT_SECRET || 'super-secret-key-estilo-mansa',
 })
 
-// Custom Middleware
+// Custom auth middleware
 app.register(authMiddleware)
 
 // Routes
-app.register(authRoutes, { prefix: '/api/auth' })
-app.register(roomRoutes, { prefix: '/api/rooms' })
-app.register(bookingRoutes, { prefix: '/api/bookings' })
-app.register(eventRoutes, { prefix: '/api/events' })
-app.register(contentRoutes, { prefix: '/api/content' })
-app.register(uploadRoutes, { prefix: '/api/upload' })
-app.register(heroRoutes, { prefix: '/api/hero' })
+app.register(authRoutes,     { prefix: '/api/auth' })
+app.register(roomRoutes,     { prefix: '/api/rooms' })
+app.register(bookingRoutes,  { prefix: '/api/bookings' })
+app.register(eventRoutes,    { prefix: '/api/events' })
+app.register(contentRoutes,  { prefix: '/api/content' })
+app.register(uploadRoutes,   { prefix: '/api/upload' })
+app.register(heroRoutes,     { prefix: '/api/hero' })
+app.register(storyRoutes,    { prefix: '/api/story' })
+app.register(galleryRoutes,  { prefix: '/api/gallery' })
+app.register(feedbackRoutes, { prefix: '/api/feedback' })
+app.register(videoRoutes,    { prefix: '/api/videos' })
 
-// Test route
-app.get('/', async (req, reply) => {
-  return { message: 'Estilo Mansa API Server Running 🚀' }
-})
+app.get('/', async () => ({ message: 'Estilo Mansa API Server Running 🚀' }))
 
-// Start server
 const start = async () => {
   try {
     await app.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' })
