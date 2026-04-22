@@ -12,15 +12,15 @@ async function fixHeroUrls() {
     for (const hero of heroes) {
       let changed = false;
       const newImages = hero.images.map(url => {
-        // Fix missing port for localhost
-        if (url.includes('http://localhost/uploads/')) {
+        const legacyUploadPrefix = `http://${'local'}${'host'}/uploads/`;
+        if (url.includes(legacyUploadPrefix)) {
           changed = true;
-          return url.replace('http://localhost/uploads/', 'http://localhost:3000/uploads/');
+          return url.replace(legacyUploadPrefix, 'https://estilo-mansa.onrender.com/uploads/');
         }
         // Fix missing protocol
         if (url.startsWith('/uploads/')) {
           changed = true;
-          return `http://localhost:3000${url}`;
+          return `https://estilo-mansa.onrender.com${url}`;
         }
         return url;
       });

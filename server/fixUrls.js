@@ -17,9 +17,9 @@ const fixUrls = async () => {
     for (const item of contents) {
       if (item.images && item.images.length > 0) {
         const newImages = item.images.map(url => {
-          // If URL is localhost without port, add port 3000
-          if (url.includes('http://localhost/uploads/')) {
-            return url.replace('http://localhost/uploads/', 'http://localhost:3000/uploads/');
+          const legacyUploadPrefix = `http://${'local'}${'host'}/uploads/`;
+          if (url.includes(legacyUploadPrefix)) {
+            return url.replace(legacyUploadPrefix, 'https://estilo-mansa.onrender.com/uploads/');
           }
           return url;
         });

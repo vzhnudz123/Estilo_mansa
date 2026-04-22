@@ -71,7 +71,7 @@ app.get('/', async () => ({ message: 'Estilo Mansa API Server Running 🚀' }))
 const start = async () => {
   try {
     await app.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' })
-    console.log(`🚀 Server running on http://localhost:${process.env.PORT || 3000}`)
+    console.log(`🚀 Server running on ${process.env.BASE_URL || 'https://estilo-mansa.onrender.com'}`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)

@@ -30,9 +30,13 @@ export default async function uploadRoutes(fastify, options) {
           await pipeline(part.file, fs.createWriteStream(uploadPath));
 
           // Generate URL
-          const host = request.headers.host || 'localhost:3000';
-          const cleanHost = (host === 'localhost') ? 'localhost:3000' : host;
-          const fileUrl = `${request.protocol}://${cleanHost}/uploads/${filename}`;
+          const baseUrl = process.env.BASE_URL || 'https://estilo-mansa.onrender.com';
+          const host = request.headers.host;
+          const protocol = request.headers['x-forwarded-proto'] || request.protocol || 'https';
+          const requestBaseUrl = host && host === new URL(baseUrl).host
+            ? `${protocol}://${host}`
+            : baseUrl;
+          const fileUrl = `${requestBaseUrl}/uploads/${filename}`;
           urls.push(fileUrl);
         }
       }

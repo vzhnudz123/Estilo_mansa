@@ -15,7 +15,7 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const BASE_URL = process.env.BASE_URL || 'https://estilo-mansa.onrender.com';
 
 await connectDB();
 
