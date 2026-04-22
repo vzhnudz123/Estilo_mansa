@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import api from '../api/axios';
 import HeroManager from '../components/HeroManager';
 import EventManager from '../components/EventManager';
 import StoryManager from '../components/StoryManager';
 import GalleryManager from '../components/GalleryManager';
 import FeedbackManager from '../components/FeedbackManager';
 import VideoManager from '../components/VideoManager';
+import RoomManager from '../components/RoomManager';
 import { 
   LayoutDashboard, 
   Hotel, 
@@ -18,34 +18,13 @@ import {
 } from 'lucide-react';
 
 const AdminDashboard = () => {
-  const [tab, setTab] = useState('bookings');
-  const [bookings, setBookings] = useState([]);
+  const [tab, setTab] = useState('rooms');
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get('/bookings/all');
-      setBookings(res.data);
-    } catch (error) {
-      console.error("Error fetching admin data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(() => setLoading(false), 250);
+    return () => clearTimeout(timer);
   }, []);
-
-  const handleStatusChange = async (id, newStatus) => {
-    try {
-      await api.put(`/bookings/${id}/status`, { status: newStatus });
-      fetchData();
-    } catch (error) {
-      alert('Failed to update status');
-    }
-  };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50">
     <div className="w-10 h-10 border-4 border-luxury-gold border-t-transparent rounded-full animate-spin" />
@@ -75,7 +54,7 @@ const AdminDashboard = () => {
         </div>
         
         <nav className="mt-4 space-y-1">
-          <SidebarItem id="bookings" icon={Hotel} label="Bookings" />
+          <SidebarItem id="rooms" icon={Hotel} label="Rooms & Media" />
           <SidebarItem id="events" icon={Calendar} label="Events & Offers" />
           <div className="px-8 py-4 text-[10px] uppercase tracking-widest text-gray-300 font-bold">Website Content</div>
           <SidebarItem id="hero" icon={LayoutDashboard} label="Hero Carousel" />
@@ -108,61 +87,7 @@ const AdminDashboard = () => {
 
           {/* Dynamic Tab Content */}
           <div className="animate-fade-in">
-            {tab === 'bookings' && (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-8 border-b border-gray-50">
-                   <h3 className="text-xl font-bold text-gray-800">Reservation Requests</h3>
-                   <p className="text-sm text-gray-500">Manage incoming booking requests from your guests.</p>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-gray-50/50 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
-                        <th className="px-8 py-5">Customer Details</th>
-                        <th className="px-8 py-5">Room Category</th>
-                        <th className="px-8 py-5">Total Price</th>
-                        <th className="px-8 py-5 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bookings.map(b => (
-                        <tr key={b._id} className="border-t border-gray-50 hover:bg-gray-50/50 transition-colors">
-                          <td className="px-8 py-6">
-                            <div className="font-bold text-gray-800">{b.user?.name || 'Guest'}</div>
-                            <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                              {b.phone}
-                            </div>
-                          </td>
-                          <td className="px-8 py-6">
-                            <span className="inline-block bg-luxury-gold/10 text-luxury-gold text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider">
-                              {b.room?.name || 'Standard'}
-                            </span>
-                          </td>
-                          <td className="px-8 py-6 font-bold text-gray-800">
-                            ₹{b.totalPrice}
-                          </td>
-                          <td className="px-8 py-6 text-right">
-                            <select 
-                              className={`text-xs font-bold py-2 px-4 rounded-xl border-none outline-none cursor-pointer transition-all ${
-                                b.status === 'approved' ? 'bg-green-100 text-green-600' : 
-                                b.status === 'rejected' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
-                              }`} 
-                              value={b.status} 
-                              onChange={e => handleStatusChange(b._id, e.target.value)}
-                            >
-                              <option value="pending">Pending</option>
-                              <option value="approved">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
+            {tab === 'rooms' && <RoomManager />}
             {tab === 'events' && <EventManager />}
             {tab === 'hero' && <HeroManager />}
             {tab === 'story' && <StoryManager />}

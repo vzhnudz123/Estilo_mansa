@@ -50,7 +50,7 @@ const Login = () => {
             <span className="font-script text-3xl gold-text -mt-1">Mansa</span>
           </div>
           <h2 className="font-serif text-2xl text-luxury-cream mb-2">Welcome Back</h2>
-          <p className="text-luxury-text/50 text-sm">Sign in to manage your bookings</p>
+          <p className="text-luxury-text/50 text-sm">Sign in to access your Estilo Mansa account</p>
         </div>
 
         {error && (

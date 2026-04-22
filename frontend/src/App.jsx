@@ -13,16 +13,9 @@ const Rooms = lazy(() => import('./pages/Rooms'));
 const RoomDetails = lazy(() => import('./pages/RoomDetails'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
-const MyBookings = lazy(() => import('./pages/MyBookings'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const Gallery = lazy(() => import('./pages/Gallery'));
 const Contact = lazy(() => import('./pages/Contact'));
-
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
-  if (loading) return null;
-  return user ? children : <Navigate to="/login" />;
-};
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -49,9 +42,6 @@ function App() {
                 <Route path="/login"    element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
-                <Route path="/my-bookings" element={
-                  <ProtectedRoute><MyBookings /></ProtectedRoute>
-                } />
                 <Route path="/admin" element={
                   <AdminRoute><AdminDashboard /></AdminRoute>
                 } />

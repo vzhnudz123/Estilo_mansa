@@ -79,9 +79,6 @@ const Navbar = () => {
                     Admin
                   </Link>
                 )}
-                <Link to="/my-bookings" className="text-sm text-luxury-text/70 hover:text-luxury-gold tracking-widest uppercase transition-colors">
-                  My Bookings
-                </Link>
                 <button onClick={handleLogout} className="btn-outline text-xs py-2.5 px-6">
                   Logout
                 </button>

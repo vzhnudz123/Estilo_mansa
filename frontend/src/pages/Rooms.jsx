@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Wifi, Coffee, Wind, ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowRight, Images, Play, Video } from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../api/axios';
-import { ScrollReveal, SectionHeader, LoadingScreen } from '../components/ui';
+import { LoadingScreen, ScrollReveal } from '../components/ui';
 
-const amenityIcons = { Wifi, Coffee, 'Air conditioning': Wind };
+const fallbackImage = 'https://images.unsplash.com/photo-1618773928120-2c15c328de8e?auto=format&fit=crop&q=80&w=1200';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -21,134 +21,86 @@ const Rooms = () => {
   if (loading) return <LoadingScreen />;
 
   return (
-    <div className="bg-luxury-bg min-h-screen pt-28">
-      {/* Page Header */}
-      <div className="relative py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&q=80&w=1800"
-            alt=""
-            className="w-full h-full object-cover opacity-15"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-luxury-bg/50 to-luxury-bg" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 text-center">
-          <motion.p
-            className="section-label mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            Accommodations
-          </motion.p>
-          <motion.h1
-            className="font-serif text-5xl md:text-7xl text-luxury-cream mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
-            Our Curated Spaces
-          </motion.h1>
+    <div className="min-h-screen bg-obsidian pt-28 text-cream">
+      <section className="px-6 pb-16 pt-14 md:px-12 md:pb-24 md:pt-20">
+        <div className="mx-auto max-w-7xl">
           <motion.div
-            className="flex items-center justify-center gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            className="mb-14 max-w-3xl"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-luxury-gold opacity-60" />
-            <div className="w-1.5 h-1.5 rounded-full bg-luxury-gold" />
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-luxury-gold opacity-60" />
+            <span className="section-label mb-6 block">Rooms</span>
+            <h1 className="premium-h2 text-ivory">Room Gallery</h1>
+            <p className="mt-6 text-lg font-light leading-relaxed text-cream/60">
+              Explore room images, videos, and details added by the Estilo Mansa admin team.
+            </p>
           </motion.div>
-          <motion.p
-            className="text-luxury-text/60 max-w-xl mx-auto mt-6 leading-relaxed"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Every room is a window into Wayanad. Wake to mist-covered valleys, fall asleep to forest sounds.
-          </motion.p>
-        </div>
-      </div>
 
-      {/* Rooms Grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-28">
-        {rooms.length === 0 ? (
-          <div className="text-center py-20 text-luxury-text/40">
-            <p className="font-serif text-2xl mb-2">No rooms available</p>
-            <p className="text-sm">Please check back soon.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {rooms.map((room, i) => (
-              <ScrollReveal key={room._id} delay={i * 80}>
-                <div className="group relative rounded-3xl overflow-hidden glass-card hover:border-luxury-gold/20 transition-all duration-500">
-                  {/* Image */}
-                  <div className="relative h-72 overflow-hidden">
-                    <img
-                      src={room.images?.[0] || 'https://images.unsplash.com/photo-1618773928120-2c15c328de8e?auto=format&fit=crop&q=80&w=800'}
-                      alt={room.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
-                      style={{ transition: 'transform 700ms cubic-bezier(0.25,0.46,0.45,0.94)' }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-luxury-card/90 via-transparent to-transparent" />
+          {rooms.length === 0 ? (
+            <div className="border border-dashed border-white/10 py-24 text-center">
+              <p className="font-serif text-2xl text-cream/40">No rooms added yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-10">
+              {rooms.map((room, index) => {
+                const images = room.images?.length ? room.images : [fallbackImage];
+                const hasVideo = room.videos?.length > 0;
 
-                    {/* Price badge */}
-                    <div className="absolute top-5 right-5 glass-card-light px-4 py-2 rounded-full">
-                      <span className="text-luxury-gold font-medium">₹{room.price}</span>
-                      <span className="text-white/50 text-xs"> / night</span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-7">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="font-serif text-2xl text-luxury-cream">{room.name}</h3>
-                      <div className="flex items-center gap-2 text-luxury-text/50 text-sm">
-                        <Users size={14} />
-                        <span>Up to {room.capacity}</span>
-                      </div>
-                    </div>
-
-                    <p className="text-luxury-text/60 text-sm leading-relaxed line-clamp-2 mb-6">
-                      {room.description}
-                    </p>
-
-                    {/* Amenities */}
-                    {room.amenities?.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {room.amenities.slice(0, 4).map((a, idx) => (
-                          <span key={idx} className="text-xs px-3 py-1 rounded-full border border-luxury-gold/20 text-luxury-text/60">
-                            {a}
+                return (
+                  <ScrollReveal key={room._id} delay={index * 90}>
+                    <Link
+                      to={`/rooms/${room._id}`}
+                      className="group grid overflow-hidden rounded-[2px] border border-white/10 bg-forest/40 shadow-[0_40px_120px_rgba(0,0,0,0.35)] transition-colors duration-500 hover:border-gold/35 lg:grid-cols-[1.25fr_0.75fr]"
+                    >
+                      <div className="relative min-h-[360px] overflow-hidden md:min-h-[520px]">
+                        <img
+                          src={images[0]}
+                          alt={room.name}
+                          loading={index === 0 ? 'eager' : 'lazy'}
+                          decoding="async"
+                          className="h-full w-full object-cover transition-transform duration-[1600ms] group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-obsidian/75 via-transparent to-transparent" />
+                        <div className="absolute bottom-6 left-6 flex flex-wrap gap-3 text-[10px] font-bold uppercase tracking-[0.28em] text-ivory/80">
+                          <span className="inline-flex items-center gap-2 rounded-full bg-obsidian/55 px-4 py-2 backdrop-blur-md">
+                            <Images size={13} />
+                            {room.images?.length || 0} Images
                           </span>
-                        ))}
+                          <span className="inline-flex items-center gap-2 rounded-full bg-obsidian/55 px-4 py-2 backdrop-blur-md">
+                            <Video size={13} />
+                            {room.videos?.length || 0} Videos
+                          </span>
+                        </div>
+                        {hasVideo && (
+                          <div className="absolute right-6 top-6 flex h-14 w-14 items-center justify-center rounded-full border border-gold/35 bg-obsidian/60 text-gold backdrop-blur-md">
+                            <Play size={18} fill="currentColor" />
+                          </div>
+                        )}
                       </div>
-                    )}
 
-                    <div className="flex gap-3">
-                      <Link
-                        to={`/rooms/${room._id}`}
-                        className="btn-primary flex-1 py-3 text-xs group"
-                      >
-                        <span>View & Book</span>
-                        <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                      <a
-                        href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hello! I'm interested in the ${room.name} at Estilo Mansa.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center w-12 h-12 rounded-full border border-luxury-gold/25 text-luxury-gold hover:bg-luxury-gold/10 transition-colors"
-                      >
-                        <MessageCircle size={16} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        )}
-      </div>
+                      <div className="flex flex-col justify-between p-8 md:p-12">
+                        <div>
+                          <span className="section-label mb-5 block">Room {String(index + 1).padStart(2, '0')}</span>
+                          <h2 className="font-serif text-4xl text-ivory md:text-6xl">{room.name}</h2>
+                          <p className="mt-7 line-clamp-5 text-base font-light leading-relaxed text-cream/65 md:text-lg">
+                            {room.description}
+                          </p>
+                        </div>
+
+                        <div className="mt-10 flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-gold transition-all group-hover:gap-6">
+                          View Images & Videos
+                          <ArrowRight size={15} />
+                        </div>
+                      </div>
+                    </Link>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 };
