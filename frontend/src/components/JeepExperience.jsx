@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import api from '../api/axios';
+import { resolveMediaUrl } from '../utils/media';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,7 +27,7 @@ const JeepExperience = () => {
         
         if (jeepVid) {
           const isYouTube = jeepVid.url.includes('youtube.com') || jeepVid.url.includes('youtu.be');
-          let finalUrl = jeepVid.url;
+          let finalUrl = resolveMediaUrl(jeepVid.url);
           
           if (isYouTube) {
             const id = jeepVid.url.split('/').pop().split('?')[0].split('v=')[1]?.split('&')[0] || jeepVid.url.split('/').pop();
@@ -92,6 +93,7 @@ const JeepExperience = () => {
                 muted 
                 loop 
                 playsInline 
+                preload="metadata"
                 className="w-full h-full object-cover"
                 src={video.url}
               />

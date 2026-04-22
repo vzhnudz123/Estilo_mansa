@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/axios';
 import { ArrowLeft, Images, Play, Video } from 'lucide-react';
 import { LoadingScreen } from '../components/ui';
+import { resolveMediaUrl } from '../utils/media';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -43,7 +44,7 @@ const RoomVideo = ({ url, title }) => {
             loading="lazy"
           />
         ) : (
-          <video src={url} controls playsInline preload="metadata" className="h-full w-full object-cover" />
+          <video src={resolveMediaUrl(url)} controls playsInline preload="metadata" className="h-full w-full object-cover" />
         )}
       </div>
     </div>
@@ -64,7 +65,7 @@ const RoomDetails = () => {
   }, [id]);
 
   const images = useMemo(() => (
-    room?.images?.length ? room.images : [fallbackImage]
+    room?.images?.length ? room.images.map(resolveMediaUrl) : [fallbackImage]
   ), [room]);
 
   if (loading) return <LoadingScreen />;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { Plus, Trash2, Youtube, ExternalLink, Video, Upload, CheckCircle2 } from 'lucide-react';
+import { resolveMediaUrl } from '../utils/media';
 
 const VideoManager = () => {
   const [videos, setVideos] = useState([]);
@@ -158,7 +159,7 @@ const VideoManager = () => {
                   title={vid.title}
                 />
               ) : (
-                <video src={vid.url} className="w-full h-full object-cover" controls={false} muted loop autoPlay />
+                <video src={resolveMediaUrl(vid.url)} className="w-full h-full object-cover" controls={false} muted loop autoPlay playsInline preload="metadata" />
               )}
               <div className="absolute top-4 left-4">
                 {vid.title?.toLowerCase().includes('jeep') && (
@@ -172,7 +173,7 @@ const VideoManager = () => {
             <div className="p-4 flex items-center justify-between gap-4">
               <div className="overflow-hidden">
                 <p className="text-sm font-bold text-gray-800 truncate">{vid.title || 'Untitled Video'}</p>
-                <a href={vid.url} target="_blank" rel="noreferrer" className="text-[10px] text-gray-400 hover:text-luxury-gold flex items-center gap-1 transition-colors">
+                <a href={resolveMediaUrl(vid.url)} target="_blank" rel="noreferrer" className="text-[10px] text-gray-400 hover:text-luxury-gold flex items-center gap-1 transition-colors">
                   {vid.url.includes('youtube.com') ? 'YouTube' : 'Direct Link'} <ExternalLink size={10} />
                 </a>
               </div>
