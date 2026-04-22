@@ -7,6 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
+        'obsidian':         '#050706',
+        'forest':           '#0d110f',
+        'gold':             '#c5a059',
+        'gold-light':       '#e2c99a',
+        'gold-dark':        '#8e6f3e',
+        'ivory':            '#f5f2ed',
+        'cream':            '#d4cfc7',
         'luxury-bg':        '#0a0f0d',
         'luxury-surface':   '#111a15',
         'luxury-card':      '#16211a',

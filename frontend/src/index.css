@@ -6,7 +6,7 @@
 
 /* ===== BASE ===== */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: initial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -15,13 +15,22 @@ html {
   box-sizing: border-box;
 }
 
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @layer base {
   body {
-    background-color: #0a0f0d;
+    background-color: #050706;
     color: #d4cfc7;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -34,35 +43,12 @@ html {
   }
 }
 
-/* ===== CUSTOM CURSOR ===== */
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: #c8a96e;
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  transition: transform 0.1s ease;
-}
-
-.cursor-ring {
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid rgba(200, 169, 110, 0.5);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9998;
-  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-}
-
 /* ===== COMPONENTS ===== */
 @layer components {
 
   /* Gold gradient text */
   .gold-text {
-    background: linear-gradient(135deg, #c8a96e 0%, #e2c99a 50%, #c8a96e 100%);
+    background: linear-gradient(135deg, #8e6f3e 0%, #c5a059 50%, #e2c99a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -70,47 +56,55 @@ html {
     animation: shimmer 4s linear infinite;
   }
 
+  .btn-premium {
+    @apply relative inline-flex items-center justify-center gap-3 px-9 py-4 rounded-[2px] font-medium text-xs tracking-[0.26em] uppercase overflow-hidden transition-all duration-700;
+    background: transparent;
+    border: 1px solid rgba(197, 160, 89, 0.36);
+    color: #c5a059;
+  }
+
+  .btn-premium::before {
+    content: '';
+    @apply absolute inset-0 -translate-x-full transition-transform duration-700 ease-in-out;
+    background: linear-gradient(135deg, #c5a059, #e2c99a);
+  }
+
+  .btn-premium:hover {
+    color: #050706;
+    border-color: rgba(226, 201, 154, 0.85);
+  }
+
+  .btn-premium:hover::before {
+    @apply translate-x-0;
+  }
+
+  .btn-premium span,
+  .btn-premium svg {
+    @apply relative z-10;
+  }
+
   /* Primary Button */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-medium text-sm tracking-widest uppercase overflow-hidden transition-all duration-500;
-    background: linear-gradient(135deg, #c8a96e, #a07840);
-    color: #0a0f0d;
-    letter-spacing: 0.12em;
+    @apply btn-premium;
   }
 
   .btn-primary::before {
-    content: '';
-    @apply absolute inset-0 rounded-full opacity-0 transition-opacity duration-500;
-    background: linear-gradient(135deg, #e2c99a, #c8a96e);
-  }
-
-  .btn-primary:hover::before {
-    opacity: 1;
-  }
-
-  .btn-primary span {
-    @apply relative z-10;
+    @apply rounded-[2px];
   }
 
   /* Outline Button */
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-medium text-sm tracking-widest uppercase border transition-all duration-500;
-    border-color: rgba(200, 169, 110, 0.4);
-    color: #c8a96e;
-    letter-spacing: 0.12em;
-  }
-
-  .btn-outline:hover {
-    background: rgba(200, 169, 110, 0.1);
-    border-color: rgba(200, 169, 110, 0.8);
+    @apply btn-premium;
   }
 
   /* Glass card */
+  .glass-panel,
   .glass-card {
-    background: rgba(22, 33, 26, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(200, 169, 110, 0.12);
+    background: rgba(13, 17, 15, 0.72);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
   }
 
   .glass-card-light {
@@ -129,15 +123,15 @@ html {
 
   /* Section label */
   .section-label {
-    @apply text-xs tracking-[0.4em] uppercase font-medium;
-    color: #c8a96e;
+    @apply text-[10px] tracking-[0.46em] uppercase font-semibold;
+    color: #e2c99a;
   }
 
   /* Input */
   .input-field {
-    @apply w-full px-5 py-4 rounded-xl border text-sm transition-all duration-300;
-    background: rgba(22, 33, 26, 0.8);
-    border-color: rgba(200, 169, 110, 0.2);
+    @apply w-full px-5 py-4 rounded-[2px] border text-sm transition-all duration-300;
+    background: rgba(255, 255, 255, 0.035);
+    border-color: rgba(255, 255, 255, 0.1);
     color: #d4cfc7;
   }
 
@@ -147,8 +141,8 @@ html {
 
   .input-field:focus {
     outline: none;
-    border-color: rgba(200, 169, 110, 0.6);
-    box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.08);
+    border-color: rgba(197, 160, 89, 0.7);
+    box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.08);
   }
 
   /* Scroll reveal */
@@ -216,6 +210,56 @@ html {
   will-change: transform;
 }
 
+.premium-h2 {
+  font-size: clamp(2.75rem, 8vw, 5.75rem);
+  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.italic-serif {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 /* ===== NOISE TEXTURE ===== */
 .noise-overlay::after {
   content: '';
@@ -247,4 +291,15 @@ html {
 .marquee-track {
   display: inline-flex;
   animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

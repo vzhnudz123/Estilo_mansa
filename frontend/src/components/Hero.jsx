@@ -70,6 +70,8 @@ const Hero = () => {
                     alt={slide.title}
                     className="w-full h-full object-cover"
                     loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
                   />
                 </motion.div>
 

@@ -7,23 +7,25 @@ gsap.registerPlugin(ScrollTrigger);
 
 const SmoothScroll = ({ children }) => {
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+    if (prefersReducedMotion || isTouch) {
+      ScrollTrigger.refresh();
+      return undefined;
+    }
+
     let lenis;
     try {
       lenis = new Lenis({
-        duration: 1.5,
+        duration: 1.15,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1.1,
-        lerp: 0.05,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1,
+        lerp: 0.075,
       });
-
-      function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      }
-
-      requestAnimationFrame(raf);
 
       lenis.on('scroll', ScrollTrigger.update);
 
@@ -32,13 +34,16 @@ const SmoothScroll = ({ children }) => {
       };
       
       gsap.ticker.add(ticker);
+      gsap.ticker.lagSmoothing(0);
+      ScrollTrigger.refresh();
 
       return () => {
-        lenis.destroy();
         gsap.ticker.remove(ticker);
+        lenis.destroy();
       };
     } catch (e) {
       console.error("Lenis init failed", e);
+      return undefined;
     }
   }, []);
 

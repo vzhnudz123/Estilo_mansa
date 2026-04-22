@@ -26,6 +26,7 @@ const RoomDetails = () => {
   const [phone, setPhone] = useState('');
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const RoomDetails = () => {
     e.preventDefault();
     if (!user) { navigate('/login'); return; }
     setError('');
+    setIsSubmitting(true);
     try {
       const payload = {
         roomId: room._id,
@@ -58,6 +60,8 @@ const RoomDetails = () => {
       setTimeout(() => navigate('/my-bookings'), 3000);
     } catch (err) {
       setError(err.response?.data?.error || 'Booking failed. Please try different dates.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -219,9 +223,9 @@ const RoomDetails = () => {
                       <p className="text-red-400 text-xs bg-red-500/10 px-4 py-2 rounded-lg">{error}</p>
                     )}
 
-                    <button type="submit" className="btn-primary w-full py-4 group">
+                    <button type="submit" disabled={isSubmitting} className="btn-primary w-full py-4 group disabled:cursor-not-allowed disabled:opacity-50">
                       <MessageCircle size={15} />
-                      <span>{user ? 'Request to Book' : 'Login to Book'}</span>
+                      <span>{isSubmitting ? 'Sending Request...' : user ? 'Request to Book' : 'Login to Book'}</span>
                       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </button>
                     <p className="text-center text-xs text-luxury-text/30 mt-3">
