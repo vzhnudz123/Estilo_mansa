@@ -158,7 +158,8 @@ const GallerySection = ({ limit = 12 }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Desktop Masonry Grid */}
+          <div className="hidden lg:grid grid-cols-3 gap-4">
             {cols.map((col, ci) => (
               <div key={ci} className="flex flex-col gap-4">
                 {col.map(item => (
@@ -169,6 +170,28 @@ const GallerySection = ({ limit = 12 }) => {
                     onClick={openLightbox}
                   />
                 ))}
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile/Tablet Horizontal Scroll */}
+          <div className="lg:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 hide-scrollbar -mx-6 px-6">
+            {images.map((item, i) => (
+              <div 
+                key={i} 
+                className="flex-none w-[80vw] sm:w-[50vw] snap-center"
+              >
+                <div 
+                  className="relative aspect-[4/5] overflow-hidden rounded-2xl cursor-pointer"
+                  onClick={() => openLightbox(i)}
+                >
+                  <img
+                    src={item.src}
+                    alt={item.label || `Gallery ${i + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-700 active:scale-95"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                </div>
               </div>
             ))}
           </div>
