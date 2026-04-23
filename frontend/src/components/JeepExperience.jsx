@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -20,8 +20,10 @@ const JeepExperience = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
     api.get('/videos/active')
       .then(res => {
+        if (!isMounted) return;
         const list = Array.isArray(res.data) ? res.data : [];
         const jeepVid = list.find(v => v.title?.toLowerCase().includes('jeep')) || list[0];
         
@@ -39,20 +41,29 @@ const JeepExperience = () => {
           setVideo(fallbackVideo);
         }
       })
-      .catch(() => setVideo(fallbackVideo));
+      .catch(() => {
+        if (isMounted) setVideo(fallbackVideo);
+      });
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
     if (!video) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (prefersReducedMotion) return;
+
     const ctx = gsap.context(() => {
+      // Smoother parallax with less scrub and will-change
       gsap.to(videoContainerRef.current, {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: true,
+          scrub: isMobile ? false : 0.5, // Subtle scrub or no scrub on mobile
         },
-        y: 150,
+        y: isMobile ? 50 : 120,
         ease: "none"
       });
 
@@ -60,25 +71,30 @@ const JeepExperience = () => {
       gsap.from(lines, {
         scrollTrigger: {
           trigger: contentRef.current,
-          start: "top 75%",
+          start: "top 85%",
+          once: true, // Only play once for better performance
         },
         opacity: 0,
-        y: 50,
-        stagger: 0.3,
-        duration: 1.5,
-        ease: "power4.out"
+        y: 30,
+        stagger: 0.2,
+        duration: 1.2,
+        ease: "power3.out"
       });
     }, sectionRef);
+
     return () => ctx.revert();
   }, [video]);
 
   return (
     <section 
       ref={sectionRef} 
-      className="relative min-h-screen w-full flex items-center overflow-hidden py-32 md:py-48"
+      className="relative min-h-screen w-full flex items-center overflow-hidden py-32 md:py-48 bg-luxury-bg"
     >
       <div className="absolute inset-0 z-0">
-        <div ref={videoContainerRef} className="absolute inset-0 h-[120%] -top-[10%] w-full">
+        <div 
+          ref={videoContainerRef} 
+          className="absolute inset-0 h-[115%] -top-[7%] w-full will-change-transform transform-gpu"
+        >
           {video && (
             video.isYouTube ? (
               <iframe
@@ -86,6 +102,7 @@ const JeepExperience = () => {
                 className="w-full h-full object-cover scale-[1.5]"
                 allow="autoplay; fullscreen"
                 frameBorder="0"
+                loading="lazy"
               />
             ) : (
               <video 
@@ -93,14 +110,13 @@ const JeepExperience = () => {
                 muted 
                 loop 
                 playsInline 
-                preload="metadata"
+                preload="none"
                 className="w-full h-full object-cover"
                 src={video.url}
               />
             )
           )}
         </div>
-        {/* CINEMATIC OVERLAYS (No blur for clear look) */}
         <div className="absolute inset-0 bg-black/40" /> 
         <div className="absolute inset-0 bg-gradient-to-b from-luxury-bg via-transparent to-luxury-bg" />
         <div className="absolute inset-0 bg-gradient-to-r from-luxury-bg via-transparent to-transparent opacity-70" />
@@ -143,12 +159,11 @@ const JeepExperience = () => {
         </div>
       </div>
 
-      {/* Decorative Corner Elements */}
-      <div className="absolute top-12 right-12 text-luxury-gold/20 font-serif text-9xl select-none pointer-events-none">
+      <div className="absolute top-12 right-12 text-luxury-gold/10 font-serif text-9xl select-none pointer-events-none hidden md:block">
         03
       </div>
     </section>
   );
 };
 
-export default JeepExperience;
+export default memo(JeepExperience);

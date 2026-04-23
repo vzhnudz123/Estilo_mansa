@@ -168,7 +168,7 @@ const HeroManager = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (loading) return <div className="p-10 text-center">Loading Hero Manager...</div>;
+  if (loading) return null;
 
   return (
     <div className="space-y-10 pb-20">

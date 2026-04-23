@@ -104,7 +104,7 @@ const GalleryManager = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-luxury-text/40 italic">Loading gallery...</div>;
+  if (loading) return null;
 
   return (
     <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">

@@ -21,7 +21,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return <LoadingScreen label="Checking your access" />;
+  if (loading) return null;
   return user?.role === 'admin' ? children : <Navigate to="/" />;
 };
 
@@ -36,7 +36,7 @@ const AppContent = () => {
         <div className="app-shell relative z-10 flex min-h-screen flex-col bg-obsidian">
           <Navbar />
           <main className="flex-grow">
-            <Suspense fallback={<LoadingScreen />}>
+            <Suspense fallback={null}>
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                   <Route path="/" element={<PageTransition><Home /></PageTransition>} />

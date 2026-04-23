@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import api from '../api/axios';
+import { resolveMediaUrl } from '../utils/media';
 
 const DEFAULT_STORY = {
   title: 'Where the Clouds Come to Rest',
@@ -31,7 +32,7 @@ const StoryImage = ({ src, index }) => {
       className="relative flex-shrink-0 w-64 md:w-80 h-80 md:h-[420px] rounded-2xl overflow-hidden shadow-2xl"
       whileHover={{ scale: 1.03, rotate: 0 }}
     >
-      <img src={src} alt="" loading="lazy" className="w-full h-full object-cover" />
+      <img src={resolveMediaUrl(src)} alt="" loading="lazy" className="w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
     </motion.div>
   );

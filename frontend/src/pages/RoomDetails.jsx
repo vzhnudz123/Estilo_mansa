@@ -68,7 +68,7 @@ const RoomDetails = () => {
     room?.images?.length ? room.images.map(resolveMediaUrl) : [fallbackImage]
   ), [room]);
 
-  if (loading) return <LoadingScreen />;
+  if (loading) return null;
   if (!room) return (
     <div className="page-shell flex min-h-screen items-center justify-center">
       <div className="panel px-8 py-10 text-center">

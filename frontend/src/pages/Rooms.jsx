@@ -24,7 +24,7 @@ const Rooms = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <LoadingScreen />;
+  if (loading) return null;
 
   return (
     <div className="page-shell text-cream">

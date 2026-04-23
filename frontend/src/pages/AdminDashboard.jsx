@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) return <LoadingScreen label="Preparing the management suite" />;
+  if (loading) return null;
 
   const tabs = [
     { id: 'rooms', icon: Hotel, label: 'Rooms & Media' },

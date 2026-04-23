@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import api from '../api/axios';
@@ -25,73 +25,85 @@ const ImmersiveSection = () => {
   const [images, setImages] = useState(fallbackImages);
 
   useEffect(() => {
+    let isMounted = true;
     api.get('/gallery/featured')
       .then(res => {
+        if (!isMounted) return;
         const fetched = Array.isArray(res.data) ? res.data.map(item => item.url).filter(Boolean) : [];
         setImages(fetched.length >= 4 ? fetched.slice(0, 4) : fallbackImages);
       })
-      .catch(() => setImages(fallbackImages));
+      .catch(() => {
+        if (isMounted) setImages(fallbackImages);
+      });
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
     const media = mediaRef.current;
     const cards = cardsRef.current.filter(Boolean);
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    if (!section || reduceMotion) return undefined;
+    if (!section || prefersReducedMotion) return undefined;
 
     const ctx = gsap.context(() => {
+      // Atmospheric text reveal - no scrub for better responsiveness
       gsap.fromTo(
         '.atmosphere-copy > *',
-        { autoAlpha: 0, y: 36 },
+        { autoAlpha: 0, y: 30 },
         {
           autoAlpha: 1,
           y: 0,
-          duration: 1.1,
+          duration: 1,
           ease: 'power3.out',
-          stagger: 0.14,
+          stagger: 0.12,
           scrollTrigger: {
             trigger: section,
-            start: 'top 72%',
+            start: 'top 75%',
+            once: true,
           },
         }
       );
 
+      // Media parallax with subtle scrub
       gsap.fromTo(
         media,
-        { scale: 1.06, y: 60, autoAlpha: 0.65 },
+        { scale: 1.05, y: 40, autoAlpha: 0.8 },
         {
           scale: 1,
-          y: -45,
+          y: -30,
           autoAlpha: 1,
           ease: 'none',
           scrollTrigger: {
             trigger: section,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 0.9,
+            scrub: isMobile ? false : 0.6,
           },
         }
       );
 
-      cards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          { y: 80 + index * 24, autoAlpha: 0 },
-          {
-            y: index % 2 === 0 ? -36 : -72,
-            autoAlpha: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 82%',
-              end: 'bottom 18%',
-              scrub: 0.8,
-            },
-          }
-        );
-      });
+      // Decorative cards parallax
+      if (!isMobile) {
+        cards.forEach((card, index) => {
+          gsap.fromTo(
+            card,
+            { y: 60 + index * 20, autoAlpha: 0 },
+            {
+              y: index % 2 === 0 ? -30 : -60,
+              autoAlpha: 1,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 85%',
+                end: 'bottom 15%',
+                scrub: 0.5 + index * 0.1,
+              },
+            }
+          );
+        });
+      }
     }, section);
 
     return () => ctx.revert();
@@ -125,7 +137,7 @@ const ImmersiveSection = () => {
           <div className="relative min-h-[620px] md:min-h-[760px]">
             <div
               ref={mediaRef}
-              className="absolute inset-x-0 top-8 mx-auto h-[560px] max-w-[760px] overflow-hidden rounded-[2px] border border-white/10 shadow-[0_60px_140px_rgba(0,0,0,0.55)] md:h-[680px]"
+              className="absolute inset-x-0 top-8 mx-auto h-[560px] max-w-[760px] overflow-hidden rounded-[2px] border border-white/10 shadow-[0_60px_140px_rgba(0,0,0,0.55)] md:h-[680px] will-change-transform transform-gpu"
             >
               <img
                 src={images[0]}
@@ -149,7 +161,7 @@ const ImmersiveSection = () => {
                 key={src}
                 ref={el => { cardsRef.current[index] = el; }}
                 className={[
-                  'absolute hidden overflow-hidden rounded-[2px] border border-white/10 bg-forest shadow-[0_35px_90px_rgba(0,0,0,0.42)] md:block',
+                  'absolute hidden overflow-hidden rounded-[2px] border border-white/10 bg-forest shadow-[0_35px_90px_rgba(0,0,0,0.42)] md:block will-change-transform transform-gpu',
                   index === 0 ? 'left-0 top-0 h-56 w-44 lg:h-72 lg:w-56' : '',
                   index === 1 ? 'right-0 top-28 h-64 w-48 lg:h-80 lg:w-60' : '',
                   index === 2 ? 'bottom-0 left-[18%] h-52 w-72 lg:h-60 lg:w-96' : '',
@@ -166,4 +178,4 @@ const ImmersiveSection = () => {
   );
 };
 
-export default ImmersiveSection;
+export default memo(ImmersiveSection);

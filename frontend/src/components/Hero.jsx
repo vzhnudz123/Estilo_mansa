@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight } from 'lucide-react';
 import api from '../api/axios';
 import { resolveMediaUrl } from '../utils/media';
@@ -20,70 +20,72 @@ const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchHeroData = async () => {
       try {
         const res = await api.get('/hero/active');
-        if (res.data?.length > 0) {
-          setSlides(res.data);
-        } else {
-          // Fallback to general content if no hero slides are found
-          const contentRes = await api.get('/content/home_hero');
-          if (contentRes.data && contentRes.data.images?.length > 0) {
-            setSlides([{
-              title: contentRes.data.title || 'Welcome to Estilo Mansa',
-              subtitle: contentRes.data.description || 'Your Luxury Sanctuary',
-              images: contentRes.data.images,
-              ctaTextPrimary: 'Book Now',
-              ctaTextSecondary: 'Explore Rooms',
-            }]);
+        if (isMounted) {
+          if (res.data?.length > 0) {
+            setSlides(res.data);
           } else {
-            setSlides([]);
+            const contentRes = await api.get('/content/home_hero');
+            if (contentRes.data && contentRes.data.images?.length > 0) {
+              setSlides([{
+                title: contentRes.data.title || 'Welcome to Estilo Mansa',
+                subtitle: contentRes.data.description || 'Your Luxury Sanctuary',
+                images: contentRes.data.images,
+                ctaTextPrimary: 'Book Now',
+                ctaTextSecondary: 'Explore Rooms',
+              }]);
+            } else {
+              setSlides([]);
+            }
           }
         }
       } catch (err) {
         console.error('Failed to fetch hero data:', err);
-        setSlides([]);
+        if (isMounted) setSlides([]);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
     fetchHeroData();
+    return () => { isMounted = false; };
   }, []);
 
-  if (loading) return (
-    <div className="h-screen w-full bg-luxury-bg flex items-center justify-center">
-      <div className="spinner" />
-    </div>
-  );
+
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-luxury-bg">
       {slides.length > 0 ? (
         <Swiper
           effect="fade"
-          speed={1800}
-          autoplay={{ delay: 6000, disableOnInteraction: false }}
+          speed={1500}
+          autoplay={{ delay: 7000, disableOnInteraction: false }}
           pagination={{ clickable: true }}
           navigation={{ nextEl: '.hero-next', prevEl: '.hero-prev' }}
           modules={[Autoplay, Pagination, Navigation, EffectFade]}
           onSlideChange={s => setActiveIndex(s.activeIndex)}
           className="h-full w-full"
+          grabCursor={true}
+          loop={slides.length > 1}
         >
           {slides.map((slide, index) => (
             <SwiperSlide key={slide._id || index}>
               {({ isActive }) => (
                 <div className="relative h-full w-full overflow-hidden">
-                  {/* Zoom BG */}
+                  {/* Zoom BG - Optimized with will-change and transform-gpu */}
                   <motion.div
-                    className="absolute inset-0"
-                    initial={{ scale: 1.12 }}
-                    animate={isActive ? { scale: 1 } : { scale: 1.12 }}
-                    transition={{ duration: 7, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="absolute inset-0 will-change-transform"
+                    initial={{ scale: 1.1 }}
+                    animate={isActive ? { scale: 1 } : { scale: 1.1 }}
+                    transition={{ duration: 8, ease: "linear" }}
+                    style={{ transformZ: 0 }}
                   >
                     <img
                       src={resolveMediaUrl(slide.images?.[0]) || FALLBACK_HERO_IMAGE}
                       alt={slide.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transform-gpu"
                       loading={index === 0 ? 'eager' : 'lazy'}
                       decoding="async"
                       fetchPriority={index === 0 ? 'high' : 'auto'}
@@ -99,18 +101,18 @@ const Hero = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-luxury-bg via-black/40 to-black/20" />
                   <div className="absolute inset-0 bg-gradient-to-r from-luxury-bg/60 via-transparent to-transparent" />
 
-                  {/* Noise Texture */}
-                  <div className="absolute inset-0 opacity-[0.03]"
+                  {/* Noise Texture - Only on non-mobile for performance */}
+                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none hidden md:block"
                     style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }}
                   />
 
                   {/* Content */}
                   <div className="absolute inset-0 flex flex-col justify-end pb-24 md:pb-32 px-8 md:px-20 lg:px-28 z-10">
-                    <motion.div className="max-w-3xl">
+                    <div className="max-w-3xl">
                       {/* Label */}
                       <motion.div
                         className="flex items-center gap-3 mb-6"
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -15 }}
                         animate={isActive ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 0.6, delay: 0.2 }}
                       >
@@ -122,10 +124,10 @@ const Hero = () => {
                       <div className="mb-5 overflow-hidden">
                         <motion.h1
                           className="font-script text-5xl leading-none text-luxury-cream sm:text-6xl md:text-8xl lg:text-9xl"
-                          style={{ textShadow: '0 0 60px rgba(200,169,110,0.2)' }}
-                          initial={{ y: 100, opacity: 0 }}
+                          style={{ textShadow: '0 0 40px rgba(200,169,110,0.15)' }}
+                          initial={{ y: "40%", opacity: 0 }}
                           animate={isActive ? { y: 0, opacity: 1 } : {}}
-                          transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                          transition={{ duration: 0.8, delay: 0.4, ease: [0.33, 1, 0.68, 1] }}
                         >
                           {slide?.title || 'Welcome'}
                         </motion.h1>
@@ -134,9 +136,9 @@ const Hero = () => {
                       {/* Subtitle */}
                       <motion.p
                         className="mb-10 max-w-2xl text-base font-light leading-8 text-luxury-text/80 sm:text-lg md:text-xl"
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         animate={isActive ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.9, delay: 0.8 }}
+                        transition={{ duration: 0.7, delay: 0.7 }}
                       >
                         {slide?.subtitle}
                       </motion.p>
@@ -144,9 +146,9 @@ const Hero = () => {
                       {/* CTAs */}
                       <motion.div
                         className="flex flex-col gap-4 sm:flex-row"
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         animate={isActive ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.9, delay: 1.1 }}
+                        transition={{ duration: 0.7, delay: 0.9 }}
                       >
                         <a
                           href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi, I want to book a stay at Estilo Mansa')}`}
@@ -166,7 +168,7 @@ const Hero = () => {
                           <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                         </button>
                       </motion.div>
-                    </motion.div>
+                    </div>
                   </div>
 
                   {/* Slide Counter */}
@@ -174,7 +176,7 @@ const Hero = () => {
                     className="absolute bottom-8 right-8 md:right-20 z-10 text-right"
                     initial={{ opacity: 0 }}
                     animate={isActive ? { opacity: 1 } : {}}
-                    transition={{ delay: 1.2 }}
+                    transition={{ delay: 1.0 }}
                   >
                     <span className="text-luxury-gold font-serif text-2xl">
                       {String(index + 1).padStart(2, '0')}
@@ -213,4 +215,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default memo(Hero);
