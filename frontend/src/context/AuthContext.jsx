@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import api from '../api/axios';
 
 export const AuthContext = createContext();
 

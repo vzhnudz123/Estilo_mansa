@@ -17,7 +17,7 @@ const FALLBACK_HERO_IMAGE = 'https://images.unsplash.com/photo-1566073771259-6a8
 const Hero = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -32,7 +32,7 @@ const Hero = () => {
             setSlides([{
               title: contentRes.data.title || 'Welcome to Estilo Mansa',
               subtitle: contentRes.data.description || 'Your Luxury Sanctuary',
-              images: contentRes.data.images.map(resolveMediaUrl),
+              images: contentRes.data.images,
               ctaTextPrimary: 'Book Now',
               ctaTextSecondary: 'Explore Rooms',
             }]);
@@ -66,7 +66,7 @@ const Hero = () => {
           pagination={{ clickable: true }}
           navigation={{ nextEl: '.hero-next', prevEl: '.hero-prev' }}
           modules={[Autoplay, Pagination, Navigation, EffectFade]}
-          onSlideChange={() => { }}
+          onSlideChange={s => setActiveIndex(s.activeIndex)}
           className="h-full w-full"
         >
           {slides.map((slide, index) => (
@@ -158,7 +158,7 @@ const Hero = () => {
                           <span>{slide?.ctaTextPrimary || 'Book Now'}</span>
                           <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                         </a>
-                        <button
+                        <button 
                           onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                           className="btn-outline group"
                         >
