@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ALL_GALLERY_IMAGES } from '../assets/index.js';
@@ -69,7 +69,12 @@ const GalleryItem = ({ item, index, onClick }) => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); obs.unobserve(el); } },
+      ([entry]) => { 
+        if (entry.isIntersecting) { 
+          el.classList.add('revealed'); 
+          obs.unobserve(el); 
+        } 
+      },
       { threshold: 0.1 }
     );
     obs.observe(el);
@@ -79,9 +84,9 @@ const GalleryItem = ({ item, index, onClick }) => {
   return (
     <div
       ref={ref}
-      className="gallery-item fade-up group relative overflow-hidden rounded-2xl cursor-pointer mb-4 break-inside-avoid"
+      className="fade-up group relative overflow-hidden rounded-2xl cursor-pointer mb-4 break-inside-avoid"
       onClick={() => onClick(index)}
-      style={{ transitionDelay: `${(index % 3) * 0.06}s` }}
+      style={{ transitionDelay: `${(index % 3) * 0.1}s` }}
     >
       <img
         src={item.src}
@@ -117,12 +122,19 @@ const GallerySection = ({ limit = 12 }) => {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); obs.unobserve(el); } },
+      ([entry]) => { 
+        if (entry.isIntersecting) { 
+          el.classList.add('revealed'); 
+          obs.unobserve(el); 
+        } 
+      },
       { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
+  if (!images || images.length === 0) return null;
 
   return (
     <>
@@ -175,4 +187,4 @@ const GallerySection = ({ limit = 12 }) => {
   );
 };
 
-export default GallerySection;
+export default memo(GallerySection);

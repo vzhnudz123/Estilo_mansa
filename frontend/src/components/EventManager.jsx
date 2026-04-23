@@ -23,6 +23,13 @@ const EMPTY_FORM = {
   isActive: true,
 };
 
+const Field = ({ label, children }) => (
+  <div className="space-y-2">
+    <label className="block text-[10px] uppercase tracking-[0.3em] text-luxury-gold/70 font-semibold">{label}</label>
+    {children}
+  </div>
+);
+
 const EventManager = () => {
   const [events, setEvents] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,6 +47,14 @@ const EventManager = () => {
 
   useEffect(() => { fetchEvents(); }, []);
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -48,9 +63,9 @@ const EventManager = () => {
       const payload = {
         ...form,
         offerPrice: form.offerPrice ? parseFloat(form.offerPrice) : undefined,
-        startDate: new Date(form.startDate).toISOString(),
-        endDate: new Date(form.endDate).toISOString(),
-        image: '/src/assets/IMG_8813.jpeg',
+        startDate: form.startDate ? new Date(form.startDate).toISOString() : undefined,
+        endDate: form.endDate ? new Date(form.endDate).toISOString() : undefined,
+        image: '/src/assets/IMG_8813.jpeg', // Default image as per previous logic
       };
       await api.post('/events', payload);
       setForm(EMPTY_FORM);
@@ -69,13 +84,6 @@ const EventManager = () => {
     try { await api.delete(`/events/${id}`); fetchEvents(); }
     catch { alert('Delete failed'); }
   };
-
-  const Field = ({ label, children }) => (
-    <div className="space-y-2">
-      <label className="block text-[10px] uppercase tracking-[0.3em] text-luxury-gold/70 font-semibold">{label}</label>
-      {children}
-    </div>
-  );
 
   return (
     <div className="space-y-8">
@@ -107,8 +115,11 @@ const EventManager = () => {
             <div className="md:col-span-2">
               <Field label="Event / Offer Title">
                 <input
-                  required type="text" value={form.title}
-                  onChange={e => setForm({ ...form, title: e.target.value })}
+                  required 
+                  type="text" 
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
                   className="input-field"
                   placeholder="e.g. Monsoon Special Offer"
                 />
@@ -119,8 +130,11 @@ const EventManager = () => {
             <div className="md:col-span-2">
               <Field label="Description">
                 <textarea
-                  required rows="3" value={form.description}
-                  onChange={e => setForm({ ...form, description: e.target.value })}
+                  required 
+                  name="description"
+                  rows="3" 
+                  value={form.description}
+                  onChange={handleChange}
                   className="input-field resize-none"
                   placeholder="Tell guests what's special about this event or offer..."
                 />
@@ -132,8 +146,11 @@ const EventManager = () => {
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-gold/50 font-serif">₹</span>
                 <input
-                  type="number" min="0" value={form.offerPrice}
-                  onChange={e => setForm({ ...form, offerPrice: e.target.value })}
+                  type="number" 
+                  name="offerPrice"
+                  min="0" 
+                  value={form.offerPrice}
+                  onChange={handleChange}
                   className="input-field pl-9"
                   placeholder="0"
                 />
@@ -143,8 +160,11 @@ const EventManager = () => {
             {/* Start Date */}
             <Field label="Start Date & Time">
               <input
-                required type="datetime-local" value={form.startDate}
-                onChange={e => setForm({ ...form, startDate: e.target.value })}
+                required 
+                type="datetime-local" 
+                name="startDate"
+                value={form.startDate}
+                onChange={handleChange}
                 className="input-field"
               />
             </Field>
@@ -152,8 +172,11 @@ const EventManager = () => {
             {/* End Date */}
             <Field label="End Date & Time">
               <input
-                required type="datetime-local" value={form.endDate}
-                onChange={e => setForm({ ...form, endDate: e.target.value })}
+                required 
+                type="datetime-local" 
+                name="endDate"
+                value={form.endDate}
+                onChange={handleChange}
                 className="input-field"
               />
             </Field>
@@ -162,7 +185,7 @@ const EventManager = () => {
             <div className="flex items-center gap-3 md:col-span-2">
               <button
                 type="button"
-                onClick={() => setForm({ ...form, isActive: !form.isActive })}
+                onClick={() => setForm(prev => ({ ...prev, isActive: !prev.isActive }))}
                 className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${form.isActive ? 'bg-luxury-gold' : 'bg-white/15'}`}
               >
                 <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300 ${form.isActive ? 'translate-x-6' : 'translate-x-1'}`} />

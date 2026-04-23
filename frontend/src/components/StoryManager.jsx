@@ -3,25 +3,58 @@ import { Save, BookOpen } from 'lucide-react';
 import api from '../api/axios';
 
 const StoryManager = () => {
-  const [story, setStory] = useState({ title: '', description: '' });
+  const [story, setStory] = useState({ _id: '', title: '', description: '' });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     api.get('/story/active')
-      .then(res => { if (res.data) setStory({ title: res.data.title || '', description: res.data.description || '' }); })
+      .then(res => { 
+        if (res.data) {
+          setStory({ 
+            _id: res.data._id,
+            title: res.data.title || '', 
+            description: res.data.description || '' 
+          }); 
+        } 
+      })
       .catch(() => {});
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStory(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/story/update', story);
+      const payload = {
+        title: story.title,
+        description: story.description
+      };
+
+      // Ensure we have a valid ID for update
+      if (story._id && story._id !== 'update' && story._id.length === 24) {
+        console.log('Updating existing story:', story._id);
+        await api.put(`/story/update/${story._id}`, payload);
+      } else {
+        console.log('Creating new story (no valid ID found)');
+        const res = await api.post('/story', {
+          ...payload,
+          isActive: true
+        });
+        if (res.data?._id) {
+          setStory(prev => ({ ...prev, _id: res.data._id }));
+        }
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      alert('Failed to save: ' + (err.response?.data?.error || err.message));
+      console.error('Save failed:', err);
+      const msg = err.response?.data?.error || err.message;
+      alert('Failed to save: ' + msg);
     } finally {
       setSaving(false);
     }
@@ -47,8 +80,9 @@ const StoryManager = () => {
             </label>
             <input
               type="text"
+              name="title"
               value={story.title}
-              onChange={e => setStory({ ...story, title: e.target.value })}
+              onChange={handleChange}
               className="input-field"
               placeholder="e.g. Where the Clouds Come to Rest"
             />
@@ -60,8 +94,9 @@ const StoryManager = () => {
             </label>
             <textarea
               rows="6"
+              name="description"
               value={story.description}
-              onChange={e => setStory({ ...story, description: e.target.value })}
+              onChange={handleChange}
               className="input-field resize-none"
               placeholder="Tell the story of Estilo Mansa..."
             />

@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ALL_GALLERY_IMAGES } from '../assets/index.js';
-import GallerySection from '../components/GallerySection';
+import { ScrollReveal } from '../components/ui';
 
 const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
   <motion.div
@@ -38,9 +38,11 @@ const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
             alt={images[currentIndex].label}
             className="max-h-[78vh] w-full rounded-xl object-contain"
           />
-          <p className="pt-4 text-center text-xs tracking-[0.24em] text-luxury-text/40">
-            {images[currentIndex].label}
-          </p>
+          {images[currentIndex].label && (
+            <p className="pt-4 text-center text-xs tracking-[0.24em] text-luxury-text/40">
+              {images[currentIndex].label}
+            </p>
+          )}
         </div>
       </motion.div>
     </AnimatePresence>
@@ -49,6 +51,33 @@ const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
       <ChevronRight size={20} />
     </button>
   </motion.div>
+);
+
+const GalleryItem = ({ item, index, onClick }) => (
+  <ScrollReveal delay={index % 3 * 100}>
+    <div
+      className="group relative cursor-pointer overflow-hidden rounded-2xl"
+      onClick={() => onClick(index)}
+    >
+      <img
+        src={item.src}
+        alt={item.label}
+        loading="lazy"
+        decoding="async"
+        className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-500" />
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400">
+        <ZoomIn size={24} className="text-white scale-75 group-hover:scale-100 transition-transform duration-300" />
+      </div>
+      <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-luxury-gold/25 transition-all duration-500 pointer-events-none" />
+      {item.label && (
+        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-400">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-luxury-cream/80">{item.label}</p>
+        </div>
+      )}
+    </div>
+  </ScrollReveal>
 );
 
 const Gallery = () => {
@@ -60,61 +89,40 @@ const Gallery = () => {
   const goPrev = useCallback(() => setLightboxIndex(i => (i - 1 + images.length) % images.length), [images.length]);
   const goNext = useCallback(() => setLightboxIndex(i => (i + 1) % images.length), [images.length]);
 
-  // 3-column masonry — all images
+  // 3-column masonry
   const cols = [[], [], []];
   images.forEach((img, i) => cols[i % 3].push({ ...img, _origIndex: i }));
 
   return (
-    <div className="page-shell overflow-hidden pb-20 md:pb-28">
+    <div className="page-shell pb-20 md:pb-28">
       {/* ── Hero ── */}
       <div className="page-hero">
-        <motion.div
-          className="page-hero-panel text-center max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="eyebrow-pill mb-6">Visual Journey</span>
-          <h1 className="premium-h2 text-luxury-cream mb-5">
-            A Portrait of the Retreat
-          </h1>
-          <p className="text-luxury-text/55 max-w-lg mx-auto text-base leading-8 md:text-lg">
-            Where mist meets stone, forest meets luxury — every frame a memory waiting to be made.
-          </p>
-        </motion.div>
+        <div className="page-hero-panel text-center max-w-3xl mx-auto">
+          <ScrollReveal>
+            <span className="eyebrow-pill mb-6">Visual Journey</span>
+            <h1 className="premium-h2 text-luxury-cream mb-5">
+              A Portrait of the Retreat
+            </h1>
+            <p className="text-luxury-text/55 max-w-lg mx-auto text-base leading-8 md:text-lg">
+              Where mist meets stone, forest meets luxury — every frame a memory waiting to be made.
+            </p>
+          </ScrollReveal>
+        </div>
       </div>
 
       {/* ── Full gallery masonry ── */}
-      <div className="page-container">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="page-container mt-12 md:mt-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cols.map((col, ci) => (
-            <div key={ci} className="flex flex-col gap-4">
-              {col.map(item => {
-                const i = item._origIndex;
-                return (
-                  <div
-                    key={i}
-                    className="gallery-item-full group relative cursor-pointer overflow-hidden rounded-2xl"
-                    onClick={() => openLightbox(i)}
-                  >
-                    <img
-                      src={item.src}
-                      alt={item.label}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-500" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400">
-                      <ZoomIn size={24} className="text-white" />
-                    </div>
-                    <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-luxury-gold/25 transition-all duration-500 pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-400">
-                      <p className="text-xs tracking-[0.2em] text-luxury-cream/80">{item.label}</p>
-                    </div>
-                  </div>
-                );
-              })}
+            <div key={ci} className="flex flex-col gap-6">
+              {col.map(item => (
+                <GalleryItem
+                  key={item._origIndex}
+                  item={item}
+                  index={item._origIndex}
+                  onClick={openLightbox}
+                />
+              ))}
             </div>
           ))}
         </div>

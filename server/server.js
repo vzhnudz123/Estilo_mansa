@@ -27,7 +27,10 @@ dotenv.config()
 
 connectDB()
 
-const app = Fastify({ logger: true })
+const app = Fastify({ 
+  logger: true,
+  ignoreTrailingSlash: true 
+})
 
 // Security & Utility Plugins
 app.register(helmet, { crossOriginResourcePolicy: { policy: 'cross-origin' } })

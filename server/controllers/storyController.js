@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Story from '../models/Story.js';
 
 export const getActiveStory = async (req, reply) => {
@@ -29,18 +30,31 @@ export const createStory = async (req, reply) => {
 };
 
 export const updateStory = async (req, reply) => {
+  const { id } = req.params;
+  console.log('Updating story with ID:', id, 'Body:', req.body);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return reply.status(400).send({ error: "Invalid ID" });
+  }
   try {
-    const story = await Story.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!story) return reply.status(404).send({ error: 'Not found' });
+    const story = await Story.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+    if (!story) {
+      console.warn('Story not found for ID:', id);
+      return reply.status(404).send({ error: 'Not found' });
+    }
     return reply.send(story);
   } catch (err) {
+    console.error('Update story error:', err);
     return reply.status(400).send({ error: err.message });
   }
 };
 
 export const deleteStory = async (req, reply) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return reply.status(400).send({ error: "Invalid ID" });
+  }
   try {
-    await Story.findByIdAndDelete(req.params.id);
+    await Story.findByIdAndDelete(id);
     return reply.send({ success: true });
   } catch (err) {
     return reply.status(500).send({ error: err.message });

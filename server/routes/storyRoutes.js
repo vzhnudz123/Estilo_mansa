@@ -4,8 +4,12 @@ async function storyRoutes(app) {
   app.get('/active', getActiveStory);
   app.get('/', { onRequest: [app.authenticate] }, getAllStories);
   app.post('/', { onRequest: [app.authenticate] }, createStory);
-  app.put('/:id', { onRequest: [app.authenticate] }, updateStory);
-  app.delete('/:id', { onRequest: [app.authenticate] }, deleteStory);
+  
+  // Explicit update route to avoid collisions with "update" string
+  app.put('/update/:id', { onRequest: [app.authenticate] }, updateStory);
+  
+  // Explicit delete route
+  app.delete('/delete/:id', { onRequest: [app.authenticate] }, deleteStory);
 }
 
 export default storyRoutes;
