@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, Compass } from 'lucide-react';
+import { Menu, X, ArrowRight, Instagram } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -47,15 +47,20 @@ const Navbar = () => {
           <div className={`panel-soft flex items-center justify-between gap-4 rounded-full px-4 py-3 shadow-[0_16px_60px_rgba(0,0,0,0.18)] transition-all duration-500 sm:px-5 ${
             scrolled ? 'border-luxury-gold/18 bg-[#0a100dcc]' : 'bg-[#0a100db8]'
           }`}>
-            <Link to="/" className="group flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-luxury-gold/16 bg-white/5 text-luxury-gold">
-                <Compass size={18} />
-              </div>
-              <div className="flex min-w-0 flex-col leading-none">
+            <div className="group flex min-w-0 items-center gap-3">
+              <a 
+                href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-luxury-gold/16 bg-white/5 text-luxury-gold hover:bg-luxury-gold/10 transition-colors"
+              >
+                <Instagram size={18} />
+              </a>
+              <Link to="/" className="flex min-w-0 flex-col leading-none">
                 <span className="truncate font-serif text-lg text-luxury-cream tracking-wide sm:text-xl">Estilo</span>
                 <span className="-mt-0.5 truncate font-script text-2xl gold-text sm:text-[1.8rem]">Mansa</span>
-              </div>
-            </Link>
+              </Link>
+            </div>
 
             <div className="hidden md:flex items-center gap-2 rounded-full border border-white/6 bg-white/[0.03] px-2 py-1.5">
             {navLinks.map(link => (
