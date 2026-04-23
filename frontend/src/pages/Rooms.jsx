@@ -99,13 +99,7 @@ const Rooms = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="eyebrow-pill mb-6">Our Rooms</span>
-          <h1 className="premium-h2 text-luxury-cream mb-5">
-            Signature Sanctuaries
-          </h1>
-          <p className="text-luxury-text/55 max-w-xl mx-auto text-base md:text-lg leading-8">
-            Each room is an invitation to witness the valley's changing moods through expansive vistas and quiet luxury.
-          </p>
+          <span className="eyebrow-pill">Our Rooms</span>
         </motion.div>
       </div>
 

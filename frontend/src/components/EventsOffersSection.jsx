@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo, useMemo } from 'react';
 import { Calendar, Tag, ArrowRight } from 'lucide-react';
 import { format, isAfter, parseISO } from 'date-fns';
 import api from '../api/axios';
+import { motion } from 'framer-motion';
 
-const EventOfferCard = ({ event, index }) => {
+const EventOfferCard = memo(({ event, index }) => {
   const ref = useRef(null);
   const isOffer = !!event.offerPrice;
 
@@ -21,55 +22,58 @@ const EventOfferCard = ({ event, index }) => {
   return (
     <div
       ref={ref}
-      className="fade-up group relative glass-card rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
-      style={{ transitionDelay: `${index * 0.08}s` }}
+      className="fade-up group relative rounded-3xl overflow-hidden bg-luxury-surface/40 backdrop-blur-sm border border-white/5 transition-all duration-700 hover:border-luxury-gold/30 hover:-translate-y-2 hover:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)]"
+      style={{ transitionDelay: `${index * 0.1}s` }}
     >
-      {/* Badge */}
-      <div className="absolute top-4 left-4 z-10">
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.25em] ${
+      {/* Decorative Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-luxury-gold/5 via-transparent to-transparent pointer-events-none" />
+
+      {/* Header Area */}
+      <div className="p-8 pb-0 flex flex-col sm:flex-row justify-between items-start gap-3">
+        <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap ${
           isOffer
             ? 'bg-luxury-gold text-obsidian'
-            : 'bg-luxury-green/80 text-luxury-cream border border-luxury-gold/20'
+            : 'bg-white/5 text-luxury-cream border border-white/10'
         }`}>
-          {isOffer ? <Tag size={10} /> : <Calendar size={10} />}
-          {isOffer ? 'Offer' : 'Event'}
+          {isOffer ? <Tag size={12} /> : <Calendar size={12} />}
+          {isOffer ? 'Special Offer' : 'Upcoming Event'}
         </span>
+
+        {isOffer && (
+          <div className="text-left sm:text-right">
+            <p className="text-luxury-gold font-serif text-3xl leading-none">₹{event.offerPrice}</p>
+            <p className="text-luxury-text/40 text-[9px] uppercase tracking-widest mt-1">per stay</p>
+          </div>
+        )}
       </div>
 
-      {/* Price badge */}
-      {isOffer && (
-        <div className="absolute top-4 right-4 z-10">
-          <div className="bg-obsidian/80 backdrop-blur-md px-4 py-2 rounded-xl border border-luxury-gold/20">
-            <p className="text-luxury-gold font-serif text-lg leading-none">₹{event.offerPrice}</p>
-            <p className="text-luxury-text/40 text-[9px] tracking-widest mt-0.5">per stay</p>
-          </div>
-        </div>
-      )}
-
-      {/* Content */}
-      <div className="p-7 pt-14">
-        <h3 className="font-serif text-xl text-luxury-cream mb-3 group-hover:text-luxury-gold transition-colors duration-300">
+      {/* Content Area */}
+      <div className="p-8 pt-8">
+        <h3 className="font-serif text-2xl md:text-4xl text-luxury-cream mb-4 group-hover:text-luxury-gold transition-colors duration-500 leading-tight">
           {event.title}
         </h3>
-        <p className="text-luxury-text/65 text-sm leading-7 mb-5 line-clamp-2">{event.description}</p>
+        <p className="text-luxury-text/50 text-sm md:text-base leading-relaxed mb-8 line-clamp-2 font-light">
+          {event.description}
+        </p>
 
-        <div className="flex flex-col gap-2 pt-4 border-t border-white/6">
-          <div className="flex items-center gap-2 text-[11px] text-luxury-text/40">
-            <Calendar size={12} className="text-luxury-gold/60" />
+        <div className="flex items-center justify-between pt-6 border-t border-white/5">
+          <div className="flex items-center gap-3 text-xs tracking-widest text-luxury-text/40 uppercase">
+            <Calendar size={14} className="text-luxury-gold/40" />
             <span>
               {event.startDate ? format(parseISO(event.startDate), 'MMM dd') : '—'}
               {' — '}
               {event.endDate ? format(parseISO(event.endDate), 'MMM dd, yyyy') : '—'}
             </span>
           </div>
+          
+          <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-obsidian transition-all duration-500">
+            <ArrowRight size={14} />
+          </div>
         </div>
       </div>
-
-      {/* Hover accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-luxury-gold/40 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
     </div>
   );
-};
+});
 
 const EventsOffersSection = () => {
   const [events, setEvents] = useState([]);
@@ -79,7 +83,6 @@ const EventsOffersSection = () => {
     api.get('/events')
       .then(res => {
         if (Array.isArray(res.data)) {
-          // Show active/upcoming only
           const now = new Date();
           const active = res.data.filter(e => {
             try { return isAfter(parseISO(e.endDate), now); } catch { return true; }
@@ -104,30 +107,34 @@ const EventsOffersSection = () => {
   if (events.length === 0) return null;
 
   return (
-    <section className="py-24 md:py-36 bg-luxury-surface relative overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-luxury-gold/6 rounded-full blur-[120px] pointer-events-none" />
+    <section className="py-12 md:py-16 bg-[#080d0a] relative overflow-hidden">
+      {/* Immersive background texture */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-luxury-gold/10 to-transparent" />
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-luxury-gold/10 to-transparent" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10">
-        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14 fade-up">
-          <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-10 h-px bg-luxury-gold/60" />
-              <span className="section-label">Events & Offers</span>
-            </div>
-            <h2 className="font-serif text-4xl md:text-5xl text-luxury-cream leading-tight">
-              Exclusive{' '}
-              <em className="font-script text-luxury-gold not-italic">Experiences</em>
-            </h2>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        <div ref={headerRef} className="text-center mb-8 fade-up">
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <div className="w-8 h-px bg-luxury-gold/40" />
+            <span className="section-label !text-[8px] tracking-[0.6em]">Exclusive Access</span>
+            <div className="w-8 h-px bg-luxury-gold/40" />
           </div>
-          <p className="text-luxury-text/55 max-w-xs text-sm leading-7">
-            Limited-time offers and special events curated for our guests.
-          </p>
+          <h2 className="font-serif text-3xl md:text-5xl text-luxury-cream leading-tight">
+            Special <em className="font-script text-luxury-gold not-italic">Offers</em>
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Wider Cards & Improved Centering */}
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center ${
+          events.length === 1 ? 'max-w-4xl mx-auto' : 
+          events.length === 2 ? 'max-w-6xl mx-auto' : 'w-full'
+        }`}>
           {events.map((event, i) => (
-            <EventOfferCard key={event._id} event={event} index={i} />
+            <div key={event._id} className="w-full max-w-3xl">
+              <EventOfferCard event={event} index={i} />
+            </div>
           ))}
         </div>
       </div>
@@ -135,4 +142,4 @@ const EventsOffersSection = () => {
   );
 };
 
-export default EventsOffersSection;
+export default memo(EventsOffersSection);

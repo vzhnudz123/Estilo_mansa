@@ -84,6 +84,20 @@ import jeepVideo from './WhatsApp Video 2026-04-22 at 07.38.37.mp4';
 export const HERO_IMAGE     = img8813;
 export const SIDEVIEW       = sideview;
 
+/** Hero Carousel Images */
+export const HERO_CAROUSEL_IMAGES = [
+  wa37, // WhatsApp Image 2026-04-22 at 07.36.37.jpeg
+  wa38, // WhatsApp Image 2026-04-22 at 07.36.39.jpeg
+  wa44, // WhatsApp Image 2026-04-22 at 07.36.57.jpeg
+  wa54, // WhatsApp Image 2026-04-22 at 07.37.12.jpeg
+  wa58, // WhatsApp Image 2026-04-22 at 07.37.14.jpeg
+  wa8,  // WhatsApp Image 2026-04-22 at 07.36.13.jpeg
+];
+
+/** Hero Video */
+import hVideo from './WhatsApp Video 2026-04-22 at 07.38.06.mp4';
+export const HERO_VIDEO = hVideo;
+
 /** Room-specific images (used on Rooms page) */
 export const ROOM_IMAGES = [
   img8814, img8815, img8816, img8817,

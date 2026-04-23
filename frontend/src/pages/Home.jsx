@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 
 import Hero from '../components/Hero';
+import HomeVideo from '../components/HomeVideo';
 import StorySection from '../components/StorySection';
 import ImmersiveSection from '../components/ImmersiveSection';
 import JeepExperience from '../components/JeepExperience';
@@ -41,8 +42,11 @@ const Home = () => {
   return (
     <div className="bg-luxury-bg text-luxury-text">
 
-      {/* 1. HERO — single strong image */}
+      {/* 1. HERO — fullscreen carousel */}
       <Hero />
+
+      {/* 1.1 INTRO VIDEO */}
+      <HomeVideo />
 
       {/* 2. OUR STORY */}
       <StorySection />

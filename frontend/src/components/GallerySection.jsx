@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, memo } from 'react';
+import React, { useRef, useEffect, useState, useCallback, memo, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ALL_GALLERY_IMAGES } from '../assets/index.js';
@@ -62,7 +62,7 @@ const Lightbox = ({ images, activeIndex, onClose, onPrev, onNext }) => {
 };
 
 // ── Gallery Item ────────────────────────────────────────────────────────────────
-const GalleryItem = ({ item, index, onClick }) => {
+const GalleryItem = memo(({ item, index, onClick }) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -101,12 +101,12 @@ const GalleryItem = ({ item, index, onClick }) => {
       <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-luxury-gold/30 transition-all duration-500 pointer-events-none" />
     </div>
   );
-};
+});
 
 // ── Gallery Section ──────────────────────────────────────────────────────────────
 const GallerySection = ({ limit = 12 }) => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const images = ALL_GALLERY_IMAGES.slice(0, limit);
+  const images = useMemo(() => ALL_GALLERY_IMAGES.slice(0, limit), [limit]);
 
   const openLightbox  = useCallback(i => setLightboxIndex(i), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -114,8 +114,11 @@ const GallerySection = ({ limit = 12 }) => {
   const nextImage = useCallback(() => setLightboxIndex(i => (i + 1) % images.length), [images.length]);
 
   // 3-column masonry
-  const cols = [[], [], []];
-  images.forEach((img, i) => cols[i % 3].push({ ...img, _origIndex: i }));
+  const cols = useMemo(() => {
+    const columns = [[], [], []];
+    images.forEach((img, i) => columns[i % 3].push({ ...img, _origIndex: i }));
+    return columns;
+  }, [images]);
 
   const sectionRef = useRef(null);
   useEffect(() => {

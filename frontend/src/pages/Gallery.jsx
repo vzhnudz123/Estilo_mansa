@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, memo, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ALL_GALLERY_IMAGES } from '../assets/index.js';
@@ -53,36 +53,44 @@ const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
   </motion.div>
 );
 
-const GalleryItem = ({ item, index, onClick }) => (
+const GalleryItem = memo(({ item, index, onClick }) => (
   <ScrollReveal delay={index % 3 * 100}>
     <div
-      className="group relative cursor-pointer overflow-hidden rounded-2xl"
+      className="group relative cursor-pointer overflow-hidden rounded-[1.5rem] bg-luxury-surface/20"
       onClick={() => onClick(index)}
     >
+      {/* Subtle Border Glow */}
+      <div className="absolute inset-0 z-10 border border-white/5 group-hover:border-luxury-gold/30 transition-colors duration-700 pointer-events-none rounded-[1.5rem]" />
+      
       <img
         src={item.src}
         alt={item.label}
         loading="lazy"
         decoding="async"
-        className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+        className="w-full h-auto object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
       />
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-500" />
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400">
-        <ZoomIn size={24} className="text-white scale-75 group-hover:scale-100 transition-transform duration-300" />
+      
+      {/* Immersive Hover Overlay */}
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-700" />
+      
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
+        <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-500">
+          <ZoomIn size={20} className="text-white" />
+        </div>
       </div>
-      <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-luxury-gold/25 transition-all duration-500 pointer-events-none" />
+
       {item.label && (
-        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-400">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-luxury-cream/80">{item.label}</p>
+        <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-700 bg-gradient-to-t from-black/80 to-transparent">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-luxury-gold font-bold">{item.label}</p>
         </div>
       )}
     </div>
   </ScrollReveal>
-);
+));
 
 const Gallery = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const images = ALL_GALLERY_IMAGES;
+  const images = useMemo(() => ALL_GALLERY_IMAGES, []);
 
   const openLightbox  = useCallback(i => setLightboxIndex(i), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -90,22 +98,19 @@ const Gallery = () => {
   const goNext = useCallback(() => setLightboxIndex(i => (i + 1) % images.length), [images.length]);
 
   // 3-column masonry
-  const cols = [[], [], []];
-  images.forEach((img, i) => cols[i % 3].push({ ...img, _origIndex: i }));
+  const cols = useMemo(() => {
+    const columns = [[], [], []];
+    images.forEach((img, i) => columns[i % 3].push({ ...img, _origIndex: i }));
+    return columns;
+  }, [images]);
 
   return (
     <div className="page-shell pb-20 md:pb-28">
       {/* ── Hero ── */}
       <div className="page-hero">
-        <div className="page-hero-panel text-center max-w-3xl mx-auto">
+        <div className="page-hero-panel text-center max-w-3xl mx-auto py-10 md:py-16">
           <ScrollReveal>
-            <span className="eyebrow-pill mb-6">Visual Journey</span>
-            <h1 className="premium-h2 text-luxury-cream mb-5">
-              A Portrait of the Retreat
-            </h1>
-            <p className="text-luxury-text/55 max-w-lg mx-auto text-base leading-8 md:text-lg">
-              Where mist meets stone, forest meets luxury — every frame a memory waiting to be made.
-            </p>
+            <span className="eyebrow-pill">Visual Journey</span>
           </ScrollReveal>
         </div>
       </div>
