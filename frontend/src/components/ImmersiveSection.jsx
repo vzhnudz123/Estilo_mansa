@@ -3,10 +3,10 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import api from '../api/axios';
 
-import img13 from '../assets/IMG_8813.jpeg';
-import img14 from '../assets/IMG_8814.jpeg';
-import img15 from '../assets/IMG_8815.jpeg';
-import img16 from '../assets/IMG_8816.jpeg';
+import img13 from '../assets/IMG_8814.jpeg';
+import img14 from '../assets/IMG_8815.jpeg';
+import img15 from '../assets/IMG_8816.jpeg';
+import img16 from '../assets/IMG_8817.jpeg'; 
 
 gsap.registerPlugin(ScrollTrigger);
 

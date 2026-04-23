@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight } from 'lucide-react';
 import api from '../api/axios';
 import { resolveMediaUrl } from '../utils/media';
-
+import Sideview from '../assets/Sideview.jpeg';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 const WHATSAPP_NUMBER = '919876543210';
-const FALLBACK_HERO_IMAGE = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=2070';
+const FALLBACK_HERO_IMAGE = Sideview;
 
 const Hero = () => {
   const [slides, setSlides] = useState([]);

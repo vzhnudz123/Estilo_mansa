@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ScrollReveal } from '../components/ui';
 
-import img13 from '../assets/IMG_8813.jpeg';
+import img13 from '../assets/Sideview.jpeg';
 import img14 from '../assets/IMG_8814.jpeg';
 import img15 from '../assets/IMG_8815.jpeg';
 import img16 from '../assets/IMG_8816.jpeg';
