@@ -1,131 +1,128 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Images, Play, Video } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../api/axios';
-import { LoadingScreen, ScrollReveal } from '../components/ui';
+import { ROOM_IMAGES } from '../assets/index.js';
 
-const fallbackImage = 'https://images.unsplash.com/photo-1618773928120-2c15c328de8e?auto=format&fit=crop&q=80&w=1200';
+// Fallback images from assets if no room images from DB
+const getFallback = (index) => ROOM_IMAGES[index % ROOM_IMAGES.length];
+
+const RoomCard = ({ room, index }) => {
+  const ref = useRef(null);
+  const imgSrc = room.images?.[0] || getFallback(index);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); obs.unobserve(el); } },
+      { threshold: 0.12 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="fade-up"
+      style={{ transitionDelay: `${(index % 2) * 0.1}s` }}
+    >
+      <Link to={`/rooms/${room._id}`} className="group block">
+        <div className="relative overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.35)] border border-white/6 mb-6 transition-all duration-700 group-hover:-translate-y-2 group-hover:shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+          {/* Room image */}
+          <div className="relative h-[340px] md:h-[440px] overflow-hidden">
+            <img
+              src={imgSrc}
+              alt={room.name}
+              loading={index < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+              className="w-full h-full object-cover transition-transform duration-[1.4s] group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-luxury-bg/90 via-black/20 to-transparent" />
+
+            {/* Room number badge */}
+            <div className="absolute top-5 left-5">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-obsidian/60 backdrop-blur-md px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/75">
+                Room {String(index + 1).padStart(2, '0')}
+              </span>
+            </div>
+
+            {/* Price */}
+            {room.price && (
+              <div className="absolute top-5 right-5">
+                <div className="glass-card-light px-4 py-2 rounded-xl">
+                  <p className="text-[9px] uppercase tracking-widest text-white/40 mb-0.5">Per Night</p>
+                  <p className="text-luxury-gold font-serif text-lg leading-none">₹{room.price}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Bottom text on image */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <h2 className="font-serif text-2xl md:text-3xl text-luxury-cream mb-2">{room.name}</h2>
+            </div>
+          </div>
+
+          {/* Description strip */}
+          <div className="px-6 py-5 bg-luxury-surface/40 backdrop-blur-sm flex items-center justify-between gap-4">
+            <p className="text-luxury-text/60 text-sm leading-7 line-clamp-2 flex-1">
+              {room.description || 'A serene sanctuary designed with the finest details for an unforgettable stay.'}
+            </p>
+            <div className="flex items-center gap-3 text-luxury-gold text-[10px] uppercase tracking-[0.28em] font-bold flex-shrink-0 group-hover:gap-5 transition-all duration-300">
+              View <ArrowRight size={13} />
+            </div>
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+};
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.get('/rooms')
-      .then(res => {
-        if (Array.isArray(res.data)) {
-          setRooms(res.data);
-        } else {
-          setRooms([]);
-        }
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .then(res => { if (Array.isArray(res.data)) setRooms(res.data); })
+      .catch(() => {});
   }, []);
 
-  if (loading) return null;
-
   return (
-    <div className="page-shell text-cream">
-      <section className="page-hero">
+    <div className="page-shell pb-24 md:pb-36">
+      {/* ── Page Hero ── */}
+      <div className="page-hero">
         <motion.div
-          className="page-hero-panel max-w-6xl"
+          className="page-hero-panel max-w-4xl mx-auto text-center"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-            <div>
-              <span className="eyebrow-pill mb-5">Rooms</span>
-              <h1 className="premium-h2 text-ivory">Room gallery crafted around the view</h1>
-              <p className="mt-6 max-w-2xl text-base font-light leading-8 text-cream/62 md:text-lg">
-                Explore the full visual story of each room, from quiet morning light to the media-rich details curated by the Estilo Mansa team.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-              <div className="panel-soft px-4 py-4">
-                <p className="section-label mb-2">What you see</p>
-                <p className="text-sm leading-7 text-cream/56">Every card blends gallery images, video previews, and descriptive room highlights.</p>
-              </div>
-              <div className="panel-soft px-4 py-4">
-                <p className="section-label mb-2">Best experience</p>
-                <p className="text-sm leading-7 text-cream/56">Browse on mobile or desktop without layout jumps, crop issues, or overflow.</p>
-              </div>
-            </div>
-          </div>
+          <span className="eyebrow-pill mb-6">Our Rooms</span>
+          <h1 className="premium-h2 text-luxury-cream mb-5">
+            Signature Sanctuaries
+          </h1>
+          <p className="text-luxury-text/55 max-w-xl mx-auto text-base md:text-lg leading-8">
+            Each room is an invitation to witness the valley's changing moods through expansive vistas and quiet luxury.
+          </p>
         </motion.div>
-      </section>
+      </div>
 
-      <section className="page-container pb-16 md:pb-24">
+      {/* ── Rooms Grid ── */}
+      <div className="page-container">
         {rooms.length === 0 ? (
-          <div className="panel flex min-h-[340px] items-center justify-center border-dashed text-center">
-            <p className="font-serif text-2xl text-cream/40">No rooms added yet.</p>
+          <div className="panel flex min-h-[300px] items-center justify-center border-dashed text-center">
+            <p className="font-serif text-2xl text-luxury-text/30">No rooms added yet.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 lg:gap-10">
-            {rooms.map((room, index) => {
-              const images = room.images?.length ? room.images : [fallbackImage];
-              const hasVideo = room.videos?.length > 0;
-
-              return (
-                <ScrollReveal key={room._id} delay={index * 90}>
-                  <Link
-                    to={`/rooms/${room._id}`}
-                    className="group panel card-hover grid overflow-hidden lg:grid-cols-[1.18fr_0.82fr]"
-                  >
-                    <div className="relative min-h-[320px] overflow-hidden sm:min-h-[400px] md:min-h-[520px]">
-                      <img
-                        src={images[0]}
-                        alt={room.name}
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                        decoding="async"
-                        className="h-full w-full object-cover transition-transform duration-[1600ms] group-hover:scale-[1.04]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-obsidian/85 via-black/10 to-transparent" />
-                      <div className="absolute left-5 right-5 top-5 flex flex-wrap justify-between gap-3 sm:left-6 sm:right-6 sm:top-6">
-                        <span className="status-pill">
-                          Room {String(index + 1).padStart(2, '0')}
-                        </span>
-                        {hasVideo && (
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/35 bg-obsidian/60 text-gold backdrop-blur-md">
-                            <Play size={18} fill="currentColor" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="absolute bottom-5 left-5 flex flex-wrap gap-3 text-[10px] font-bold uppercase tracking-[0.28em] text-ivory/80 sm:bottom-6 sm:left-6">
-                        <span className="inline-flex items-center gap-2 rounded-full bg-obsidian/55 px-4 py-2 backdrop-blur-md">
-                          <Images size={13} />
-                          {room.images?.length || 0} Images
-                        </span>
-                        <span className="inline-flex items-center gap-2 rounded-full bg-obsidian/55 px-4 py-2 backdrop-blur-md">
-                          <Video size={13} />
-                          {room.videos?.length || 0} Videos
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col justify-between p-6 sm:p-8 md:p-10 lg:p-12">
-                      <div>
-                        <span className="section-label mb-4 block">Signature Stay</span>
-                        <h2 className="font-serif text-3xl text-ivory sm:text-4xl md:text-5xl xl:text-6xl">{room.name}</h2>
-                        <p className="mt-6 line-clamp-5 text-base font-light leading-8 text-cream/65 md:text-lg">
-                          {room.description}
-                        </p>
-                      </div>
-
-                      <div className="mt-8 flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-gold transition-all group-hover:gap-6 md:mt-10">
-                        View Images & Videos
-                        <ArrowRight size={15} />
-                      </div>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            {rooms.map((room, i) => (
+              <RoomCard key={room._id} room={room} index={i} />
+            ))}
           </div>
         )}
-      </section>
+      </div>
     </div>
   );
 };

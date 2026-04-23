@@ -1,91 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { ScrollReveal } from '../components/ui';
-
-import img13 from '../assets/Sideview.jpeg';
-import img14 from '../assets/IMG_8814.jpeg';
-import img15 from '../assets/IMG_8815.jpeg';
-import img16 from '../assets/IMG_8816.jpeg';
-import img17 from '../assets/IMG_8817.jpeg';
-import img18 from '../assets/IMG_8818.jpeg';
-import img19 from '../assets/IMG_8819.jpeg';
-import img20 from '../assets/IMG_8820.jpeg';
-import img21 from '../assets/IMG_8821.jpeg';
-import img22 from '../assets/IMG_8822.jpeg';
-import img23 from '../assets/IMG_8823.jpeg';
-import img24 from '../assets/IMG_8824.jpeg';
-import img25 from '../assets/IMG_8825.jpeg';
-
-const allImages = [
-  { src: img13, label: 'The Estate' },
-  { src: img14, label: 'Lakkidi Pass View' },
-  { src: img15, label: 'Forest Edge' },
-  { src: img16, label: 'Outdoor Terrace' },
-  { src: img17, label: 'Mist Morning' },
-  { src: img18, label: 'Living Suite' },
-  { src: img19, label: 'Master Bedroom' },
-  { src: img20, label: 'Dining Area' },
-  { src: img21, label: 'Cozy Corner' },
-  { src: img22, label: 'Detail Arch' },
-  { src: img23, label: 'Valley Vista' },
-  { src: img24, label: 'Night View' },
-  { src: img25, label: 'Sunrise' },
-];
+import { ALL_GALLERY_IMAGES } from '../assets/index.js';
+import GallerySection from '../components/GallerySection';
 
 const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
   <motion.div
-    className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 px-4 backdrop-blur-xl"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
+    className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl px-4"
+    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     onClick={onClose}
   >
-    <button
-      className="absolute top-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-luxury-text/70 transition-colors hover:text-luxury-cream"
-      onClick={onClose}
-    >
-      <X size={20} />
+    <button className="absolute top-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/5 text-luxury-text/70 hover:text-luxury-cream transition-colors" onClick={onClose}>
+      <X size={18} />
     </button>
 
-    <div className="absolute top-6 left-1/2 -translate-x-1/2 text-sm tracking-[0.3em] text-luxury-text/40">
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 text-xs tracking-[0.3em] text-luxury-text/35">
       {String(currentIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
     </div>
 
-    <button
-      className="absolute left-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-luxury-text/60 transition-colors hover:text-luxury-gold md:left-8"
-      onClick={e => { e.stopPropagation(); onPrev(); }}
-    >
+    <button className="absolute left-4 md:left-8 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/5 text-luxury-text/60 hover:text-luxury-gold transition-colors" onClick={e => { e.stopPropagation(); onPrev(); }}>
       <ChevronLeft size={20} />
     </button>
 
     <AnimatePresence mode="wait">
       <motion.div
         key={currentIndex}
-        className="w-full max-w-6xl px-10"
+        className="w-full max-w-5xl"
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.28 }}
+        transition={{ duration: 0.25 }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="panel overflow-hidden rounded-[2rem] bg-black/80 p-3 sm:p-4">
+        <div className="panel overflow-hidden rounded-2xl p-3">
           <img
             src={images[currentIndex].src}
             alt={images[currentIndex].label}
-            className="max-h-[75vh] w-full rounded-[1.5rem] object-contain"
+            className="max-h-[78vh] w-full rounded-xl object-contain"
           />
-          <p className="pt-4 text-center text-sm tracking-[0.24em] text-luxury-text/45">
+          <p className="pt-4 text-center text-xs tracking-[0.24em] text-luxury-text/40">
             {images[currentIndex].label}
           </p>
         </div>
       </motion.div>
     </AnimatePresence>
 
-    <button
-      className="absolute right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-luxury-text/60 transition-colors hover:text-luxury-gold md:right-8"
-      onClick={e => { e.stopPropagation(); onNext(); }}
-    >
+    <button className="absolute right-4 md:right-8 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/5 text-luxury-text/60 hover:text-luxury-gold transition-colors" onClick={e => { e.stopPropagation(); onNext(); }}>
       <ChevronRight size={20} />
     </button>
   </motion.div>
@@ -93,77 +53,76 @@ const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
 
 const Gallery = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const images = ALL_GALLERY_IMAGES;
 
-  const openLightbox = i => setLightboxIndex(i);
-  const closeLightbox = () => setLightboxIndex(null);
-  const goPrev = () => setLightboxIndex(i => (i - 1 + allImages.length) % allImages.length);
-  const goNext = () => setLightboxIndex(i => (i + 1) % allImages.length);
+  const openLightbox  = useCallback(i => setLightboxIndex(i), []);
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const goPrev = useCallback(() => setLightboxIndex(i => (i - 1 + images.length) % images.length), [images.length]);
+  const goNext = useCallback(() => setLightboxIndex(i => (i + 1) % images.length), [images.length]);
 
-  const spans = [2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1];
+  // 3-column masonry — all images
+  const cols = [[], [], []];
+  images.forEach((img, i) => cols[i % 3].push({ ...img, _origIndex: i }));
 
   return (
-    <div className="page-shell overflow-hidden">
+    <div className="page-shell overflow-hidden pb-20 md:pb-28">
+      {/* ── Hero ── */}
       <div className="page-hero">
         <motion.div
-          className="page-hero-panel text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="page-hero-panel text-center max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="mx-auto max-w-3xl">
-            <span className="eyebrow-pill mb-5">Visual Journey</span>
-            <h1 className="premium-h2 text-luxury-cream">A curated portrait of the retreat</h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-luxury-text/58 md:text-lg">
-              A visual portrait of life at Estilo Mansa — where mist meets stone, forest meets luxury.
-            </p>
-          </div>
+          <span className="eyebrow-pill mb-6">Visual Journey</span>
+          <h1 className="premium-h2 text-luxury-cream mb-5">
+            A Portrait of the Retreat
+          </h1>
+          <p className="text-luxury-text/55 max-w-lg mx-auto text-base leading-8 md:text-lg">
+            Where mist meets stone, forest meets luxury — every frame a memory waiting to be made.
+          </p>
         </motion.div>
       </div>
 
-      <div className="page-container pb-20 md:pb-28">
-        <div
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          style={{ gridAutoRows: '220px' }}
-        >
-          {allImages.map((img, i) => (
-            <ScrollReveal key={i} delay={(i % 3) * 80}>
-              <div
-                className="group panel card-hover relative cursor-pointer overflow-hidden rounded-[1.75rem]"
-                style={{ gridRow: `span ${spans[i] || 1}` }}
-                onClick={() => openLightbox(i)}
-              >
-                <img
-                  src={img.src}
-                  alt={img.label}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-5 py-5">
-                  <div>
-                    <p className="section-label mb-2">Gallery</p>
-                    <span className="text-sm tracking-[0.24em] text-luxury-cream/86">{img.label}</span>
+      {/* ── Full gallery masonry ── */}
+      <div className="page-container">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {cols.map((col, ci) => (
+            <div key={ci} className="flex flex-col gap-4">
+              {col.map(item => {
+                const i = item._origIndex;
+                return (
+                  <div
+                    key={i}
+                    className="gallery-item-full group relative cursor-pointer overflow-hidden rounded-2xl"
+                    onClick={() => openLightbox(i)}
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.label}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-500" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400">
+                      <ZoomIn size={24} className="text-white" />
+                    </div>
+                    <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-luxury-gold/25 transition-all duration-500 pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-400">
+                      <p className="text-xs tracking-[0.2em] text-luxury-cream/80">{item.label}</p>
+                    </div>
                   </div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/10 text-luxury-gold opacity-0 transition-all duration-500 group-hover:opacity-100">
-                    <ZoomIn size={18} />
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+                );
+              })}
+            </div>
           ))}
         </div>
       </div>
 
       <AnimatePresence>
         {lightboxIndex !== null && (
-          <Lightbox
-            images={allImages}
-            currentIndex={lightboxIndex}
-            onClose={closeLightbox}
-            onPrev={goPrev}
-            onNext={goNext}
-          />
+          <Lightbox images={images} currentIndex={lightboxIndex} onClose={closeLightbox} onPrev={goPrev} onNext={goNext} />
         )}
       </AnimatePresence>
     </div>

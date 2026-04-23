@@ -16,21 +16,20 @@ export const resolveMediaUrl = (value) => {
   const trimmed = value.trim();
   if (!trimmed) return trimmed;
 
-  const backendOrigin = getBackendOrigin();
-
-  if (trimmed.startsWith('/uploads/') && backendOrigin) {
-    return `${backendOrigin}${trimmed}`;
+  // Handle local asset paths (e.g. /src/assets/...)
+  if (trimmed.startsWith('/src/assets/')) {
+    return trimmed;
   }
 
+  // Handle external URLs
   try {
-    const parsed = new URL(trimmed);
-
-    if (LOCAL_HOSTS.has(parsed.hostname) && parsed.pathname.startsWith('/uploads/') && backendOrigin) {
-      return `${backendOrigin}${parsed.pathname}`;
-    }
-
-    return parsed.toString();
+    new URL(trimmed);
+    return trimmed;
   } catch {
+    // If it's just a filename, assume it's in assets
+    if (!trimmed.includes('/') && !trimmed.startsWith('http')) {
+      return `/src/assets/${trimmed}`;
+    }
     return trimmed;
   }
 };

@@ -34,7 +34,6 @@ const getManagedUploadFilename = (url) => {
 const GalleryManager = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchImages();
@@ -51,24 +50,7 @@ const GalleryManager = () => {
     }
   };
 
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const res = await api.post('/upload', formData);
-      await api.post('/gallery', { url: res.data.url });
-      fetchImages();
-    } catch (err) {
-      alert('Upload failed');
-    } finally {
-      setUploading(false);
-    }
-  };
 
   const toggleFeatured = async (id, current) => {
     try {
@@ -119,11 +101,6 @@ const GalleryManager = () => {
           </div>
         </div>
 
-        <label className="bg-luxury-gold text-white px-6 py-3 rounded-xl font-bold hover:bg-luxury-gold-hover transition-all cursor-pointer flex items-center gap-2 shadow-lg shadow-luxury-gold/20">
-          {uploading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Plus size={18} />}
-          <span>Upload Image</span>
-          <input type="file" className="hidden" onChange={handleUpload} />
-        </label>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">

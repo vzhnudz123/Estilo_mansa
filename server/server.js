@@ -12,17 +12,13 @@ import roomRoutes from './routes/roomRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
 import eventRoutes from './routes/eventRoutes.js'
 import contentRoutes from './routes/contentRoutes.js'
-import uploadRoutes from './routes/uploadRoutes.js'
 import heroRoutes from './routes/heroRoutes.js'
 import storyRoutes from './routes/storyRoutes.js'
 import galleryRoutes from './routes/galleryRoutes.js'
 import feedbackRoutes from './routes/feedbackRoutes.js'
 import videoRoutes from './routes/videoRoutes.js'
-import fastifyMultipart from '@fastify/multipart'
-import fastifyStatic from '@fastify/static'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { ensureUploadDir, UPLOAD_DIR, warnIfEphemeralUploadDir } from './config/uploads.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -30,8 +26,6 @@ const __dirname = path.dirname(__filename)
 dotenv.config()
 
 connectDB()
-ensureUploadDir()
-warnIfEphemeralUploadDir()
 
 const app = Fastify({ logger: true })
 
@@ -42,11 +36,6 @@ app.register(cors, {
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-})
-app.register(fastifyMultipart, { limits: { fileSize: 500 * 1024 * 1024 } }) // 500 MB
-app.register(fastifyStatic, {
-  root: UPLOAD_DIR,
-  prefix: '/uploads/',
 })
 app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
 app.register(jwt, {
@@ -62,7 +51,6 @@ app.register(roomRoutes,     { prefix: '/api/rooms' })
 app.register(bookingRoutes,  { prefix: '/api/bookings' })
 app.register(eventRoutes,    { prefix: '/api/events' })
 app.register(contentRoutes,  { prefix: '/api/content' })
-app.register(uploadRoutes,   { prefix: '/api/upload' })
 app.register(heroRoutes,     { prefix: '/api/hero' })
 app.register(storyRoutes,    { prefix: '/api/story' })
 app.register(galleryRoutes,  { prefix: '/api/gallery' })

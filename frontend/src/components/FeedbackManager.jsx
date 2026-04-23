@@ -1,136 +1,155 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/axios';
 import { Trash2, Check, X, MessageSquare, Star } from 'lucide-react';
 import { format } from 'date-fns';
+import api from '../api/axios';
+
+const StarDisplay = ({ rating }) => (
+  <div className="flex gap-0.5">
+    {Array.from({ length: 5 }).map((_, i) => (
+      <Star
+        key={i}
+        size={12}
+        fill={i < rating ? '#c8a96e' : 'transparent'}
+        className={i < rating ? 'text-luxury-gold' : 'text-luxury-text/15'}
+      />
+    ))}
+  </div>
+);
 
 const FeedbackManager = () => {
   const [feedbacks, setFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchFeedbacks();
-  }, []);
+  const [filter, setFilter] = useState('all'); // 'all' | 'pending' | 'approved'
 
   const fetchFeedbacks = async () => {
     try {
       const res = await api.get('/feedback');
-      setFeedbacks(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      setFeedbacks(Array.isArray(res.data) ? res.data : []);
+    } catch (err) { console.error(err); }
   };
 
+  useEffect(() => { fetchFeedbacks(); }, []);
+
   const handleApprove = async (id) => {
-    try {
-      await api.put(`/feedback/${id}/approve`);
-      fetchFeedbacks();
-    } catch (err) {
-      alert('Failed to approve');
-    }
+    try { await api.put(`/feedback/${id}/approve`); fetchFeedbacks(); }
+    catch { alert('Failed to approve'); }
   };
 
   const handleReject = async (id) => {
-    try {
-      await api.put(`/feedback/${id}/reject`);
-      fetchFeedbacks();
-    } catch (err) {
-      alert('Failed to reject');
-    }
+    try { await api.put(`/feedback/${id}/reject`); fetchFeedbacks(); }
+    catch { alert('Failed to unapprove'); }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Permanently delete this feedback?')) return;
-    try {
-      await api.delete(`/feedback/${id}`);
-      fetchFeedbacks();
-    } catch (err) {
-      alert('Delete failed');
-    }
+    try { await api.delete(`/feedback/${id}`); fetchFeedbacks(); }
+    catch { alert('Delete failed'); }
   };
 
-  if (loading) return <div className="p-8 text-center text-luxury-text/40 italic">Loading feedback...</div>;
+  const filtered = feedbacks.filter(f => {
+    if (filter === 'pending') return !f.isApproved;
+    if (filter === 'approved') return f.isApproved;
+    return true;
+  });
+
+  const pending  = feedbacks.filter(f => !f.isApproved).length;
+  const approved = feedbacks.filter(f => f.isApproved).length;
 
   return (
-    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
-          <MessageSquare size={20} />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-gray-800">Guest Feedback Manager</h2>
-          <p className="text-sm text-gray-500">Review, approve, or delete guest feedback submissions.</p>
-        </div>
+    <div className="space-y-6">
+      {/* Stats bar */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: 'Total', value: feedbacks.length, key: 'all' },
+          { label: 'Pending', value: pending, key: 'pending' },
+          { label: 'Approved', value: approved, key: 'approved' },
+        ].map(stat => (
+          <button
+            key={stat.key}
+            onClick={() => setFilter(stat.key)}
+            className={`panel rounded-xl p-4 text-center transition-all duration-300 border ${
+              filter === stat.key ? 'border-luxury-gold/30 bg-luxury-gold/5' : 'border-white/6 hover:border-white/12'
+            }`}
+          >
+            <p className={`font-serif text-3xl mb-1 ${filter === stat.key ? 'text-luxury-gold' : 'text-luxury-cream'}`}>
+              {stat.value}
+            </p>
+            <p className="text-[9px] uppercase tracking-[0.3em] text-luxury-text/35">{stat.label}</p>
+          </button>
+        ))}
       </div>
 
-      <div className="space-y-4">
-        {feedbacks.length > 0 ? (
-          feedbacks.map((item) => (
-            <div key={item._id} className={`p-6 rounded-2xl border transition-all ${item.isApproved ? 'bg-white border-gray-100' : 'bg-orange-50/30 border-orange-100'}`}>
-              <div className="flex flex-col md:flex-row justify-between gap-6">
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-gray-800">{item.name}</span>
-                    <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
-                      {format(new Date(item.createdAt), 'MMM dd, yyyy')}
+      {/* Feedback list */}
+      <div className="space-y-3">
+        {filtered.length === 0 ? (
+          <div className="panel rounded-2xl p-12 text-center border-dashed border-white/8">
+            <p className="text-luxury-text/30 text-sm italic">No feedback in this category.</p>
+          </div>
+        ) : (
+          filtered.map(item => (
+            <div
+              key={item._id}
+              className={`panel rounded-xl p-5 border transition-all duration-300 ${
+                item.isApproved ? 'border-white/6' : 'border-amber-500/15 bg-amber-500/3'
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                {/* Avatar */}
+                <div className="w-10 h-10 rounded-full bg-luxury-dark border border-luxury-gold/20 flex items-center justify-center text-luxury-gold font-serif flex-shrink-0">
+                  {item.name?.[0]?.toUpperCase()}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-3 mb-2">
+                    <span className="text-luxury-cream font-medium text-sm">{item.name}</span>
+                    <StarDisplay rating={item.rating} />
+                    <span className="text-luxury-text/30 text-[10px]">
+                      {item.createdAt ? format(new Date(item.createdAt), 'MMM dd, yyyy') : ''}
                     </span>
                     {!item.isApproved && (
-                      <span className="bg-orange-100 text-orange-600 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                      <span className="bg-amber-500/15 text-amber-400 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                         Pending
                       </span>
                     )}
+                    {item.isApproved && (
+                      <span className="bg-green-500/10 text-green-400 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                        Live
+                      </span>
+                    )}
                   </div>
-                  
-                  <div className="flex gap-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        size={12}
-                        fill={i < item.rating ? "#c8a96e" : "transparent"}
-                        className={i < item.rating ? "text-luxury-gold" : "text-gray-200"}
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-gray-600 text-sm italic">"{item.comment}"</p>
+                  <p className="text-luxury-text/60 text-sm italic leading-6">"{item.comment}"</p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Actions */}
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {item.isApproved ? (
                     <button
                       onClick={() => handleReject(item._id)}
-                      className="p-2.5 rounded-xl bg-gray-50 text-gray-400 hover:bg-gray-100 transition-all flex items-center gap-2"
-                      title="Unapprove"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/8 text-luxury-text/40 hover:border-white/20 hover:text-luxury-cream transition-all text-xs"
+                      title="Remove from live"
                     >
-                      <X size={16} />
-                      <span className="text-xs font-bold uppercase">Unapprove</span>
+                      <X size={13} /> Hide
                     </button>
                   ) : (
                     <button
                       onClick={() => handleApprove(item._id)}
-                      className="p-2.5 rounded-xl bg-green-50 text-green-600 hover:bg-green-500 hover:text-white transition-all flex items-center gap-2"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-green-500/25 bg-green-500/8 text-green-400 hover:bg-green-500/15 transition-all text-xs"
                       title="Approve"
                     >
-                      <Check size={16} />
-                      <span className="text-xs font-bold uppercase">Approve</span>
+                      <Check size={13} /> Approve
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(item._id)}
-                    className="p-2.5 rounded-xl bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-all"
-                    title="Delete Permanently"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg border border-transparent text-luxury-text/25 hover:border-red-500/30 hover:text-red-400 transition-all"
+                    title="Delete"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
             </div>
           ))
-        ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-            <p className="text-gray-400 text-sm">No feedback submissions yet.</p>
-          </div>
         )}
       </div>
     </div>

@@ -1,131 +1,137 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import HeroManager from '../components/HeroManager';
+import React, { useState } from 'react';
 import EventManager from '../components/EventManager';
 import StoryManager from '../components/StoryManager';
-import GalleryManager from '../components/GalleryManager';
 import FeedbackManager from '../components/FeedbackManager';
 import VideoManager from '../components/VideoManager';
-import RoomManager from '../components/RoomManager';
 import {
-  LayoutDashboard,
-  Hotel,
   Calendar,
-  Image as ImageIcon,
+  BookOpen,
   Youtube,
   MessageSquare,
-  BookOpen,
   Settings,
+  ChevronRight,
+  Sparkles,
 } from 'lucide-react';
-import { LoadingScreen } from '../components/ui';
+
+const tabs = [
+  { id: 'events',   icon: Calendar,       label: 'Events & Offers',  desc: 'Manage events and promotional offers' },
+  { id: 'story',    icon: BookOpen,        label: 'Our Story',        desc: 'Edit title and description' },
+  { id: 'videos',   icon: Youtube,         label: 'YouTube Shorts',   desc: 'Manage video links' },
+  { id: 'feedback', icon: MessageSquare,   label: 'Guest Reviews',    desc: 'Moderate guest feedback' },
+];
 
 const AdminDashboard = () => {
-  const [tab, setTab] = useState('rooms');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 250);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) return null;
-
-  const tabs = [
-    { id: 'rooms', icon: Hotel, label: 'Rooms & Media' },
-    { id: 'events', icon: Calendar, label: 'Events & Offers' },
-    { id: 'hero', icon: LayoutDashboard, label: 'Hero Carousel' },
-    { id: 'story', icon: BookOpen, label: 'Our Story' },
-    { id: 'gallery', icon: ImageIcon, label: 'Gallery & Highlights' },
-    { id: 'videos', icon: Youtube, label: 'YouTube Shorts' },
-    { id: 'feedback', icon: MessageSquare, label: 'Guest Reviews' },
-  ];
-
-  const SidebarItem = ({ id, icon: Icon, label }) => (
-    <button
-      onClick={() => setTab(id)}
-      className={`w-full flex items-center gap-3 rounded-[1.1rem] px-4 py-3 text-left transition-all ${
-        tab === id
-          ? 'bg-luxury-gold/12 text-luxury-gold shadow-[0_12px_30px_rgba(200,169,110,0.08)]'
-          : 'text-gray-500 hover:bg-black/[0.025] hover:text-gray-800'
-      }`}
-    >
-      <Icon size={20} />
-      <span>{label}</span>
-    </button>
-  );
+  const [activeTab, setActiveTab] = useState('events');
+  const current = tabs.find(t => t.id === activeTab);
 
   return (
-    <div className="min-h-screen bg-[#eef2ef]">
+    <div className="min-h-screen bg-[#07100d]">
       <div className="mx-auto flex min-h-screen max-w-[1680px] flex-col lg:flex-row">
-        <aside className="hidden w-80 border-r border-black/6 bg-white px-6 py-8 lg:block">
-          <div className="panel-soft mb-8 px-5 py-5">
-            <p className="section-label mb-3">Management Suite</p>
-            <h1 className="text-3xl font-serif font-semibold text-luxury-dark">Estilo Mansa</h1>
-            <p className="mt-3 text-sm leading-7 text-gray-500">A polished control center for rooms, media, and story-led content.</p>
+
+        {/* ── Sidebar ── */}
+        <aside className="hidden w-72 xl:w-80 border-r border-white/6 bg-luxury-bg/80 backdrop-blur-2xl px-5 py-8 lg:flex lg:flex-col">
+          {/* Brand */}
+          <div className="mb-10 px-3">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-luxury-gold/10 border border-luxury-gold/20 flex items-center justify-center">
+                <Sparkles size={18} className="text-luxury-gold" />
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-luxury-gold/60">Admin</p>
+                <h1 className="font-serif text-xl text-luxury-cream">Estilo Mansa</h1>
+              </div>
+            </div>
+            <p className="text-luxury-text/40 text-xs leading-6">Control centre for your luxury homestay.</p>
           </div>
 
-          <nav className="space-y-2">
-            <div className="px-2 pb-2 text-[10px] font-bold uppercase tracking-[0.32em] text-gray-300">Operations</div>
-            {tabs.slice(0, 2).map(item => <SidebarItem key={item.id} {...item} />)}
-            <div className="px-2 pt-4 pb-2 text-[10px] font-bold uppercase tracking-[0.32em] text-gray-300">Website Content</div>
-            {tabs.slice(2).map(item => <SidebarItem key={item.id} {...item} />)}
+          {/* Divider */}
+          <div className="h-px bg-white/6 mb-6" />
+
+          {/* Nav */}
+          <nav className="flex-1 space-y-1">
+            <p className="text-[9px] uppercase tracking-[0.35em] text-luxury-text/25 px-3 mb-3">Content Management</p>
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-all duration-300 group ${
+                    isActive
+                      ? 'bg-luxury-gold/10 border border-luxury-gold/20 text-luxury-gold'
+                      : 'text-luxury-text/50 hover:bg-white/4 hover:text-luxury-cream border border-transparent'
+                  }`}
+                >
+                  <Icon size={17} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{tab.label}</p>
+                    <p className={`text-[10px] truncate mt-0.5 ${isActive ? 'text-luxury-gold/50' : 'text-luxury-text/30'}`}>
+                      {tab.desc}
+                    </p>
+                  </div>
+                  {isActive && <ChevronRight size={14} className="flex-shrink-0" />}
+                </button>
+              );
+            })}
           </nav>
+
+          {/* Footer */}
+          <div className="mt-6 pt-6 border-t border-white/6">
+            <div className="flex items-center gap-3 px-3">
+              <div className="w-9 h-9 rounded-full bg-luxury-dark border border-luxury-gold/20 flex items-center justify-center">
+                <Settings size={15} className="text-luxury-gold" />
+              </div>
+              <div>
+                <p className="text-luxury-cream text-xs font-medium">Administrator</p>
+                <p className="text-luxury-text/30 text-[9px] tracking-widest uppercase">Master Access</p>
+              </div>
+            </div>
+          </div>
         </aside>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 xl:p-10">
-          <div className="mx-auto max-w-7xl">
-            <motion.div
-              className="panel mb-8 overflow-hidden rounded-[2rem] px-5 py-6 sm:px-6 sm:py-7 lg:px-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="section-label mb-3">Administrator Workspace</p>
-                  <h2 className="text-3xl font-bold capitalize text-gray-900 sm:text-4xl">{tab.replace('_', ' ')}</h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-500 sm:text-base">Administrative control panel for your homestay, designed for fast updates and calm navigation.</p>
-                </div>
-                <div className="flex items-center gap-3 self-start lg:self-auto">
-                  <div className="hidden text-right md:block">
-                    <p className="text-sm font-bold text-gray-800">Administrator</p>
-                    <p className="text-[10px] uppercase tracking-widest text-gray-400">Master Access</p>
-                  </div>
-                  <div className="flex h-14 w-14 items-center justify-center rounded-[1.35rem] bg-luxury-dark text-luxury-gold shadow-lg">
-                    <Settings size={24} />
-                  </div>
-                </div>
+        {/* ── Main content ── */}
+        <main className="flex-1 overflow-y-auto">
+          {/* Header bar */}
+          <div className="sticky top-0 z-30 bg-luxury-bg/90 backdrop-blur-xl border-b border-white/6 px-6 py-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-luxury-gold/60 mb-0.5">
+                  {current?.desc}
+                </p>
+                <h2 className="font-serif text-xl md:text-2xl text-luxury-cream">{current?.label}</h2>
               </div>
 
-              <div className="hide-scrollbar -mx-1 mt-6 flex gap-3 overflow-x-auto px-1 pb-1 lg:hidden">
-                {tabs.map(item => {
-                  const Icon = item.icon;
+              {/* Mobile tab pills */}
+              <div className="flex gap-2 overflow-x-auto hide-scrollbar lg:hidden">
+                {tabs.map(tab => {
+                  const Icon = tab.icon;
                   return (
                     <button
-                      key={item.id}
-                      onClick={() => setTab(item.id)}
-                      className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] transition-all ${
-                        tab === item.id
-                          ? 'border-luxury-gold/24 bg-luxury-gold/12 text-luxury-gold'
-                          : 'border-black/8 bg-white/50 text-gray-500'
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex-shrink-0 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] transition-all ${
+                        activeTab === tab.id
+                          ? 'bg-luxury-gold/15 border border-luxury-gold/30 text-luxury-gold'
+                          : 'border border-white/8 text-luxury-text/50'
                       }`}
                     >
-                      <Icon size={15} />
-                      {item.label}
+                      <Icon size={12} />
+                      {tab.label.split(' ')[0]}
                     </button>
                   );
                 })}
               </div>
-            </motion.div>
+            </div>
+          </div>
 
-            <div className="animate-fade-in">
-              {tab === 'rooms' && <RoomManager />}
-              {tab === 'events' && <EventManager />}
-              {tab === 'hero' && <HeroManager />}
-              {tab === 'story' && <StoryManager />}
-              {tab === 'gallery' && <GalleryManager />}
-              {tab === 'videos' && <VideoManager />}
-              {tab === 'feedback' && <FeedbackManager />}
+          {/* Tab content */}
+          <div className="p-5 sm:p-7 lg:p-10">
+            <div className="max-w-5xl mx-auto">
+              {activeTab === 'events'   && <EventManager />}
+              {activeTab === 'story'    && <StoryManager />}
+              {activeTab === 'videos'   && <VideoManager />}
+              {activeTab === 'feedback' && <FeedbackManager />}
             </div>
           </div>
         </main>

@@ -1,191 +1,142 @@
 import React, { useState, useEffect } from 'react';
+import { Plus, Trash2, Youtube, ExternalLink } from 'lucide-react';
 import api from '../api/axios';
-import { Plus, Trash2, Youtube, ExternalLink, Video, Upload, CheckCircle2 } from 'lucide-react';
-import { resolveMediaUrl } from '../utils/media';
 
 const VideoManager = () => {
   const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [newUrl, setNewUrl] = useState('');
-  const [newTitle, setNewTitle] = useState('');
-  const [uploading, setUploading] = useState(false);
-
-  useEffect(() => {
-    fetchVideos();
-  }, []);
+  const [form, setForm] = useState({ url: '', title: '' });
+  const [saving, setSaving] = useState(false);
 
   const fetchVideos = async () => {
     try {
       const res = await api.get('/videos');
-      setVideos(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      setVideos(Array.isArray(res.data) ? res.data : []);
+    } catch (err) { console.error(err); }
   };
 
-  const handleAddLink = async (e) => {
+  useEffect(() => { fetchVideos(); }, []);
+
+  const handleAdd = async (e) => {
     e.preventDefault();
-    if (!newUrl) return;
+    if (!form.url) return;
+    setSaving(true);
     try {
-      await api.post('/videos', { url: newUrl, title: newTitle });
-      setNewUrl('');
-      setNewTitle('');
+      await api.post('/videos', { url: form.url, title: form.title });
+      setForm({ url: '', title: '' });
       fetchVideos();
-    } catch (err) {
-      alert('Failed to add video link');
-    }
-  };
-
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file); // API expects 'image' field for uploads
-
-    try {
-      const res = await api.post('/upload', formData);
-      const videoUrl = res.data.url;
-      
-      // Create video record in DB
-      await api.post('/videos', { 
-        url: videoUrl, 
-        title: newTitle || file.name 
-      });
-      
-      setNewTitle('');
-      fetchVideos();
-      alert('Video uploaded successfully!');
-    } catch (err) {
-      alert('Video upload failed. Max size 500MB.');
-    } finally {
-      setUploading(false);
-    }
+    } catch { alert('Failed to add video'); }
+    finally { setSaving(false); }
   };
 
   const deleteVideo = async (id) => {
     if (!window.confirm('Delete this video?')) return;
-    try {
-      await api.delete(`/videos/${id}`);
-      fetchVideos();
-    } catch (err) {
-      alert('Delete failed');
-    }
+    try { await api.delete(`/videos/${id}`); fetchVideos(); }
+    catch { alert('Delete failed'); }
   };
 
-  if (loading) return <div className="p-8 text-center text-luxury-text/40 italic">Loading video suite...</div>;
+  const getThumb = (url) => {
+    try {
+      const u = new URL(url);
+      let id = '';
+      if (u.pathname.includes('/shorts/')) id = u.pathname.split('/shorts/')[1].split('/')[0].split('?')[0];
+      else if (u.searchParams.get('v')) id = u.searchParams.get('v');
+      else id = u.pathname.split('/').pop();
+      return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
+    } catch { return null; }
+  };
 
   return (
-    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-luxury-gold/10 flex items-center justify-center text-luxury-gold">
-            <Video size={20} />
+    <div className="space-y-6">
+      {/* Add form */}
+      <div className="panel rounded-2xl overflow-hidden border-white/8">
+        <div className="flex items-center gap-3 px-7 py-5 border-b border-white/6">
+          <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+            <Youtube size={15} className="text-red-400" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-800">Experience Video Suite</h2>
-            <p className="text-sm text-gray-500">Manage YouTube shorts or direct MP4 uploads for the Jeep Adventure.</p>
+            <h3 className="text-luxury-cream font-medium">Add YouTube Short / Video</h3>
+            <p className="text-luxury-text/35 text-xs mt-0.5">Paste a YouTube Shorts URL to display in the Reels section</p>
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        {/* Link Section */}
-        <form onSubmit={handleAddLink} className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-            <Youtube size={16} />
-            <span>Add YouTube Link</span>
-          </h3>
-          <input
-            required
-            type="url"
-            value={newUrl}
-            onChange={e => setNewUrl(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none transition-all"
-            placeholder="https://youtube.com/shorts/..."
-          />
-          <input
-            type="text"
-            value={newTitle}
-            onChange={e => setNewTitle(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none transition-all"
-            placeholder="Title (e.g. Jeep Adventure)"
-          />
-          <button type="submit" className="w-full bg-red-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-600 transition-all flex items-center justify-center gap-2">
-            <Plus size={18} />
-            <span>Add YouTube Video</span>
+        <form onSubmit={handleAdd} className="px-7 py-6 space-y-4">
+          <div className="space-y-2">
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-luxury-gold/70 font-semibold">YouTube URL</label>
+            <input
+              required type="url" value={form.url}
+              onChange={e => setForm({ ...form, url: e.target.value })}
+              className="input-field"
+              placeholder="https://youtube.com/shorts/..."
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-luxury-gold/70 font-semibold">Title (Optional)</label>
+            <input
+              type="text" value={form.title}
+              onChange={e => setForm({ ...form, title: e.target.value })}
+              className="input-field"
+              placeholder="e.g. Misty Mornings at Lakkidi"
+            />
+          </div>
+          <button type="submit" disabled={saving} className="btn-primary w-full !py-4 group">
+            <Plus size={15} />
+            <span>{saving ? 'Adding...' : 'Add Video'}</span>
           </button>
         </form>
-
-        {/* Upload Section */}
-        <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-            <Upload size={16} />
-            <span>Direct Video Upload</span>
-          </h3>
-          <div className="relative group">
-            <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-luxury-gold/5 hover:border-luxury-gold/50 transition-all">
-              {uploading ? (
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-8 h-8 border-4 border-luxury-gold border-t-transparent rounded-full animate-spin" />
-                  <span className="text-xs font-bold text-luxury-gold animate-pulse">Uploading Large File...</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <Upload size={32} className="text-gray-300 group-hover:text-luxury-gold transition-colors" />
-                  <span className="text-xs text-gray-400 font-medium text-center">Click to upload MP4/MOV<br/>(Max 500MB)</span>
-                </div>
-              )}
-              <input type="file" className="hidden" accept="video/*" onChange={handleFileUpload} disabled={uploading} />
-            </label>
-          </div>
-          <p className="text-[10px] text-gray-400 text-center italic">
-            Tip: Include "Jeep" in the title to show it in the Adventure section.
-          </p>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((vid) => (
-          <div key={vid._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
-            <div className="aspect-[9/16] bg-gray-900 relative">
-              {vid.url.includes('youtube.com') || vid.url.includes('youtu.be') ? (
-                <iframe
-                  src={`https://www.youtube.com/embed/${vid.url.split('/').pop().split('?')[0]}?controls=0&modestbranding=1`}
-                  className="w-full h-full pointer-events-none"
-                  title={vid.title}
-                />
-              ) : (
-                <video src={resolveMediaUrl(vid.url)} className="w-full h-full object-cover" controls={false} muted loop autoPlay playsInline preload="metadata" />
-              )}
-              <div className="absolute top-4 left-4">
-                {vid.title?.toLowerCase().includes('jeep') && (
-                  <div className="bg-luxury-gold text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-widest flex items-center gap-1 shadow-lg">
-                    <CheckCircle2 size={10} />
-                    Jeep Section
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="p-4 flex items-center justify-between gap-4">
-              <div className="overflow-hidden">
-                <p className="text-sm font-bold text-gray-800 truncate">{vid.title || 'Untitled Video'}</p>
-                <a href={resolveMediaUrl(vid.url)} target="_blank" rel="noreferrer" className="text-[10px] text-gray-400 hover:text-luxury-gold flex items-center gap-1 transition-colors">
-                  {vid.url.includes('youtube.com') ? 'YouTube' : 'Direct Link'} <ExternalLink size={10} />
-                </a>
-              </div>
-              <button
-                onClick={() => deleteVideo(vid._id)}
-                className="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all flex-shrink-0"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
+      {/* Video list */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Youtube size={16} className="text-red-400" />
+          <h3 className="text-luxury-cream font-medium">All Videos</h3>
+          <span className="ml-auto text-[10px] uppercase tracking-widest text-luxury-text/30">{videos.length} total</span>
+        </div>
+
+        {videos.length === 0 ? (
+          <div className="panel rounded-2xl p-10 text-center border-dashed border-white/8">
+            <p className="text-luxury-text/30 text-sm italic">No videos added yet.</p>
           </div>
-        ))}
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {videos.map(vid => {
+              const thumb = getThumb(vid.url);
+              const isYT = vid.url.includes('youtube') || vid.url.includes('youtu.be');
+              return (
+                <div key={vid._id} className="panel rounded-xl overflow-hidden border-white/8 group hover:border-luxury-gold/15 transition-all duration-300">
+                  <div className="aspect-[9/16] bg-black/40 relative overflow-hidden">
+                    {thumb ? (
+                      <img src={thumb} alt={vid.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-luxury-text/20">
+                        <Youtube size={32} />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    {isYT && (
+                      <div className="absolute top-2 left-2">
+                        <span className="bg-red-600 text-white text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">YouTube</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3 flex items-center justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-luxury-cream text-xs font-medium truncate">{vid.title || 'Untitled'}</p>
+                      <a href={vid.url} target="_blank" rel="noreferrer" className="text-[9px] text-luxury-text/30 hover:text-luxury-gold flex items-center gap-1 mt-0.5 transition-colors">
+                        Link <ExternalLink size={8} />
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => deleteVideo(vid._id)}
+                      className="w-8 h-8 flex items-center justify-center rounded-lg border border-transparent text-luxury-text/25 hover:border-red-500/30 hover:text-red-400 transition-all flex-shrink-0"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

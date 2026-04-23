@@ -5,8 +5,6 @@ import { Edit3, Hotel, ImagePlus, Plus, Save, Trash2, Upload, Video, X } from 'l
 const emptyForm = {
   name: '',
   description: '',
-  imagesText: '',
-  videosText: '',
 };
 
 const toLines = (value) => value
@@ -55,34 +53,8 @@ const RoomManager = () => {
     setForm({
       name: room.name || '',
       description: room.description || '',
-      imagesText: fromLines(room.images),
-      videosText: fromLines(room.videos),
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const uploadMedia = async (event, field) => {
-    const files = Array.from(event.target.files || []);
-    if (files.length === 0) return;
-
-    setUploading(field);
-    const data = new FormData();
-    files.forEach(file => data.append('image', file));
-
-    try {
-      const res = await api.post('/upload', data);
-      const urls = res.data.urls || [res.data.url].filter(Boolean);
-      const existing = toLines(form[field]);
-      setForm(prev => ({
-        ...prev,
-        [field]: [...existing, ...urls].join('\n'),
-      }));
-    } catch (err) {
-      alert('Upload failed. Please try another file.');
-    } finally {
-      setUploading('');
-      event.target.value = '';
-    }
   };
 
   const saveRoom = async (event) => {
@@ -95,8 +67,8 @@ const RoomManager = () => {
       price: 1,
       capacity: 1,
       amenities: ['Room media'],
-      images: toLines(form.imagesText),
-      videos: toLines(form.videosText),
+      images: editingId ? undefined : ['/src/assets/IMG_8813.jpeg'],
+      videos: editingId ? undefined : []
     };
 
     try {
@@ -175,41 +147,7 @@ const RoomManager = () => {
             </div>
           </div>
 
-          <div className="space-y-5">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Room Images</label>
-                <label className="inline-flex items-center gap-2 text-xs font-bold text-luxury-gold cursor-pointer">
-                  {uploading === 'imagesText' ? <span>Uploading...</span> : <><ImagePlus size={15} /> Upload Images</>}
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={e => uploadMedia(e, 'imagesText')} />
-                </label>
-              </div>
-              <textarea
-                rows="5"
-                value={form.imagesText}
-                onChange={e => updateField('imagesText', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none resize-none focus:border-luxury-gold"
-                placeholder="Image URLs, one per line"
-              />
-            </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Room Videos</label>
-                <label className="inline-flex items-center gap-2 text-xs font-bold text-luxury-gold cursor-pointer">
-                  {uploading === 'videosText' ? <span>Uploading...</span> : <><Upload size={15} /> Upload Videos</>}
-                  <input type="file" accept="video/*" multiple className="hidden" onChange={e => uploadMedia(e, 'videosText')} />
-                </label>
-              </div>
-              <textarea
-                rows="5"
-                value={form.videosText}
-                onChange={e => updateField('videosText', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none resize-none focus:border-luxury-gold"
-                placeholder="Video URLs, one per line. Supports MP4/MOV uploads or hosted video URLs."
-              />
-            </div>
-          </div>
         </div>
 
         <div className="mt-8 flex justify-end">

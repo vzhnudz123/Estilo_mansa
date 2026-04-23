@@ -12,9 +12,9 @@ const HeroManager = () => {
     ctaTextPrimary: 'Book Now',
     ctaTextSecondary: 'Explore Rooms',
     isActive: true,
-    order: 0
+    order: 0,
+    images: []
   });
-  const [uploadFiles, setUploadFiles] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,53 +33,23 @@ const HeroManager = () => {
     fetchHeroes();
   }, []);
 
-  const handleFileChange = (e) => {
-    setUploadFiles(Array.from(e.target.files));
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
     
+    if (form.images.length === 0 && !editingId) {
+      form.images = ['/src/assets/IMG_8813.jpeg']; // Default fallback asset
+    }
+
     setIsSubmitting(true);
     try {
-      let imageUrls = [];
-      
-      // Upload files if any
-      if (uploadFiles.length > 0) {
-        const formData = new FormData();
-        uploadFiles.forEach(file => formData.append('images', file));
-        const uploadRes = await api.post('/upload', formData);
-        imageUrls = uploadRes.data.urls || [uploadRes.data.url];
-      }
-
-      // Prepare payload
-      let finalImages = [];
       if (editingId) {
-        const currentHero = heroes.find(h => h._id === editingId);
-        finalImages = [...currentHero.images];
-        if (imageUrls.length > 0) {
-          finalImages = [...finalImages, ...imageUrls];
-        }
-      } else {
-        if (imageUrls.length === 0) {
-          alert('Please select at least one image for the new hero slide.');
-          setIsSubmitting(false);
-          return;
-        }
-        finalImages = imageUrls;
-      }
-
-      const payload = {
-        ...form,
-        images: finalImages
-      };
-
-      if (editingId) {
-        await api.put(`/hero/${editingId}`, payload);
+        await api.put(`/hero/${editingId}`, form);
         alert('Hero slide updated!');
       } else {
-        await api.post('/hero', payload);
+        await api.post('/hero', form);
         alert('Hero slide created!');
       }
 
@@ -90,9 +60,9 @@ const HeroManager = () => {
         ctaTextPrimary: 'Book Now',
         ctaTextSecondary: 'Explore Rooms',
         isActive: true,
-        order: 0
+        order: 0,
+        images: []
       });
-      setUploadFiles([]);
       setEditingId(null);
       fetchHeroes();
     } catch (err) {
@@ -231,17 +201,7 @@ const HeroManager = () => {
               className="input-field w-full"
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold mb-2">Upload Images {editingId ? '(Add More)' : '(At least one required)'}</label>
-            <div className="flex items-center gap-4">
-               <label className="flex items-center gap-2 px-4 py-2 bg-luxury-gold/10 text-luxury-gold rounded-full cursor-pointer hover:bg-luxury-gold/20 transition">
-                <ImageIcon size={20} />
-                <span>Choose Files</span>
-                <input type="file" multiple onChange={handleFileChange} className="hidden" />
-              </label>
-              <span className="text-xs text-gray-500">{uploadFiles.length} files selected</span>
-            </div>
-          </div>
+
           <div className="flex items-end">
             <label className="flex items-center gap-2 cursor-pointer mb-3">
               <input 
