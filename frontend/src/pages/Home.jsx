@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 
 import Hero from '../components/Hero';
 import HomeVideo from '../components/HomeVideo';
@@ -11,6 +12,7 @@ import EventsOffersSection from '../components/EventsOffersSection';
 import GallerySection from '../components/GallerySection';
 import VideoSection from '../components/VideoSection';
 import FeedbackSection from '../components/FeedbackSection';
+import LoadingScreen from '../components/LoadingScreen';
 
 const WHATSAPP_NUMBER = '919876543210';
 
@@ -26,7 +28,15 @@ const GoldDivider = () => (
 );
 
 const Home = () => {
+  const [isLoading, setIsLoading] = useState(() => {
+    return !sessionStorage.getItem('home_loaded');
+  });
   const ctaRef = useRef(null);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    sessionStorage.setItem('home_loaded', 'true');
+  };
 
   useEffect(() => {
     const el = ctaRef.current;
@@ -40,7 +50,12 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-luxury-bg text-luxury-text">
+    <>
+      <AnimatePresence>
+        {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
+      </AnimatePresence>
+
+      <div className="bg-luxury-bg text-luxury-text">
 
       {/* 1. HERO — fullscreen carousel */}
       <Hero />
@@ -111,6 +126,7 @@ const Home = () => {
       </section>
 
     </div>
+    </>
   );
 };
 
