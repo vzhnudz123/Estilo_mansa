@@ -22,7 +22,7 @@ import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { ensureUploadDir, UPLOAD_DIR } from './config/uploads.js'
+import { ensureUploadDir, UPLOAD_DIR, warnIfEphemeralUploadDir } from './config/uploads.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -31,6 +31,7 @@ dotenv.config()
 
 connectDB()
 ensureUploadDir()
+warnIfEphemeralUploadDir()
 
 const app = Fastify({ logger: true })
 
