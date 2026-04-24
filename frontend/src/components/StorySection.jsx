@@ -2,6 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import api from '../api/axios';
 import { STORY_BG } from '../assets/index.js';
 
+import storyImg1 from '../assets/WhatsApp Image 2026-04-22 at 07.37.14.jpeg';
+import storyImg2 from '../assets/WhatsApp Image 2026-04-22 at 07.37.09.jpeg';
+import storyImg3 from '../assets/WhatsApp Image 2026-04-22 at 07.36.53.jpeg';
+import storyImg4 from '../assets/WhatsApp Image 2026-04-22 at 07.36.26 (2).jpeg';
+
 const DEFAULT_STORY = {
   title: 'Where the Clouds Come to Rest',
   description:
@@ -73,13 +78,29 @@ const StorySection = () => {
           <p className="story-reveal fade-up text-luxury-text/75 text-base md:text-lg leading-8 md:leading-9">
             {data.description}
           </p>
+        </div>
 
-          {/* Stats */}
-          <div className="story-reveal fade-up grid grid-cols-3 gap-8 mt-14 pt-10 border-t border-white/8">
+        {/* Story Images Grid (Moved right after description) */}
+        <div className="story-reveal fade-up grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12 md:mt-16">
+          {[storyImg1, storyImg2, storyImg3, storyImg4].map((src, idx) => (
+            <div key={idx} className="relative aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden group shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-luxury-gold/10">
+              <img 
+                src={src} 
+                className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" 
+                alt="Estilo Mansa Story" 
+                loading="lazy" 
+              />
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-700" />
+            </div>
+          ))}
+        </div>
+
+        <div className="max-w-2xl">
+          {/* Stats (Moved below images) */}
+          <div className="story-reveal fade-up grid grid-cols-2 gap-8 mt-16 md:mt-24 pt-10 border-t border-white/8">
             {[
-              { label: 'Altitude', value: '2100 ft' },
-              { label: 'Est.', value: '2020' },
-              { label: 'Rooms', value: '6' },
+              { label: 'Est.', value: '2025' },
+              { label: 'Rooms', value: '3' },
             ].map(({ label, value }) => (
               <div key={label}>
                 <p className="font-serif text-2xl md:text-3xl text-luxury-gold mb-1">{value}</p>
