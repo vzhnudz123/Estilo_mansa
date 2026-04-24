@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Instagram, Facebook, MessageCircle, ArrowRight } from 'lucide-react';
 
-const WHATSAPP_NUMBER = '919876543210';
+const WHATSAPP_NUMBER = '919037706644';
 
 const Footer = () => {
   return (
@@ -74,15 +74,15 @@ const Footer = () => {
                     <Phone size={14} />
                     <span className="text-[11px] font-semibold uppercase tracking-[0.24em]">Phone</span>
                   </div>
-                  <a href="tel:+919876543210" className="text-sm text-luxury-text/62 transition-colors hover:text-luxury-cream">+91 98765 43210</a>
+                  <a href="tel:+919037706644" className="text-sm text-luxury-text/62 transition-colors hover:text-luxury-cream">+91 9037706644</a>
                 </div>
                 <div className="panel-soft px-4 py-4">
                   <div className="mb-2 flex items-center gap-3 text-luxury-gold">
                     <Mail size={14} />
                     <span className="text-[11px] font-semibold uppercase tracking-[0.24em]">Email</span>
                   </div>
-                  <a href="mailto:reservations@estilomansa.com" className="text-sm text-luxury-text/62 transition-colors hover:text-luxury-cream">
-                    reservations@estilomansa.com
+                  <a href="mailto:estilomansa@gmail.com" className="text-sm text-luxury-text/62 transition-colors hover:text-luxury-cream">
+                    estilomansa@gmail.com
                   </a>
                 </div>
               </div>

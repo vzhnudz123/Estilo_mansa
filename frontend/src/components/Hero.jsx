@@ -3,7 +3,7 @@ import { MessageCircle, ArrowDown, ChevronLeft, ChevronRight } from 'lucide-reac
 import { HERO_CAROUSEL_IMAGES } from '../assets/index.js';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const WHATSAPP_NUMBER = '919876543210';
+const WHATSAPP_NUMBER = '919037706644';
 
 const Hero = () => {
   const [current, setCurrent] = useState(0);

@@ -14,7 +14,7 @@ import VideoSection from '../components/VideoSection';
 import FeedbackSection from '../components/FeedbackSection';
 import LoadingScreen from '../components/LoadingScreen';
 
-const WHATSAPP_NUMBER = '919876543210';
+const WHATSAPP_NUMBER = '919037706644';
 
 // CTA divider strip
 const GoldDivider = () => (

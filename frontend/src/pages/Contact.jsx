@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, MessageCircle, ArrowRight, Clock } from 'lucide-react';
 import { HERO_IMAGE } from '../assets/index.js';
 
-const WHATSAPP_NUMBER = '919876543210';
+const WHATSAPP_NUMBER = '919037706644';
 
 const Contact = () => {
   const revealRef = useRef(null);
@@ -19,21 +19,16 @@ const Contact = () => {
     {
       icon: Phone,
       title: 'Concierge Line',
-      body: '+91 98765 43210',
-      link: 'tel:+919876543210',
+      body: '+91 9037706644',
+      link: 'tel:+919037706644',
       linkLabel: 'Connect via Voice',
     },
     {
       icon: Mail,
       title: 'Digital Inquiries',
-      body: 'reservations@estilomansa.com',
-      link: 'mailto:reservations@estilomansa.com',
+      body: 'estilomansa@gmail.com',
+      link: 'mailto:estilomansa@gmail.com',
       linkLabel: 'Email Our Team',
-    },
-    {
-      icon: Clock,
-      title: 'Your Arrival',
-      body: 'In: 2:00 PM | Out: 11:00 AM',
     },
   ], []);
 
@@ -51,27 +46,37 @@ const Contact = () => {
   return (
     <div className="page-shell pb-24 md:pb-40" ref={revealRef}>
       {/* ── Curated Hero Header ── */}
-      <div className="page-hero text-center py-20 md:py-32">
+      <div className="text-center pt-32 pb-12">
         <motion.div
-          className="page-hero-panel max-w-3xl mx-auto py-12 md:py-20 px-8 md:px-16"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="eyebrow-pill mb-8 tracking-[0.4em]">Get in Touch</span>
-          <h1 className="premium-h2 text-luxury-cream mb-8 font-serif leading-tight">
-            Begin Your <br />
-            <em className="font-script text-luxury-gold not-italic">Luxury Escape</em>
-          </h1>
-          <p className="text-luxury-text/45 max-w-md mx-auto text-base md:text-lg leading-relaxed font-light">
-            Our private concierge is at your service to craft a bespoke stay in the heart of Wayanad.
-          </p>
+          <span className="eyebrow-pill tracking-[0.4em]">Get in Touch</span>
         </motion.div>
       </div>
 
       <div className="page-container max-w-6xl">
+        {/* ── WhatsApp Highlight Section ── */}
+        <div className="contact-reveal fade-up max-w-2xl mx-auto mb-16">
+          <div className="panel-soft p-10 md:p-12 rounded-[2.5rem] text-center border-luxury-gold/10 relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-luxury-gold/20 to-transparent" />
+             <p className="text-[10px] uppercase tracking-[0.5em] text-luxury-gold mb-6 font-bold">Instant Concierge</p>
+             <h4 className="text-luxury-cream text-2xl md:text-3xl font-serif mb-8 italic-serif">Reach us on WhatsApp for personal assistance</h4>
+             <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello! I would like to inquire about Estilo Mansa.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary !px-16 !py-6 group text-xs tracking-[0.2em]"
+            >
+              <MessageCircle size={18} />
+              <span>Open Chat</span>
+            </a>
+          </div>
+        </div>
+
         {/* ── Contact Grid — Curated Panels ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10 mb-24 max-w-5xl mx-auto">
           {contactItems.map((item, i) => (
             <div
               key={item.title}
@@ -97,23 +102,7 @@ const Contact = () => {
           ))}
         </div>
 
-        {/* ── WhatsApp Highlight Section ── */}
-        <div className="contact-reveal fade-up max-w-2xl mx-auto mb-24">
-          <div className="panel-soft p-10 md:p-12 rounded-[2.5rem] text-center border-luxury-gold/10 relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-luxury-gold/20 to-transparent" />
-             <p className="text-[10px] uppercase tracking-[0.5em] text-luxury-gold mb-6 font-bold">Instant Concierge</p>
-             <h4 className="text-luxury-cream text-2xl md:text-3xl font-serif mb-8 italic-serif">Reach us on WhatsApp for personal assistance</h4>
-             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello! I would like to inquire about Estilo Mansa.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary !px-16 !py-6 group text-xs tracking-[0.2em]"
-            >
-              <MessageCircle size={18} />
-              <span>Open Chat</span>
-            </a>
-          </div>
-        </div>
+
 
         {/* ── Map — Cinematic Frame ── */}
         <div className="contact-reveal fade-up">
