@@ -1,8 +1,19 @@
 import React, { useState, useCallback, useRef, useEffect, memo, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { ALL_GALLERY_IMAGES } from '../assets/index.js';
+import { ALL_GALLERY_IMAGES as STATIC_IMAGES } from '../assets/index.js';
 import { ScrollReveal } from '../components/ui';
+
+// Dynamically load all images from the assets folder
+const allAssets = import.meta.glob('../assets/*.{jpeg,jpg,png,webp}', { eager: true });
+const ALL_GALLERY_IMAGES = Object.entries(allAssets).map(([path, module]) => {
+  const src = module.default;
+  const existing = STATIC_IMAGES.find(img => img.src === src);
+  return {
+    src,
+    label: existing ? existing.label : '',
+  };
+});
 
 const Lightbox = ({ images, currentIndex, onClose, onPrev, onNext }) => (
   <motion.div
@@ -64,10 +75,10 @@ const GalleryItem = memo(({ item, index, onClick }) => (
       
       <img
         src={item.src}
-        alt={item.label}
+        alt={item.label || 'Gallery Image'}
         loading="lazy"
         decoding="async"
-        className="w-full h-auto object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+        className="w-full h-auto object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 bg-luxury-gold/5"
       />
       
       {/* Immersive Hover Overlay */}
@@ -97,12 +108,7 @@ const Gallery = () => {
   const goPrev = useCallback(() => setLightboxIndex(i => (i - 1 + images.length) % images.length), [images.length]);
   const goNext = useCallback(() => setLightboxIndex(i => (i + 1) % images.length), [images.length]);
 
-  // 3-column masonry
-  const cols = useMemo(() => {
-    const columns = [[], [], []];
-    images.forEach((img, i) => columns[i % 3].push({ ...img, _origIndex: i }));
-    return columns;
-  }, [images]);
+
 
   return (
     <div className="page-shell pb-20 md:pb-28">
@@ -117,17 +123,14 @@ const Gallery = () => {
 
       {/* ── Full gallery masonry ── */}
       <div className="page-container mt-12 md:mt-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cols.map((col, ci) => (
-            <div key={ci} className="flex flex-col gap-6">
-              {col.map(item => (
-                <GalleryItem
-                  key={item._origIndex}
-                  item={item}
-                  index={item._origIndex}
-                  onClick={openLightbox}
-                />
-              ))}
+        <div className="columns-2 md:columns-3 gap-3 md:gap-6 space-y-3 md:space-y-6">
+          {images.map((item, index) => (
+            <div key={index} className="break-inside-avoid">
+              <GalleryItem
+                item={item}
+                index={index}
+                onClick={openLightbox}
+              />
             </div>
           ))}
         </div>
