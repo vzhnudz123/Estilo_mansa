@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ArrowRight, Instagram } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import KasaLogo from '../assets/image.png';
 
 const navLinks = [
   { to: '/',        label: 'Home' },
@@ -43,67 +44,50 @@ const Navbar = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <div className="page-container">
-          <div className={`panel-soft flex items-center justify-between gap-4 rounded-full px-4 py-3 shadow-[0_16px_60px_rgba(0,0,0,0.18)] transition-all duration-500 sm:px-5 ${
-            scrolled ? 'border-luxury-gold/18 bg-[#0a100dcc]' : 'bg-[#0a100db8]'
+        <div className="page-container max-w-4xl px-4">
+          <div className={`relative flex items-center justify-between rounded-full border border-[#c8a96e]/30 bg-gradient-to-r from-[#050706] via-[#0a1128] to-[#050706] px-4 py-2 shadow-[0_12px_48px_rgba(0,0,0,0.7),0_0_24px_rgba(200,169,110,0.15)] backdrop-blur-2xl transition-all duration-500 sm:px-8 sm:py-3 ${
+            scrolled ? 'scale-95' : 'scale-100'
           }`}>
-            <div className="group flex min-w-0 items-center gap-3">
+            {/* Left Section: Instagram */}
+            <div className="flex flex-1 items-center justify-start gap-4">
               <a 
                 href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-luxury-gold/16 bg-white/5 text-luxury-gold hover:bg-luxury-gold/10 transition-colors"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-white/5 text-[#c8a96e] shadow-[0_0_15px_rgba(200,169,110,0.1)] transition-all duration-300 hover:border-[#c8a96e] hover:shadow-[0_0_30px_rgba(200,169,110,0.3)] sm:h-14 sm:w-14"
               >
-                <Instagram size={18} />
+                <Instagram size={20} className="transition-transform duration-300 group-hover:scale-110" />
               </a>
-              <Link to="/" className="flex min-w-0 flex-col leading-none">
-                <span className="truncate font-serif text-lg text-luxury-cream tracking-wide sm:text-xl">Estilo</span>
-                <span className="-mt-0.5 truncate font-script text-2xl gold-text sm:text-[1.8rem]">Mansa</span>
-              </Link>
             </div>
 
-            <div className="hidden md:flex items-center gap-2 rounded-full border border-white/6 bg-white/[0.03] px-2 py-1.5">
-            {navLinks.map(link => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`relative rounded-full px-4 py-2 text-xs tracking-[0.28em] uppercase font-semibold transition-all duration-300 ${
-                  location.pathname === link.to
-                    ? 'bg-luxury-gold/12 text-luxury-gold'
-                    : 'text-luxury-text/70 hover:bg-white/[0.04] hover:text-luxury-cream'
-                }`}
+            {/* Center Section: Brand Text & Divider */}
+            <div className="flex items-center gap-4 sm:gap-7">
+              <Link to="/" className="flex flex-col items-center leading-none">
+                <span className="font-serif text-[1.4rem] tracking-wide text-white sm:text-2xl">Estilo</span>
+                <span className="-mt-1 font-script text-[1.8rem] text-[#c8a96e] sm:text-[2.2rem]">Mansa</span>
+              </Link>
+              
+              <div className="h-10 w-[1px] bg-gradient-to-b from-transparent via-[#c8a96e]/50 to-transparent sm:h-12" />
+              
+              <div className="relative group">
+                <div className="absolute inset-0 rounded-lg bg-[#c8a96e]/5 blur-md group-hover:bg-[#c8a96e]/10 transition-colors" />
+                <img 
+                  src={KasaLogo} 
+                  alt="Kasa Exotica" 
+                  className="relative h-12 w-auto object-contain sm:h-16"
+                />
+              </div>
+            </div>
+
+            {/* Right Section: Menu */}
+            <div className="flex flex-1 items-center justify-end">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-white/5 text-[#c8a96e] shadow-[0_0_15px_rgba(200,169,110,0.1)] transition-all duration-300 hover:border-[#c8a96e] hover:shadow-[0_0_30px_rgba(200,169,110,0.3)] sm:h-14 sm:w-14"
               >
-                {link.label}
-              </Link>
-            ))}
+                {isOpen ? <X size={24} /> : <Menu size={24} className="transition-transform duration-300 group-hover:scale-110" />}
+              </button>
             </div>
-
-            <div className="hidden md:flex items-center gap-3">
-            {user ? (
-              <>
-                {user.role === 'admin' && (
-                    <Link to="/admin" className="rounded-full border border-luxury-gold/18 bg-luxury-gold/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-luxury-gold transition-colors hover:bg-luxury-gold/16">
-                    Admin
-                  </Link>
-                )}
-                  <button onClick={handleLogout} className="btn-outline py-2.5 text-[11px]">
-                  Logout
-                </button>
-              </>
-            ) : (
-                <Link to="/login" className="btn-primary py-2.5 text-[11px]">
-                  <span>Sign In</span>
-                  <ArrowRight size={12} />
-                </Link>
-              )}
-            </div>
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-luxury-text/80 transition-colors hover:text-luxury-gold md:hidden"
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
           </div>
         </div>
       </motion.nav>

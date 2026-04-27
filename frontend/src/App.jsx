@@ -31,9 +31,17 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
-      <div className="grain-overlay" />
+      
+      {/* Premium Nature/Sky Background Mockup Effect */}
+      <div className="fixed inset-0 z-0 bg-[#050706]">
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#0a1128] via-[#050706] to-[#1a2a1f] opacity-40" />
+        <div className="absolute top-[-10%] right-[-5%] h-[60%] w-[50%] rounded-full bg-[#1e3a8a]/10 blur-[120px]" />
+        <div className="absolute bottom-[-15%] left-[-10%] h-[70%] w-[60%] rounded-full bg-[#2d4a35]/10 blur-[140px]" />
+        <div className="grain-overlay" />
+      </div>
+
       <SmoothScroll>
-        <div className="app-shell relative z-10 flex min-h-screen flex-col bg-luxury-bg">
+        <div className="app-shell relative z-10 flex min-h-screen flex-col bg-transparent">
           <Navbar />
           <main className="flex-grow">
             <Suspense fallback={null}>
