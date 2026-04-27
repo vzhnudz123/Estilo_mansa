@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import KasaLogo from '../assets/image.png';
 
 const navLinks = [
-  { to: '/',        label: 'Home' },
-  { to: '/rooms',   label: 'Rooms' },
+  { to: '/', label: 'Home' },
+  { to: '/rooms', label: 'Rooms' },
   { to: '/gallery', label: 'Gallery' },
   { to: '/contact', label: 'Contact' },
 ];
@@ -43,26 +43,22 @@ const Navbar = () => {
   return (
     <>
       <motion.nav
-        className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
-          scrolled ? 'py-2' : 'py-3 sm:py-4'
-        }`}
+        className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'py-2' : 'py-3 sm:py-4'}`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <div className="page-container max-w-7xl px-4">
-          <div className={`relative rounded-full border border-white/20 bg-white/5 px-4 py-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] backdrop-blur-3xl transition-all duration-700 ${
-            scrolled ? 'scale-[0.98] border-luxury-gold/30' : 'scale-100'
-          }`}>
+          <div className={`relative rounded-full border border-white/20 bg-white/5 px-4 py-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] backdrop-blur-3xl transition-all duration-700 ${scrolled ? 'scale-[0.98] border-luxury-gold/30' : 'scale-100'}`}>
             {/* Glossy Sheen Overlay */}
             <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 pointer-events-none rounded-full" />
-            
+
             <div className="relative flex items-center justify-between gap-4 px-2 sm:px-4">
               {/* Left: Instagram + Brand */}
               <div className="flex items-center gap-3">
-                <a 
-                  href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4" 
-                  target="_blank" 
+                <a
+                  href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="group flex h-9 w-9 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-black/20 text-[#c8a96e] backdrop-blur-md transition-all duration-300 hover:border-[#c8a96e] hover:shadow-[0_0_20px_rgba(200,169,110,0.3)] sm:h-11 sm:w-11"
                 >
@@ -80,9 +76,7 @@ const Navbar = () => {
                   <Link
                     key={link.to}
                     to={link.to}
-                    className={`relative px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.3em] transition-all duration-300 hover:text-[#c8a96e] ${
-                      location.pathname === link.to ? 'text-[#c8a96e]' : 'text-white/70'
-                    }`}
+                    className={`relative px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.3em] transition-all duration-300 hover:text-[#c8a96e] ${location.pathname === link.to ? 'text-[#c8a96e]' : 'text-white/70'}`}
                   >
                     {link.label}
                     {location.pathname === link.to && (
@@ -95,14 +89,14 @@ const Navbar = () => {
               {/* Right: Logo + Auth */}
               <div className="flex items-center gap-3 sm:gap-6">
                 <div className="hidden sm:block h-7 w-[1px] bg-white/10" />
-                
-                {/* ── Balanced Logo Section ── */}
+
+                {/* Logo Section */}
                 <div className="relative flex items-center justify-center w-14 sm:w-20">
                   <div className="absolute inset-0 rounded-lg bg-[#c8a96e]/5 blur-lg pointer-events-none" />
-                  <img 
-                    src={KasaLogo} 
-                    alt="Kasa Exotica" 
-                    className="relative z-10 w-auto h-15 sm:h-22 object-contain transition-all duration-500 hover:scale-110 drop-shadow-[0_0_10px_rgba(200,169,110,0.2)]" 
+                  <img
+                    src={KasaLogo}
+                    alt="Kasa Exotica"
+                    className="relative z-10 w-auto h-15 sm:h-22 object-contain transition-all duration-500 hover:scale-110 drop-shadow-[0_0_10px_rgba(200,169,110,0.2)]"
                   />
                 </div>
 
@@ -117,8 +111,8 @@ const Navbar = () => {
                         </div>
                         <span className="hidden md:block text-[9px] font-bold uppercase tracking-widest text-white/80 group-hover:text-white">{user.name?.split(' ')[0]}</span>
                       </Link>
-                      
-                      <button 
+
+                      <button
                         onClick={handleLogout}
                         className="hidden md:flex h-9 w-9 items-center justify-center rounded-full border border-red-500/20 bg-red-500/5 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-300"
                         title="Logout"
@@ -127,12 +121,12 @@ const Navbar = () => {
                       </button>
                     </div>
                   ) : (
-                    <Link to="/login" className="flex items-center gap-2 rounded-full border border-[#c8a96e]/40 bg-white/5 px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-[#c8a96e] hover:text-black transition-all duration-300">
-                      <LogIn size={14} />
+                    <Link to="/login" className="flex items-center gap-1.5 rounded-full border border-[#c8a96e]/40 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-[#c8a96e] hover:text-black transition-all duration-300">
+                      <LogIn size={13} />
                       <span className="hidden sm:block">Sign In</span>
                     </Link>
                   )}
-                  
+
                   {/* Mobile Menu Button */}
                   <button
                     onClick={() => setIsOpen(!isOpen)}
@@ -177,11 +171,7 @@ const Navbar = () => {
                     key={link.to}
                     to={link.to}
                     onClick={() => setIsOpen(false)}
-                    className={`flex items-center justify-between rounded-2xl border px-5 py-4 transition-all ${
-                      location.pathname === link.to
-                        ? 'border-[#c8a96e]/30 bg-[#c8a96e]/10 text-[#c8a96e]'
-                        : 'border-white/5 bg-white/5 text-luxury-cream hover:border-[#c8a96e]/20'
-                    }`}
+                    className={`flex items-center justify-between rounded-2xl border px-5 py-4 transition-all ${location.pathname === link.to ? 'border-[#c8a96e]/30 bg-[#c8a96e]/10 text-[#c8a96e]' : 'border-white/5 bg-white/5 text-luxury-cream hover:border-[#c8a96e]/20'}`}
                   >
                     <span className="font-serif text-2xl">{link.label}</span>
                     <ArrowRight size={18} />
