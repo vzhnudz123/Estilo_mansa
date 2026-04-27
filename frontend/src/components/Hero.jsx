@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { MessageCircle, ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { HERO_CAROUSEL_IMAGES } from '../assets/index.js';
 import { AnimatePresence, motion } from 'framer-motion';
+import OptimizedImage from './ui/OptimizedImage';
 
 const WHATSAPP_NUMBER = '919037706644';
 
@@ -34,13 +35,12 @@ const Hero = () => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0"
         >
-          <motion.img
+          <OptimizedImage
             src={images[current]}
             alt={`Slide ${current + 1}`}
-            initial={{ scale: 1.08 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 5, ease: "linear" }}
-            className="h-full w-full object-cover"
+            priority={current === 0}
+            aspectRatio="unset"
+            className="h-full w-full"
           />
           {/* Overlays */}
           <div className="absolute inset-0 bg-black/35" />

@@ -86,11 +86,11 @@ export const SIDEVIEW       = sideview;
 
 /** Hero Carousel Images */
 export const HERO_CAROUSEL_IMAGES = [
+  wa58, // WhatsApp Image 2026-04-22 at 07.37.14.jpeg
   wa37, // WhatsApp Image 2026-04-22 at 07.36.37.jpeg
   wa38, // WhatsApp Image 2026-04-22 at 07.36.39.jpeg
   wa44, // WhatsApp Image 2026-04-22 at 07.36.57.jpeg
   wa54, // WhatsApp Image 2026-04-22 at 07.37.12.jpeg
-  wa58, // WhatsApp Image 2026-04-22 at 07.37.14.jpeg
   wa8,  // WhatsApp Image 2026-04-22 at 07.36.13.jpeg
 ];
 

@@ -95,9 +95,9 @@ const Footer = () => {
             © {new Date().getFullYear()} Estilo Mansa. All rights reserved.
           </p>
           <div className="flex items-center gap-3">
-            <a 
-              href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4"
+              target="_blank"
               rel="noopener noreferrer"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-white/8 bg-white/[0.03] text-luxury-text/35 transition-colors hover:text-luxury-gold"
             >
@@ -107,9 +107,7 @@ const Footer = () => {
               <Facebook size={16} />
             </a>
           </div>
-          <p className="text-xs text-luxury-text/24">
-            Designed for slow stays in Wayanad
-          </p>
+
         </div>
       </div>
     </footer>
