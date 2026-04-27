@@ -44,49 +44,55 @@ const Navbar = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <div className="page-container max-w-4xl px-4">
-          <div className={`relative flex items-center justify-between rounded-full border border-[#c8a96e]/30 bg-gradient-to-r from-[#050706] via-[#0a1128] to-[#050706] px-4 py-2 shadow-[0_12px_48px_rgba(0,0,0,0.7),0_0_24px_rgba(200,169,110,0.15)] backdrop-blur-2xl transition-all duration-500 sm:px-8 sm:py-3 ${
-            scrolled ? 'scale-95' : 'scale-100'
+        <div className="page-container max-w-5xl px-4">
+          <div className={`relative overflow-hidden rounded-full border border-white/20 bg-white/5 px-2 py-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] backdrop-blur-3xl transition-all duration-700 ${
+            scrolled ? 'scale-[0.98] border-luxury-gold/30' : 'scale-100'
           }`}>
-            {/* Left Section: Instagram */}
-            <div className="flex flex-1 items-center justify-start gap-4">
-              <a 
-                href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-white/5 text-[#c8a96e] shadow-[0_0_15px_rgba(200,169,110,0.1)] transition-all duration-300 hover:border-[#c8a96e] hover:shadow-[0_0_30px_rgba(200,169,110,0.3)] sm:h-14 sm:w-14"
-              >
-                <Instagram size={20} className="transition-transform duration-300 group-hover:scale-110" />
-              </a>
-            </div>
+            {/* Glossy Sheen Effect Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 pointer-events-none" />
+            
+            <div className="relative flex items-center justify-between gap-2 px-2 sm:px-4">
+              {/* Left Section: Instagram + Brand Grouped */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <a 
+                  href="https://www.instagram.com/estilo_mansa?igsh=ZjRnZDJvNjlqd3c4" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group flex h-10 w-10 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-black/20 text-[#c8a96e] backdrop-blur-md transition-all duration-300 hover:border-[#c8a96e] hover:shadow-[0_0_20px_rgba(200,169,110,0.3)] sm:h-12 sm:w-12"
+                >
+                  <Instagram size={18} className="transition-transform duration-300 group-hover:scale-110" />
+                </a>
 
-            {/* Center Section: Brand Text & Divider */}
-            <div className="flex items-center gap-4 sm:gap-7">
-              <Link to="/" className="flex flex-col items-center leading-none">
-                <span className="font-serif text-[1.4rem] tracking-wide text-white sm:text-2xl">Estilo</span>
-                <span className="-mt-1 font-script text-[1.8rem] text-[#c8a96e] sm:text-[2.2rem]">Mansa</span>
-              </Link>
-              
-              <div className="h-10 w-[1px] bg-gradient-to-b from-transparent via-[#c8a96e]/50 to-transparent sm:h-12" />
-              
-              <div className="relative group">
-                <div className="absolute inset-0 rounded-lg bg-[#c8a96e]/5 blur-md group-hover:bg-[#c8a96e]/10 transition-colors" />
-                <img 
-                  src={KasaLogo} 
-                  alt="Kasa Exotica" 
-                  className="relative h-12 w-auto object-contain sm:h-16"
-                />
+                {/* Brand Text */}
+                <Link to="/" className="flex flex-col leading-none transition-transform hover:scale-[1.02]">
+                  <span className="font-serif text-[1.1rem] tracking-tight text-white sm:text-xl">Estilo</span>
+                  <span className="-mt-0.5 font-script text-[1.6rem] text-[#c8a96e] sm:text-[1.8rem]">Mansa</span>
+                </Link>
               </div>
-            </div>
 
-            {/* Right Section: Menu */}
-            <div className="flex flex-1 items-center justify-end">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-white/5 text-[#c8a96e] shadow-[0_0_15px_rgba(200,169,110,0.1)] transition-all duration-300 hover:border-[#c8a96e] hover:shadow-[0_0_30px_rgba(200,169,110,0.3)] sm:h-14 sm:w-14"
-              >
-                {isOpen ? <X size={24} /> : <Menu size={24} className="transition-transform duration-300 group-hover:scale-110" />}
-              </button>
+              {/* Center Divider & Logo Section */}
+              <div className="flex items-center gap-3 sm:gap-5">
+                <div className="h-8 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent sm:h-10" />
+                
+                <div className="relative group">
+                  <div className="absolute inset-0 rounded-lg bg-[#c8a96e]/5 blur-md group-hover:bg-[#c8a96e]/10 transition-colors" />
+                  <img 
+                    src={KasaLogo} 
+                    alt="Kasa Exotica" 
+                    className="relative h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[2deg] sm:h-20"
+                  />
+                </div>
+
+                <div className="h-8 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent sm:h-10" />
+
+                {/* Far Right: Menu */}
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="group flex h-10 w-10 items-center justify-center rounded-full border border-[#c8a96e]/40 bg-black/20 text-white backdrop-blur-md transition-all duration-300 hover:border-[#c8a96e] hover:text-[#c8a96e] hover:shadow-[0_0_20px_rgba(200,169,110,0.2)] sm:h-12 sm:w-12"
+                >
+                  {isOpen ? <X size={22} /> : <Menu size={22} className="transition-transform duration-300 group-hover:scale-110" />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
