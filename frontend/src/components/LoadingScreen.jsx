@@ -9,13 +9,13 @@ const LoadingScreen = ({ onComplete }) => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 800);
+          setTimeout(onComplete, 400); // Reduced delay
           return 100;
         }
-        const diff = Math.random() * 20;
+        const diff = Math.random() * 40; // Increased speed
         return Math.min(oldProgress + diff, 100);
       });
-    }, 150);
+    }, 100); // Increased frequency
 
     return () => clearInterval(timer);
   }, [onComplete]);

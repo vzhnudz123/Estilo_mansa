@@ -56,6 +56,8 @@ const TentSection = () => {
             <img 
               src={TENT_IMAGES[0]} 
               alt="Luxury Tent Setup" 
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -74,6 +76,8 @@ const TentSection = () => {
                <img 
                   src={TENT_IMAGES[2]} 
                   alt="Tent Detail" 
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/5" />
@@ -83,6 +87,8 @@ const TentSection = () => {
                <img 
                   src={TENT_IMAGES[4]} 
                   alt="Tent View" 
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6 md:p-8">

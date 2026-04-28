@@ -20,8 +20,14 @@ const Hero = () => {
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
+    
+    // Preload next image
+    const nextIndex = (current + 1) % images.length;
+    const img = new Image();
+    img.src = images[nextIndex];
+    
     return () => clearInterval(timer);
-  }, [nextSlide]);
+  }, [nextSlide, current, images]);
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-luxury-bg">

@@ -3,18 +3,38 @@ import { HERO_VIDEO } from '../assets/index.js';
 import { motion } from 'framer-motion';
 
 const HomeVideo = () => {
+  const videoRef = React.useRef(null);
+  const [shouldLoad, setShouldLoad] = React.useState(false);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    if (videoRef.current) observer.observe(videoRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative h-[70vh] md:h-screen w-full overflow-hidden bg-luxury-bg">
+    <section ref={videoRef} className="relative h-[70vh] md:h-screen w-full overflow-hidden bg-luxury-bg">
       {/* Full-width Immersive Video */}
       <div className="absolute inset-0">
-        <video
-          src={HERO_VIDEO}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        />
+        {shouldLoad && (
+          <video
+            src={HERO_VIDEO}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        )}
         {/* Cinematic Overlays */}
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-luxury-bg via-transparent to-luxury-bg" />
