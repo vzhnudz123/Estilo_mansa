@@ -13,6 +13,11 @@ import img8823 from './IMG_8823.jpeg';
 import img8824 from './IMG_8824.jpeg';
 import img8825 from './IMG_8825.jpeg';
 import sideview from './Sideview.jpeg';
+import bed from './bed.jpeg';
+import Roomm1 from './Roomm1.jpeg';
+import room2 from './room2.jpeg';
+import room3 from './room3.jpeg';
+import room4 from './room4.jpeg';
 
 // ─── WhatsApp Gallery Images ───────────────────────────────────────────────────
 import wa0 from './WhatsApp Image 2026-04-22 at 07.36.03.jpeg';
@@ -102,6 +107,14 @@ export const HERO_VIDEO = hVideo;
 export const ROOM_IMAGES = [
   img8814, img8815, img8816, img8817,
   img8818, img8819, img8820, img8821,
+];
+
+export const FEATURED_ROOMS = [
+  { src: bed, name: 'The Royal Suite' },
+  { src: Roomm1, name: 'Mountain View Suite' },
+  { src: room2, name: 'Forest Breeze Room' },
+  { src: room3, name: 'Mist Valley Room' },
+  { src: room4, name: 'Sanctuary Suite' },
 ];
 
 /** Immersive scroll section */

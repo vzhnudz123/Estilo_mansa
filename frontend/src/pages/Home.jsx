@@ -9,6 +9,7 @@ import HomeVideo from '../components/HomeVideo';
 // Lazy load non-critical sections to reduce initial bundle size
 const StorySection = lazy(() => import('../components/StorySection'));
 const TentSection = lazy(() => import('../components/TentSection'));
+const FeaturedRooms = lazy(() => import('../components/FeaturedRooms'));
 const ImmersiveSection = lazy(() => import('../components/ImmersiveSection'));
 const JeepExperience = lazy(() => import('../components/JeepExperience'));
 const EventsOffersSection = lazy(() => import('../components/EventsOffersSection'));
@@ -99,6 +100,11 @@ const Home = () => {
         {/* 2.1 TENTS AVAILABLE */}
         <SectionWrapper>
           <TentSection />
+        </SectionWrapper>
+
+        {/* 2.2 FEATURED ROOMS */}
+        <SectionWrapper>
+          <FeaturedRooms />
         </SectionWrapper>
 
         {/* 3. IMMERSIVE SCROLL */}

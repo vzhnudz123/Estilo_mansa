@@ -41,6 +41,30 @@ const Navbar = () => {
     navigate('/');
   };
 
+  const handleNavClick = (e, link) => {
+    if (link.to.startsWith('/#')) {
+      e.preventDefault();
+      const id = link.to.replace('/#', '');
+      
+      if (location.pathname === '/') {
+        // Already on home, just scroll
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Navigate home then scroll
+        navigate('/');
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    }
+  };
+
   return (
     <>
       <motion.nav
@@ -77,6 +101,7 @@ const Navbar = () => {
                   <Link
                     key={link.to}
                     to={link.to}
+                    onClick={(e) => handleNavClick(e, link)}
                     className={`relative px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.3em] transition-all duration-300 hover:text-[#c8a96e] ${location.pathname === link.to ? 'text-[#c8a96e]' : 'text-white/70'}`}
                   >
                     {link.label}
@@ -171,7 +196,10 @@ const Navbar = () => {
                   <Link
                     key={link.to}
                     to={link.to}
-                    onClick={() => setIsOpen(false)}
+                    onClick={(e) => {
+                      setIsOpen(false);
+                      handleNavClick(e, link);
+                    }}
                     className={`flex items-center justify-between rounded-2xl border px-5 py-4 transition-all ${location.pathname === link.to ? 'border-[#c8a96e]/30 bg-[#c8a96e]/10 text-[#c8a96e]' : 'border-white/5 bg-white/5 text-luxury-cream hover:border-[#c8a96e]/20'}`}
                   >
                     <span className="font-serif text-2xl">{link.label}</span>
