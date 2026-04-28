@@ -2,6 +2,7 @@ import React from 'react';
 import { FEATURED_ROOMS } from '../assets';
 import { ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '../utils/routes';
 
 const FeaturedRooms = () => {
   return (
@@ -20,11 +21,10 @@ const FeaturedRooms = () => {
               Featured <em className="font-script text-luxury-gold not-italic">Sanctuaries</em>
             </h2>
             <p className="text-black/60 leading-relaxed text-lg">
-              Each room at Estilo Mansa is a unique masterpiece, designed to provide the ultimate 
-              blend of heritage charm and modern comfort.
+              Discover comfortable, budget-friendly rooms in Wayanad designed for restful mornings, valley views, and easy booking.
             </p>
           </div>
-          <Link to="/rooms" className="flex items-center gap-3 text-black text-[10px] uppercase tracking-[0.2em] font-black group px-6 py-3 border border-black/10 rounded-full hover:bg-black hover:text-white transition-all">
+          <Link to={ROUTES.rooms} className="flex items-center gap-3 text-black text-[10px] uppercase tracking-[0.2em] font-black group px-6 py-3 border border-black/10 rounded-full hover:bg-black hover:text-white transition-all">
             <span>Explore All Rooms</span>
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -36,8 +36,9 @@ const FeaturedRooms = () => {
               <div className="aspect-[4/5] overflow-hidden">
                 <img 
                   src={room.src} 
-                  alt={room.name} 
+                  alt={`${room.name} at EstiloMansa homestay in Wayanad`} 
                   loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
               </div>
@@ -45,7 +46,7 @@ const FeaturedRooms = () => {
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <h3 className="text-2xl font-serif text-white mb-2">{room.name}</h3>
                 <p className="text-white/60 text-sm mb-6 line-clamp-2">Experience luxury in the heart of nature with panoramic views and premium amenities.</p>
-                <Link to="/rooms" className="flex items-center gap-2 text-luxury-gold text-[10px] uppercase tracking-widest font-bold group/btn">
+                <Link to={ROUTES.rooms} className="flex items-center gap-2 text-luxury-gold text-[10px] uppercase tracking-widest font-bold group/btn">
                   View Room Details <ArrowRight size={14} className="group-hover/btn:translate-x-2 transition-transform" />
                 </Link>
               </div>

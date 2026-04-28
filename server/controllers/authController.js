@@ -14,7 +14,7 @@ export const register = async (request, reply) => {
     await user.save()
 
     const token = request.server.jwt.sign({ id: user._id, role: user.role })
-    reply.code(201).send({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } })
+    reply.code(201).send({ token, user: { id: user._id, name: user.name, email: user.email, avatarUrl: user.avatarUrl || '', role: user.role } })
   } catch (error) {
     if (error.errors) return reply.code(400).send({ error: error.errors })
     reply.code(500).send({ error: 'Internal server error' })
@@ -36,7 +36,7 @@ export const login = async (request, reply) => {
     }
 
     const token = request.server.jwt.sign({ id: user._id, role: user.role })
-    reply.code(200).send({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } })
+    reply.code(200).send({ token, user: { id: user._id, name: user.name, email: user.email, avatarUrl: user.avatarUrl || '', role: user.role } })
   } catch (error) {
     if (error.errors) return reply.code(400).send({ error: error.errors })
     reply.code(500).send({ error: 'Internal server error' })

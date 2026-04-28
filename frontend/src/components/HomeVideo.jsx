@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
-import { HERO_VIDEO } from '../assets/index.js';
+import { HERO_IMAGE, HERO_VIDEO } from '../assets/index.js';
 import { motion } from 'framer-motion';
+import LazyVideo from './ui/LazyVideo';
 
 const HomeVideo = () => {
   const videoRef = React.useRef(null);
@@ -26,13 +27,15 @@ const HomeVideo = () => {
       {/* Full-width Immersive Video */}
       <div className="absolute inset-0">
         {shouldLoad && (
-          <video
+          <LazyVideo
             src={HERO_VIDEO}
-            autoPlay
+            poster={HERO_IMAGE}
+            alt="Scenic homestay in Wayanad video preview"
+            buttonLabel="Play immersive view"
             loop
             muted
-            playsInline
-            className="w-full h-full object-cover"
+            className="h-full w-full"
+            videoClassName="h-full w-full object-cover"
           />
         )}
         {/* Cinematic Overlays */}

@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import SEO from '../components/SEO';
+import LazyVideo from '../components/ui/LazyVideo';
+import { createBreadcrumbSchema, createLodgingSchema } from '../seo/site';
+import { ROUTES } from '../utils/routes';
 
 import estiloRoomVideo from '../assets/estiloroom.mp4';
 import roomWideViewVideo from '../assets/roomwideview.mp4';
-import roomImage from '../assets/room.jpeg';
-import washroomImage from '../assets/whashroom.jpeg';
+import roomImage from '../assets/room.webp';
+import washroomImage from '../assets/whashroom.webp';
 
 const rooms = [
   {
     id: 1,
     title: "Room View",
-    description: "A sanctuary crafted for slow mornings and quiet luxury in the heart of the mist-covered valley.",
+    description: "A comfortable room experience for travelers searching for a homestay in Wayanad with scenic valley calm.",
     src: estiloRoomVideo,
+    poster: roomImage,
     isVideo: true
   },
   {
     id: 2,
     title: "Wide Horizon",
-    description: "Immerse yourself in the vast tranquility of Wayanad with panoramic vistas that heal the soul.",
+    description: "Panoramic Wayanad views and easy Wayanad rooms booking for couples, families, and budget stay Kerala plans.",
     src: roomWideViewVideo,
+    poster: washroomImage,
     isVideo: true
   },
   {
@@ -50,7 +56,26 @@ const Rooms = () => {
   };
 
   return (
-    <div className="relative h-screen w-full bg-black overflow-hidden select-none">
+    <>
+      <SEO
+        title="Rooms in Wayanad | EstiloMansa Homestay"
+        description="Explore comfortable and budget-friendly rooms in Wayanad at EstiloMansa."
+        path={ROUTES.rooms}
+        image={roomImage}
+        imageAlt="Budget-friendly room at EstiloMansa homestay in Wayanad"
+        structuredData={[
+          createLodgingSchema({
+            url: ROUTES.rooms,
+            image: roomImage,
+            description: 'Explore comfortable and budget-friendly rooms in Wayanad at EstiloMansa.',
+          }),
+          createBreadcrumbSchema([
+            { name: 'Home', url: ROUTES.home },
+            { name: 'Rooms in Wayanad', url: ROUTES.rooms },
+          ]),
+        ]}
+      />
+      <div className="relative h-screen w-full bg-black overflow-hidden select-none">
       {/* ── Background Media (Full Screen) ── */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -62,16 +87,23 @@ const Rooms = () => {
           className="absolute inset-0 w-full h-full"
         >
           {rooms[activeIndex].isVideo ? (
-            <video 
+            <LazyVideo
               src={rooms[activeIndex].src}
-              autoPlay loop muted playsInline 
-              className="w-full h-full object-cover"
+              poster={rooms[activeIndex].poster}
+              alt={`${rooms[activeIndex].title} at EstiloMansa homestay in Wayanad`}
+              buttonLabel="Play room video"
+              loop
+              muted
+              className="h-full w-full"
+              videoClassName="h-full w-full object-cover"
             />
           ) : (
             <img 
               src={rooms[activeIndex].src}
-              alt={rooms[activeIndex].title}
+              alt={`${rooms[activeIndex].title} at EstiloMansa homestay in Wayanad`}
               className="w-full h-full object-cover"
+              loading={activeIndex === 2 ? 'eager' : 'lazy'}
+              decoding="async"
             />
           )}
           {/* Overlays */}
@@ -93,12 +125,13 @@ const Rooms = () => {
             SANCTUARY {activeIndex + 1} / {rooms.length}
           </p>
           
-          <h2 className="font-serif text-5xl md:text-[10rem] leading-none text-white mb-6 drop-shadow-2xl">
+          <h1 className="font-serif text-5xl md:text-[10rem] leading-none text-white mb-6 drop-shadow-2xl">
             {rooms[activeIndex].title.split(' ')[0]} <br className="md:hidden" />
             <em className="font-script text-luxury-gold not-italic block md:inline text-4xl md:text-[8rem]">
               {rooms[activeIndex].title.split(' ')[1]}
             </em>
-          </h2>
+            <span className="sr-only">Rooms in Wayanad</span>
+          </h1>
 
           <p className="text-white/70 text-sm md:text-lg font-light max-w-xl mx-auto leading-relaxed md:px-0 px-4">
             {rooms[activeIndex].description}
@@ -145,7 +178,8 @@ const Rooms = () => {
       <div className="absolute top-1/2 left-8 -translate-y-1/2 hidden lg:block vertical-text opacity-10">
         <span className="text-[9px] tracking-[1em] text-white uppercase">THE PRIVATE RETREAT · WAYANAD</span>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

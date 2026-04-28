@@ -2,8 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/axios';
 import { ArrowLeft, Images, Play, Video } from 'lucide-react';
-import { LoadingScreen } from '../components/ui';
+import SEO from '../components/SEO';
 import { resolveMediaUrl } from '../utils/media';
+import { createBreadcrumbSchema, createLodgingSchema, createRoomSchema } from '../seo/site';
+import { ROUTES } from '../utils/routes';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -71,6 +73,12 @@ const RoomDetails = () => {
   if (loading) return null;
   if (!room) return (
     <div className="page-shell flex min-h-screen items-center justify-center">
+      <SEO
+        title="Room Not Found | EstiloMansa"
+        description="The requested room is not available right now."
+        path={ROUTES.rooms}
+        noindex
+      />
       <div className="panel px-8 py-10 text-center">
         <p className="font-serif text-2xl text-cream/50">Room not found</p>
       </div>
@@ -79,9 +87,34 @@ const RoomDetails = () => {
 
   return (
     <div className="page-shell text-cream">
+      <SEO
+        title={`${room.name} | EstiloMansa Rooms in Wayanad`}
+        description={room.description || 'Book a comfortable room at EstiloMansa homestay in Wayanad.'}
+        path={ROUTES.roomDetails(id)}
+        image={images[0]}
+        imageAlt={`${room.name} at EstiloMansa homestay in Wayanad`}
+        structuredData={[
+          createLodgingSchema({
+            url: ROUTES.roomDetails(id),
+            image: images[0],
+            description: room.description,
+          }),
+          createRoomSchema({
+            name: room.name,
+            description: room.description,
+            image: images[0],
+            url: ROUTES.roomDetails(id),
+          }),
+          createBreadcrumbSchema([
+            { name: 'Home', url: ROUTES.home },
+            { name: 'Rooms in Wayanad', url: ROUTES.rooms },
+            { name: room.name, url: ROUTES.roomDetails(id) },
+          ]),
+        ]}
+      />
       <main className="page-container pt-28 pb-20 md:pt-32 md:pb-28">
         <button
-          onClick={() => navigate('/rooms')}
+          onClick={() => navigate(ROUTES.rooms)}
           className="group mb-8 inline-flex items-center gap-3 rounded-full border border-white/8 bg-white/[0.025] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.36em] text-cream/45 transition-colors hover:border-gold/18 hover:text-gold"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
@@ -122,7 +155,7 @@ const RoomDetails = () => {
                 <SwiperSlide key={img + index}>
                   <img
                     src={img}
-                    alt={`${room.name} ${index + 1}`}
+                    alt={`${room.name} room view ${index + 1} at EstiloMansa homestay in Wayanad`}
                     className="h-full w-full object-cover"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
@@ -132,7 +165,7 @@ const RoomDetails = () => {
             </Swiper>
           ) : (
             <div className="panel h-[50vh] overflow-hidden rounded-[2rem] md:h-[76vh]">
-              <img src={images[0]} alt={room.name} className="h-full w-full object-cover" />
+              <img src={images[0]} alt={`${room.name} at EstiloMansa homestay in Wayanad`} className="h-full w-full object-cover" />
             </div>
           )}
         </section>

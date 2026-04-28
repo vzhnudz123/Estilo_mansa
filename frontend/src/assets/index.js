@@ -1,84 +1,84 @@
 // ─── Room Images ───────────────────────────────────────────────────────────────
-import img8813 from './IMG_8813.jpeg';
-import img8814 from './IMG_8814.jpeg';
-import img8815 from './IMG_8815.jpeg';
-import img8816 from './IMG_8816.jpeg';
-import img8817 from './IMG_8817.jpeg';
-import img8818 from './IMG_8818.jpeg';
-import img8819 from './IMG_8819.jpeg';
-import img8820 from './IMG_8820.jpeg';
-import img8821 from './IMG_8821.jpeg';
-import img8822 from './IMG_8822.jpeg';
-import img8823 from './IMG_8823.jpeg';
-import img8824 from './IMG_8824.jpeg';
-import img8825 from './IMG_8825.jpeg';
-import sideview from './Sideview.jpeg';
-import bed from './bed.jpeg';
-import Roomm1 from './Roomm1.jpeg';
-import room2 from './room2.jpeg';
-import room3 from './room3.jpeg';
-import room4 from './room4.jpeg';
+import img8813 from './IMG_8813.webp';
+import img8814 from './IMG_8814.webp';
+import img8815 from './IMG_8815.webp';
+import img8816 from './IMG_8816.webp';
+import img8817 from './IMG_8817.webp';
+import img8818 from './IMG_8818.webp';
+import img8819 from './IMG_8819.webp';
+import img8820 from './IMG_8820.webp';
+import img8821 from './IMG_8821.webp';
+import img8822 from './IMG_8822.webp';
+import img8823 from './IMG_8823.webp';
+import img8824 from './IMG_8824.webp';
+import img8825 from './IMG_8825.webp';
+import sideview from './Sideview.webp';
+import bed from './bed.webp';
+import Roomm1 from './Roomm1.webp';
+import room2 from './room2.webp';
+import room3 from './room3.webp';
+import room4 from './room4.webp';
 
 // ─── WhatsApp Gallery Images ───────────────────────────────────────────────────
-import wa0 from './WhatsApp Image 2026-04-22 at 07.36.03.jpeg';
-import wa1 from './WhatsApp Image 2026-04-22 at 07.36.03 (1).jpeg';
-import wa2 from './WhatsApp Image 2026-04-22 at 07.36.03 (2).jpeg';
-import wa3 from './WhatsApp Image 2026-04-22 at 07.36.04 (1).jpeg';
-import wa4 from './WhatsApp Image 2026-04-22 at 07.36.09.jpeg';
-import wa5 from './WhatsApp Image 2026-04-22 at 07.36.10.jpeg';
-import wa6 from './WhatsApp Image 2026-04-22 at 07.36.10 (1).jpeg';
-import wa7 from './WhatsApp Image 2026-04-22 at 07.36.11.jpeg';
-import wa8 from './WhatsApp Image 2026-04-22 at 07.36.13.jpeg';
-import wa9 from './WhatsApp Image 2026-04-22 at 07.36.13 (1).jpeg';
-import wa10 from './WhatsApp Image 2026-04-22 at 07.36.14.jpeg';
-import wa11 from './WhatsApp Image 2026-04-22 at 07.36.15.jpeg';
-import wa12 from './WhatsApp Image 2026-04-22 at 07.36.16.jpeg';
-import wa13 from './WhatsApp Image 2026-04-22 at 07.36.17.jpeg';
-import wa14 from './WhatsApp Image 2026-04-22 at 07.36.19.jpeg';
-import wa15 from './WhatsApp Image 2026-04-22 at 07.36.20.jpeg';
-import wa16 from './WhatsApp Image 2026-04-22 at 07.36.21.jpeg';
-import wa17 from './WhatsApp Image 2026-04-22 at 07.36.22.jpeg';
-import wa18 from './WhatsApp Image 2026-04-22 at 07.36.23.jpeg';
-import wa19 from './WhatsApp Image 2026-04-22 at 07.36.24.jpeg';
-import wa20 from './WhatsApp Image 2026-04-22 at 07.36.25.jpeg';
-import wa21 from './WhatsApp Image 2026-04-22 at 07.36.26.jpeg';
-import wa22 from './WhatsApp Image 2026-04-22 at 07.36.26 (1).jpeg';
-import wa23 from './WhatsApp Image 2026-04-22 at 07.36.26 (2).jpeg';
-import wa24 from './WhatsApp Image 2026-04-22 at 07.36.27.jpeg';
-import wa25 from './WhatsApp Image 2026-04-22 at 07.36.27 (1).jpeg';
-import wa26 from './WhatsApp Image 2026-04-22 at 07.36.27 (2).jpeg';
-import wa27 from './WhatsApp Image 2026-04-22 at 07.36.28.jpeg';
-import wa28 from './WhatsApp Image 2026-04-22 at 07.36.28 (1).jpeg';
-import wa29 from './WhatsApp Image 2026-04-22 at 07.36.28 (2).jpeg';
-import wa30 from './WhatsApp Image 2026-04-22 at 07.36.29.jpeg';
-import wa31 from './WhatsApp Image 2026-04-22 at 07.36.31.jpeg';
-import wa32 from './WhatsApp Image 2026-04-22 at 07.36.32.jpeg';
-import wa33 from './WhatsApp Image 2026-04-22 at 07.36.33.jpeg';
-import wa34 from './WhatsApp Image 2026-04-22 at 07.36.34.jpeg';
-import wa35 from './WhatsApp Image 2026-04-22 at 07.36.35.jpeg';
-import wa36 from './WhatsApp Image 2026-04-22 at 07.36.36.jpeg';
-import wa37 from './WhatsApp Image 2026-04-22 at 07.36.37.jpeg';
-import wa38 from './WhatsApp Image 2026-04-22 at 07.36.39.jpeg';
-import wa39 from './WhatsApp Image 2026-04-22 at 07.36.53.jpeg';
-import wa40 from './WhatsApp Image 2026-04-22 at 07.36.54.jpeg';
-import wa41 from './WhatsApp Image 2026-04-22 at 07.36.54 (1).jpeg';
-import wa42 from './WhatsApp Image 2026-04-22 at 07.36.54 (2).jpeg';
-import wa43 from './WhatsApp Image 2026-04-22 at 07.36.56.jpeg';
-import wa44 from './WhatsApp Image 2026-04-22 at 07.36.57.jpeg';
-import wa45 from './WhatsApp Image 2026-04-22 at 07.36.59.jpeg';
-import wa46 from './WhatsApp Image 2026-04-22 at 07.37.02.jpeg';
-import wa47 from './WhatsApp Image 2026-04-22 at 07.37.03.jpeg';
-import wa48 from './WhatsApp Image 2026-04-22 at 07.37.04.jpeg';
-import wa49 from './WhatsApp Image 2026-04-22 at 07.37.09.jpeg';
-import wa50 from './WhatsApp Image 2026-04-22 at 07.37.10.jpeg';
-import wa51 from './WhatsApp Image 2026-04-22 at 07.37.10 (1).jpeg';
-import wa52 from './WhatsApp Image 2026-04-22 at 07.37.11.jpeg';
-import wa53 from './WhatsApp Image 2026-04-22 at 07.37.11 (1).jpeg';
-import wa54 from './WhatsApp Image 2026-04-22 at 07.37.12.jpeg';
-import wa55 from './WhatsApp Image 2026-04-22 at 07.37.12 (1).jpeg';
-import wa56 from './WhatsApp Image 2026-04-22 at 07.37.12 (2).jpeg';
-import wa57 from './WhatsApp Image 2026-04-22 at 07.37.13.jpeg';
-import wa58 from './WhatsApp Image 2026-04-22 at 07.37.14.jpeg';
+import wa0 from './WhatsApp Image 2026-04-22 at 07.36.03.webp';
+import wa1 from './WhatsApp Image 2026-04-22 at 07.36.03 (1).webp';
+import wa2 from './WhatsApp Image 2026-04-22 at 07.36.03 (2).webp';
+import wa3 from './WhatsApp Image 2026-04-22 at 07.36.04 (1).webp';
+import wa4 from './WhatsApp Image 2026-04-22 at 07.36.09.webp';
+import wa5 from './WhatsApp Image 2026-04-22 at 07.36.10.webp';
+import wa6 from './WhatsApp Image 2026-04-22 at 07.36.10 (1).webp';
+import wa7 from './WhatsApp Image 2026-04-22 at 07.36.11.webp';
+import wa8 from './WhatsApp Image 2026-04-22 at 07.36.13.webp';
+import wa9 from './WhatsApp Image 2026-04-22 at 07.36.13 (1).webp';
+import wa10 from './WhatsApp Image 2026-04-22 at 07.36.14.webp';
+import wa11 from './WhatsApp Image 2026-04-22 at 07.36.15.webp';
+import wa12 from './WhatsApp Image 2026-04-22 at 07.36.16.webp';
+import wa13 from './WhatsApp Image 2026-04-22 at 07.36.17.webp';
+import wa14 from './WhatsApp Image 2026-04-22 at 07.36.19.webp';
+import wa15 from './WhatsApp Image 2026-04-22 at 07.36.20.webp';
+import wa16 from './WhatsApp Image 2026-04-22 at 07.36.21.webp';
+import wa17 from './WhatsApp Image 2026-04-22 at 07.36.22.webp';
+import wa18 from './WhatsApp Image 2026-04-22 at 07.36.23.webp';
+import wa19 from './WhatsApp Image 2026-04-22 at 07.36.24.webp';
+import wa20 from './WhatsApp Image 2026-04-22 at 07.36.25.webp';
+import wa21 from './WhatsApp Image 2026-04-22 at 07.36.26.webp';
+import wa22 from './WhatsApp Image 2026-04-22 at 07.36.26 (1).webp';
+import wa23 from './WhatsApp Image 2026-04-22 at 07.36.26 (2).webp';
+import wa24 from './WhatsApp Image 2026-04-22 at 07.36.27.webp';
+import wa25 from './WhatsApp Image 2026-04-22 at 07.36.27 (1).webp';
+import wa26 from './WhatsApp Image 2026-04-22 at 07.36.27 (2).webp';
+import wa27 from './WhatsApp Image 2026-04-22 at 07.36.28.webp';
+import wa28 from './WhatsApp Image 2026-04-22 at 07.36.28 (1).webp';
+import wa29 from './WhatsApp Image 2026-04-22 at 07.36.28 (2).webp';
+import wa30 from './WhatsApp Image 2026-04-22 at 07.36.29.webp';
+import wa31 from './WhatsApp Image 2026-04-22 at 07.36.31.webp';
+import wa32 from './WhatsApp Image 2026-04-22 at 07.36.32.webp';
+import wa33 from './WhatsApp Image 2026-04-22 at 07.36.33.webp';
+import wa34 from './WhatsApp Image 2026-04-22 at 07.36.34.webp';
+import wa35 from './WhatsApp Image 2026-04-22 at 07.36.35.webp';
+import wa36 from './WhatsApp Image 2026-04-22 at 07.36.36.webp';
+import wa37 from './WhatsApp Image 2026-04-22 at 07.36.37.webp';
+import wa38 from './WhatsApp Image 2026-04-22 at 07.36.39.webp';
+import wa39 from './WhatsApp Image 2026-04-22 at 07.36.53.webp';
+import wa40 from './WhatsApp Image 2026-04-22 at 07.36.54.webp';
+import wa41 from './WhatsApp Image 2026-04-22 at 07.36.54 (1).webp';
+import wa42 from './WhatsApp Image 2026-04-22 at 07.36.54 (2).webp';
+import wa43 from './WhatsApp Image 2026-04-22 at 07.36.56.webp';
+import wa44 from './WhatsApp Image 2026-04-22 at 07.36.57.webp';
+import wa45 from './WhatsApp Image 2026-04-22 at 07.36.59.webp';
+import wa46 from './WhatsApp Image 2026-04-22 at 07.37.02.webp';
+import wa47 from './WhatsApp Image 2026-04-22 at 07.37.03.webp';
+import wa48 from './WhatsApp Image 2026-04-22 at 07.37.04.webp';
+import wa49 from './WhatsApp Image 2026-04-22 at 07.37.09.webp';
+import wa50 from './WhatsApp Image 2026-04-22 at 07.37.10.webp';
+import wa51 from './WhatsApp Image 2026-04-22 at 07.37.10 (1).webp';
+import wa52 from './WhatsApp Image 2026-04-22 at 07.37.11.webp';
+import wa53 from './WhatsApp Image 2026-04-22 at 07.37.11 (1).webp';
+import wa54 from './WhatsApp Image 2026-04-22 at 07.37.12.webp';
+import wa55 from './WhatsApp Image 2026-04-22 at 07.37.12 (1).webp';
+import wa56 from './WhatsApp Image 2026-04-22 at 07.37.12 (2).webp';
+import wa57 from './WhatsApp Image 2026-04-22 at 07.37.13.webp';
+import wa58 from './WhatsApp Image 2026-04-22 at 07.37.14.webp';
 
 // ─── Videos ───────────────────────────────────────────────────────────────────
 import jeepVideo from './WhatsApp Video 2026-04-22 at 07.38.37.mp4';
@@ -91,12 +91,12 @@ export const SIDEVIEW = sideview;
 
 /** Hero Carousel Images */
 export const HERO_CAROUSEL_IMAGES = [
-  wa58, // WhatsApp Image 2026-04-22 at 07.37.14.jpeg
-  wa37, // WhatsApp Image 2026-04-22 at 07.36.37.jpeg
-  wa38, // WhatsApp Image 2026-04-22 at 07.36.39.jpeg
-  wa44, // WhatsApp Image 2026-04-22 at 07.36.57.jpeg
-  wa54, // WhatsApp Image 2026-04-22 at 07.37.12.jpeg
-  wa8,  // WhatsApp Image 2026-04-22 at 07.36.13.jpeg
+  wa58, // WhatsApp Image 2026-04-22 at 07.37.14.webp
+  wa37, // WhatsApp Image 2026-04-22 at 07.36.37.webp
+  wa38, // WhatsApp Image 2026-04-22 at 07.36.39.webp
+  wa44, // WhatsApp Image 2026-04-22 at 07.36.57.webp
+  wa54, // WhatsApp Image 2026-04-22 at 07.37.12.webp
+  wa8,  // WhatsApp Image 2026-04-22 at 07.36.13.webp
 ];
 
 /** Hero Video */
@@ -126,11 +126,11 @@ export const STORY_BG = img8823;
 /** Jeep experience video */
 export const JEEP_VIDEO = jeepVideo;
 
-import tent1 from './image copy.png';
-// wa12: WhatsApp Image 2026-04-22 at 07.36.16.jpeg
-// wa17: WhatsApp Image 2026-04-22 at 07.36.22.jpeg
-// wa19: WhatsApp Image 2026-04-22 at 07.36.24.jpeg
-// wa24: WhatsApp Image 2026-04-22 at 07.36.27.jpeg
+import tent1 from './image copy.webp';
+// wa12: WhatsApp Image 2026-04-22 at 07.36.16.webp
+// wa17: WhatsApp Image 2026-04-22 at 07.36.22.webp
+// wa19: WhatsApp Image 2026-04-22 at 07.36.24.webp
+// wa24: WhatsApp Image 2026-04-22 at 07.36.27.webp
 
 export const TENT_IMAGES = [
   tent1,

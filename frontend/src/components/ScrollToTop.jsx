@@ -4,16 +4,25 @@ import { useLocation } from 'react-router-dom';
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
-  // Scroll to top on route change
   useEffect(() => {
+    if (hash) {
+      window.requestAnimationFrame(() => {
+        const element = document.getElementById(hash.replace('#', ''));
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+      return;
+    }
+
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: 'instant'
     });
-  }, [pathname]);
+  }, [pathname, hash]);
 
   // Show button when page is scrolled down 400px
   const toggleVisibility = () => {

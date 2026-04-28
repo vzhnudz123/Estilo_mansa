@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, MessageCircle, ArrowRight, Clock } from 'lucide-react';
-import { HERO_IMAGE } from '../assets/index.js';
+import { MapPin, Phone, Mail, MessageCircle, ArrowRight } from 'lucide-react';
+import SEO from '../components/SEO';
+import { HERO_IMAGE } from '../assets';
+import { createBreadcrumbSchema, createLodgingSchema } from '../seo/site';
+import { ROUTES } from '../utils/routes';
 
 const WHATSAPP_NUMBER = '919037706644';
 
@@ -45,6 +48,25 @@ const Contact = () => {
 
   return (
     <div className="page-shell pb-24 md:pb-40" ref={revealRef}>
+      <SEO
+        title="Contact EstiloMansa Homestay | Wayanad Stay Booking"
+        description="Contact EstiloMansa for Wayanad rooms booking, directions, and quick WhatsApp support for your stay in Kerala."
+        path={ROUTES.contact}
+        image={HERO_IMAGE}
+        imageAlt="EstiloMansa homestay in Wayanad contact and booking"
+        structuredData={[
+          createLodgingSchema({
+            url: ROUTES.contact,
+            image: HERO_IMAGE,
+            description: 'Contact EstiloMansa for Wayanad rooms booking, directions, and quick WhatsApp support for your stay in Kerala.',
+          }),
+          createBreadcrumbSchema([
+            { name: 'Home', url: ROUTES.home },
+            { name: 'Contact', url: ROUTES.contact },
+          ]),
+        ]}
+      />
+      <h1 className="sr-only">Contact EstiloMansa Homestay in Wayanad</h1>
       {/* ── Curated Hero Header ── */}
       <div className="text-center pt-32 pb-12">
         <motion.div
@@ -62,7 +84,7 @@ const Contact = () => {
           <div className="panel-soft p-10 md:p-12 rounded-[2.5rem] text-center border-luxury-gold/10 relative overflow-hidden">
              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-luxury-gold/20 to-transparent" />
              <p className="text-[10px] uppercase tracking-[0.5em] text-luxury-gold mb-6 font-bold">Instant Concierge</p>
-             <h4 className="text-luxury-cream text-2xl md:text-3xl font-serif mb-8 italic-serif">Reach us on WhatsApp for personal assistance</h4>
+             <h4 className="text-luxury-cream text-2xl md:text-3xl font-serif mb-8 italic-serif">Reach our Wayanad homestay team on WhatsApp for personal assistance</h4>
              <a
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello! I would like to inquire about Estilo Mansa.')}`}
               target="_blank"

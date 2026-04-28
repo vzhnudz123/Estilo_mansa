@@ -67,7 +67,7 @@ const RoomManager = () => {
       price: 1,
       capacity: 1,
       amenities: ['Room media'],
-      images: editingId ? undefined : ['/src/assets/IMG_8813.jpeg'],
+      images: editingId ? undefined : ['/src/assets/IMG_8813.webp'],
       videos: editingId ? undefined : []
     };
 

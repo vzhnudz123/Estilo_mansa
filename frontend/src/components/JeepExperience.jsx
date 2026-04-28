@@ -1,20 +1,21 @@
 import React, { useRef, useEffect, memo } from 'react';
-import { JEEP_VIDEO } from '../assets/index.js';
+import { JEEP_VIDEO, SIDEVIEW } from '../assets/index.js';
+import LazyVideo from './ui/LazyVideo';
 
 const JeepExperience = () => {
   const sectionRef = useRef(null);
-  const videoRef = useRef(null);
+  const mediaRef = useRef(null);
 
   // Parallax for the video layer
   useEffect(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
+    const media = mediaRef.current;
+    if (!media) return;
     const onScroll = () => {
       const rect = sectionRef.current?.getBoundingClientRect();
       if (!rect) return;
       const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
       const clamped = Math.max(0, Math.min(1, progress));
-      vid.style.transform = `translateY(${(clamped - 0.5) * -50}px)`;
+      media.style.transform = `translateY(${(clamped - 0.5) * -50}px)`;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -35,15 +36,16 @@ const JeepExperience = () => {
   return (
     <section ref={sectionRef} className="relative min-h-[70vh] md:min-h-screen w-full overflow-hidden flex items-center py-20 md:py-32">
       {/* ── Video background ── */}
-      <div className="absolute inset-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
+      <div ref={mediaRef} className="absolute inset-0 overflow-hidden will-change-transform">
+        <LazyVideo
           src={JEEP_VIDEO}
+          poster={SIDEVIEW}
+          alt="Jeep approach to EstiloMansa homestay in Wayanad"
+          buttonLabel="Play arrival video"
+          loop
+          muted
+          className="h-full w-full"
+          videoClassName="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 bg-gradient-to-b from-luxury-bg/90 via-transparent to-luxury-bg/90" />

@@ -65,7 +65,7 @@ const EventManager = () => {
         offerPrice: form.offerPrice ? parseFloat(form.offerPrice) : undefined,
         startDate: form.startDate ? new Date(form.startDate).toISOString() : undefined,
         endDate: form.endDate ? new Date(form.endDate).toISOString() : undefined,
-        image: '/src/assets/IMG_8813.jpeg', // Default image as per previous logic
+        image: '/src/assets/IMG_8813.webp', // Default image as per previous logic
       };
       await api.post('/events', payload);
       setForm(EMPTY_FORM);

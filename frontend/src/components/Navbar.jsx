@@ -3,14 +3,15 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ArrowRight, Instagram, LogIn, User, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import KasaLogo from '../assets/image.png';
+import KasaLogo from '../assets/image.webp';
+import { HOME_PATHS, ROUTES } from '../utils/routes';
 
 const navLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/rooms', label: 'Rooms' },
-  { to: '/#tents', label: 'Tents' },
-  { to: '/gallery', label: 'Gallery' },
-  { to: '/contact', label: 'Contact' },
+  { to: ROUTES.home, label: 'Home' },
+  { to: ROUTES.rooms, label: 'Rooms' },
+  { to: ROUTES.homeSection('tents'), label: 'Tents' },
+  { to: ROUTES.gallery, label: 'Gallery' },
+  { to: ROUTES.contact, label: 'Contact' },
 ];
 
 const Navbar = () => {
@@ -38,23 +39,22 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate(ROUTES.home);
   };
 
   const handleNavClick = (e, link) => {
-    if (link.to.startsWith('/#')) {
+    if (link.to.includes('#')) {
       e.preventDefault();
-      const id = link.to.replace('/#', '');
+      const [basePath, hash] = link.to.split('#');
+      const id = hash;
       
-      if (location.pathname === '/') {
-        // Already on home, just scroll
+      if (HOME_PATHS.has(location.pathname) && HOME_PATHS.has(basePath)) {
         const element = document.getElementById(id);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
       } else {
-        // Navigate home then scroll
-        navigate('/');
+        navigate(basePath);
         setTimeout(() => {
           const element = document.getElementById(id);
           if (element) {
@@ -63,6 +63,19 @@ const Navbar = () => {
         }, 100);
       }
     }
+  };
+
+  const isLinkActive = (path) => {
+    if (HOME_PATHS.has(path)) return HOME_PATHS.has(location.pathname);
+    if (path === ROUTES.rooms) {
+      return (
+        location.pathname === ROUTES.rooms ||
+        location.pathname === ROUTES.legacyRooms ||
+        location.pathname.startsWith(`${ROUTES.rooms}/`) ||
+        location.pathname.startsWith(`${ROUTES.legacyRooms}/`)
+      );
+    }
+    return location.pathname === path;
   };
 
   return (
@@ -89,7 +102,7 @@ const Navbar = () => {
                 >
                   <Instagram size={17} className="transition-transform duration-300 group-hover:scale-110" />
                 </a>
-                <Link to="/" className="flex flex-col leading-none transition-transform hover:scale-[1.02]">
+                <Link to={ROUTES.home} className="flex flex-col leading-none transition-transform hover:scale-[1.02]">
                   <span className="font-serif text-[1rem] tracking-tight text-white sm:text-lg">Estilo</span>
                   <span className="-mt-0.5 font-script text-[1.5rem] text-[#c8a96e] sm:text-[1.7rem]">Mansa</span>
                 </Link>
@@ -102,10 +115,10 @@ const Navbar = () => {
                     key={link.to}
                     to={link.to}
                     onClick={(e) => handleNavClick(e, link)}
-                    className={`relative px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.3em] transition-all duration-300 hover:text-[#c8a96e] ${location.pathname === link.to ? 'text-[#c8a96e]' : 'text-white/70'}`}
+                    className={`relative px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.3em] transition-all duration-300 hover:text-[#c8a96e] ${isLinkActive(link.to) ? 'text-[#c8a96e]' : 'text-white/70'}`}
                   >
                     {link.label}
-                    {location.pathname === link.to && (
+                    {isLinkActive(link.to) && (
                       <motion.div layoutId="navUnderline" className="absolute bottom-0 left-4 right-4 h-[1px] bg-[#c8a96e]" />
                     )}
                   </Link>
@@ -121,7 +134,7 @@ const Navbar = () => {
                   <div className="absolute inset-0 rounded-lg bg-[#c8a96e]/5 blur-lg pointer-events-none" />
                   <img
                     src={KasaLogo}
-                    alt="Kasa Exotica"
+                    alt="EstiloMansa logo"
                     className="relative z-10 w-auto h-15 sm:h-22 object-contain transition-all duration-500 hover:scale-110 drop-shadow-[0_0_10px_rgba(200,169,110,0.2)]"
                   />
                 </div>
@@ -131,7 +144,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-3">
                   {user ? (
                     <div className="flex items-center gap-2">
-                      <Link to={user.role === 'admin' ? '/admin' : '/profile'} className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#c8a96e]/30 bg-white/5 transition-all hover:border-[#c8a96e]">
+                      <Link to={user.role === 'admin' ? ROUTES.admin : '/profile'} className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#c8a96e]/30 bg-white/5 transition-all hover:border-[#c8a96e]">
                         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#c8a96e] text-black text-[10px] font-bold">
                           {user.name?.[0].toUpperCase() || 'U'}
                         </div>
@@ -147,7 +160,7 @@ const Navbar = () => {
                       </button>
                     </div>
                   ) : (
-                    <Link to="/login" className="flex items-center gap-1.5 rounded-full border border-[#c8a96e]/40 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-[#c8a96e] hover:text-black transition-all duration-300">
+                    <Link to={ROUTES.login} className="flex items-center gap-1.5 rounded-full border border-[#c8a96e]/40 bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-[#c8a96e] hover:text-black transition-all duration-300">
                       <LogIn size={13} />
                       <span className="hidden sm:block">Sign In</span>
                     </Link>
@@ -200,7 +213,7 @@ const Navbar = () => {
                       setIsOpen(false);
                       handleNavClick(e, link);
                     }}
-                    className={`flex items-center justify-between rounded-2xl border px-5 py-4 transition-all ${location.pathname === link.to ? 'border-[#c8a96e]/30 bg-[#c8a96e]/10 text-[#c8a96e]' : 'border-white/5 bg-white/5 text-luxury-cream hover:border-[#c8a96e]/20'}`}
+                    className={`flex items-center justify-between rounded-2xl border px-5 py-4 transition-all ${isLinkActive(link.to) ? 'border-[#c8a96e]/30 bg-[#c8a96e]/10 text-[#c8a96e]' : 'border-white/5 bg-white/5 text-luxury-cream hover:border-[#c8a96e]/20'}`}
                   >
                     <span className="font-serif text-2xl">{link.label}</span>
                     <ArrowRight size={18} />
@@ -210,11 +223,11 @@ const Navbar = () => {
               <div className="my-8 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               {user ? (
                 <div className="space-y-3">
-                  <Link to={user.role === 'admin' ? '/admin' : '/profile'} onClick={() => setIsOpen(false)} className="btn-outline w-full justify-center py-4">Account</Link>
+                  <Link to={user.role === 'admin' ? ROUTES.admin : '/profile'} onClick={() => setIsOpen(false)} className="btn-outline w-full justify-center py-4">Account</Link>
                   <button onClick={handleLogout} className="btn-primary w-full justify-center py-4">Logout</button>
                 </div>
               ) : (
-                <Link to="/login" onClick={() => setIsOpen(false)} className="btn-primary w-full justify-center py-4">Sign In</Link>
+                <Link to={ROUTES.login} onClick={() => setIsOpen(false)} className="btn-primary w-full justify-center py-4">Sign In</Link>
               )}
             </motion.div>
           </motion.div>

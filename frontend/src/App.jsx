@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthContext } from './context/AuthContext';
+import { ROUTES } from './utils/routes';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -22,7 +23,7 @@ const Contact       = lazy(() => import('./pages/Contact'));
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return null;
-  return user?.role === 'admin' ? children : <Navigate to="/" />;
+  return user?.role === 'admin' ? children : <Navigate to={ROUTES.home} replace />;
 };
 
 const AppContent = () => {
@@ -47,21 +48,25 @@ const AppContent = () => {
             <Suspense fallback={null}>
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
-                  <Route path="/"        element={<PageTransition><Home /></PageTransition>} />
-                  <Route path="/rooms"   element={<PageTransition><Rooms /></PageTransition>} />
-                  <Route path="/rooms/:id" element={<PageTransition><RoomDetails /></PageTransition>} />
-                  <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
-                  <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-                  <Route path="/login"   element={<PageTransition><Login /></PageTransition>} />
-                  <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
+                  <Route path={ROUTES.legacyHome} element={<PageTransition><Home /></PageTransition>} />
+                  <Route path={ROUTES.home} element={<PageTransition><Home /></PageTransition>} />
+                  <Route path={ROUTES.legacyRooms} element={<PageTransition><Rooms /></PageTransition>} />
+                  <Route path={ROUTES.rooms} element={<PageTransition><Rooms /></PageTransition>} />
+                  <Route path={ROUTES.legacyRoomDetails()} element={<PageTransition><RoomDetails /></PageTransition>} />
+                  <Route path={ROUTES.roomDetails()} element={<PageTransition><RoomDetails /></PageTransition>} />
+                  <Route path={ROUTES.gallery} element={<PageTransition><Gallery /></PageTransition>} />
+                  <Route path={ROUTES.contact} element={<PageTransition><Contact /></PageTransition>} />
+                  <Route path={ROUTES.login} element={<PageTransition><Login /></PageTransition>} />
+                  <Route path={ROUTES.register} element={<PageTransition><Register /></PageTransition>} />
                   <Route
-                    path="/admin"
+                    path={ROUTES.admin}
                     element={
                       <PageTransition>
                         <AdminRoute><AdminDashboard /></AdminRoute>
                       </PageTransition>
                     }
                   />
+                  <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
                 </Routes>
               </AnimatePresence>
             </Suspense>

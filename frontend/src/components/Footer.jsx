@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Instagram, Facebook, MessageCircle, ArrowRight } from 'lucide-react';
+import { ROUTES } from '../utils/routes';
 
 const WHATSAPP_NUMBER = '919037706644';
 
@@ -31,7 +32,7 @@ const Footer = () => {
                   <MessageCircle size={13} />
                   <span>Book via WhatsApp</span>
                 </a>
-                <Link to="/contact" className="btn-outline text-[11px]">
+                <Link to={ROUTES.contact} className="btn-outline text-[11px]">
                   <span>Contact Concierge</span>
                   <ArrowRight size={12} />
                 </Link>
@@ -42,10 +43,10 @@ const Footer = () => {
               <p className="section-label mb-5">Explore</p>
               <div className="space-y-2">
                 {[
-                  { to: '/', label: 'Home' },
-                  { to: '/rooms', label: 'Our Rooms' },
-                  { to: '/gallery', label: 'Gallery' },
-                  { to: '/contact', label: 'Contact' },
+                  { to: ROUTES.home, label: 'Home' },
+                  { to: ROUTES.rooms, label: 'Our Rooms' },
+                  { to: ROUTES.gallery, label: 'Gallery' },
+                  { to: ROUTES.contact, label: 'Contact' },
                 ].map(link => (
                   <Link
                     key={link.to}

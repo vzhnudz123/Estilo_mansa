@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Check, X, MessageSquare, Star } from 'lucide-react';
+import { Trash2, Check, X, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import api from '../api/axios';
+
+const FeedbackAvatar = ({ name, email, avatarUrl }) => {
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt={`${name} profile`}
+        className="h-10 w-10 rounded-full border border-luxury-gold/20 object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+
+  return (
+    <div className="w-10 h-10 rounded-full bg-luxury-dark border border-luxury-gold/20 flex items-center justify-center text-luxury-gold font-serif flex-shrink-0">
+      {(name || email || '?')?.[0]?.toUpperCase()}
+    </div>
+  );
+};
 
 const StarDisplay = ({ rating }) => (
   <div className="flex gap-0.5">
@@ -94,14 +114,13 @@ const FeedbackManager = () => {
             >
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 {/* Avatar */}
-                <div className="w-10 h-10 rounded-full bg-luxury-dark border border-luxury-gold/20 flex items-center justify-center text-luxury-gold font-serif flex-shrink-0">
-                  {item.name?.[0]?.toUpperCase()}
-                </div>
+                <FeedbackAvatar name={item.name} email={item.email} avatarUrl={item.avatarUrl} />
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <span className="text-luxury-cream font-medium text-sm">{item.name}</span>
+                    {item.email && <span className="text-luxury-text/35 text-[10px]">{item.email}</span>}
                     <StarDisplay rating={item.rating} />
                     <span className="text-luxury-text/30 text-[10px]">
                       {item.createdAt ? format(new Date(item.createdAt), 'MMM dd, yyyy') : ''}

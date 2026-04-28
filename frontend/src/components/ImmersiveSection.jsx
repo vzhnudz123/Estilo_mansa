@@ -76,13 +76,13 @@ const ImmersiveSection = () => {
           <div className="order-1 lg:order-2 relative">
             {/* Main image */}
             <div className="relative rounded-2xl overflow-hidden shadow-[0_60px_120px_rgba(0,0,0,0.6)] border border-white/8 h-[480px] md:h-[600px]">
-              <img
-                ref={mainImgRef}
-                src={IMMERSIVE_IMAGES[0]}
-                alt="Estilo Mansa atmosphere"
-                className="w-full h-full object-cover will-change-transform"
-                loading="lazy"
-                decoding="async"
+                <img
+                  ref={mainImgRef}
+                  src={IMMERSIVE_IMAGES[0]}
+                  alt="EstiloMansa homestay in Wayanad atmosphere"
+                  className="w-full h-full object-cover will-change-transform"
+                  loading="lazy"
+                  decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-obsidian/70 via-transparent to-transparent" />
               <div className="absolute bottom-8 left-8 right-8">
@@ -94,12 +94,12 @@ const ImmersiveSection = () => {
             {/* Floating accent cards */}
             <div className="absolute -left-8 top-10 hidden md:block imm-reveal fade-up">
               <div className="w-40 h-52 rounded-xl overflow-hidden border border-white/8 shadow-2xl">
-                <img src={IMMERSIVE_IMAGES[1]} alt="" className="w-full h-full object-cover" loading="lazy" />
+                <img src={IMMERSIVE_IMAGES[1]} alt="Interior comfort at EstiloMansa Wayanad" className="w-full h-full object-cover" loading="lazy" decoding="async" />
               </div>
             </div>
             <div className="absolute -right-6 bottom-16 hidden md:block imm-reveal fade-up" style={{ transitionDelay: '0.15s' }}>
               <div className="w-44 h-56 rounded-xl overflow-hidden border border-white/8 shadow-2xl">
-                <img src={IMMERSIVE_IMAGES[2]} alt="" className="w-full h-full object-cover" loading="lazy" />
+                <img src={IMMERSIVE_IMAGES[2]} alt="Scenic room corner at EstiloMansa Wayanad" className="w-full h-full object-cover" loading="lazy" decoding="async" />
               </div>
             </div>
           </div>

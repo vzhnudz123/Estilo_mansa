@@ -3,6 +3,7 @@ import EventManager from '../components/EventManager';
 import StoryManager from '../components/StoryManager';
 import FeedbackManager from '../components/FeedbackManager';
 import VideoManager from '../components/VideoManager';
+import SEO from '../components/SEO';
 import {
   Calendar,
   BookOpen,
@@ -12,6 +13,7 @@ import {
   ChevronRight,
   Sparkles,
 } from 'lucide-react';
+import { ROUTES } from '../utils/routes';
 
 const tabs = [
   { id: 'events',   icon: Calendar,       label: 'Events & Offers',  desc: 'Manage events and promotional offers' },
@@ -26,6 +28,12 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#07100d] pt-24 md:pt-32">
+      <SEO
+        title="Admin Dashboard | EstiloMansa"
+        description="Internal content dashboard for EstiloMansa."
+        path={ROUTES.admin}
+        noindex
+      />
       <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-[1680px] flex-col lg:flex-row">
 
         {/* ── Sidebar ── */}

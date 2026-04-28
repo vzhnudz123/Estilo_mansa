@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api/axios';
 import { ArrowRight, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import SEO from '../components/SEO';
+import { ROUTES } from '../utils/routes';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +14,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.redirectTo || ROUTES.home;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +23,7 @@ const Login = () => {
     try {
       const res = await api.post('/auth/login', { email, password });
       login(res.data.token, res.data.user);
-      navigate('/');
+      navigate(redirectTo);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
     } finally {
@@ -29,6 +33,12 @@ const Login = () => {
 
   return (
     <div className="page-shell flex min-h-screen items-center justify-center px-4 py-28 sm:px-6">
+      <SEO
+        title="Guest Login | EstiloMansa"
+        description="Secure login for EstiloMansa guests and administrators."
+        path={ROUTES.login}
+        noindex
+      />
       <motion.div
         className="panel relative grid w-full max-w-6xl overflow-hidden lg:grid-cols-[1.02fr_0.98fr]"
         initial={{ opacity: 0, y: 30 }}
@@ -132,7 +142,7 @@ const Login = () => {
           <div className="gold-divider mt-8" />
           <p className="mt-6 text-center text-sm text-luxury-text/40">
           Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-luxury-gold transition-colors hover:text-luxury-gold-light">
+            <Link to={ROUTES.register} className="font-medium text-luxury-gold transition-colors hover:text-luxury-gold-light">
             Create one
           </Link>
         </p>

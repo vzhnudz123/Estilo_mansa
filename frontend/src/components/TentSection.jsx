@@ -55,7 +55,7 @@ const TentSection = () => {
           <div className="relative group rounded-2xl overflow-hidden aspect-[16/9] md:aspect-[16/8] shadow-xl mb-4">
             <img 
               src={TENT_IMAGES[0]} 
-              alt="Luxury Tent Setup" 
+              alt="Luxury tent stay at EstiloMansa in Wayanad" 
               loading="lazy"
               decoding="async"
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
@@ -75,7 +75,7 @@ const TentSection = () => {
             <div className="min-w-[85%] md:min-w-0 snap-center relative group rounded-2xl overflow-hidden aspect-[4/3] shadow-lg">
                <img 
                   src={TENT_IMAGES[2]} 
-                  alt="Tent Detail" 
+                  alt="Tent detail at EstiloMansa Wayanad" 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
@@ -86,7 +86,7 @@ const TentSection = () => {
             <div className="min-w-[85%] md:min-w-0 snap-center relative group rounded-2xl overflow-hidden aspect-[4/3] shadow-lg">
                <img 
                   src={TENT_IMAGES[4]} 
-                  alt="Tent View" 
+                  alt="Tent view at EstiloMansa homestay in Wayanad" 
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"

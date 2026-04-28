@@ -1,7 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Star, Quote, Send, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import { AuthContext } from '../context/AuthContext';
+import { ROUTES } from '../utils/routes';
 
 const StarRow = ({ rating, interactive = false, value, onChange }) => (
   <div className="flex gap-1">
@@ -22,10 +25,32 @@ const StarRow = ({ rating, interactive = false, value, onChange }) => (
   </div>
 );
 
+const FeedbackAvatar = ({ name, email, avatarUrl }) => {
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt={`${name} profile`}
+        className="h-10 w-10 rounded-full border border-luxury-gold/20 object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+
+  return (
+    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-luxury-dark border border-luxury-gold/20 text-luxury-gold font-serif text-sm">
+      {(name || email || '?')?.[0]?.toUpperCase()}
+    </div>
+  );
+};
+
 const FeedbackSection = () => {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [feedbacks, setFeedbacks] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '', rating: 5, comment: '' });
+  const [formData, setFormData] = useState({ rating: 5, comment: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const scrollRef = useRef(null);
@@ -55,7 +80,7 @@ const FeedbackSection = () => {
     try {
       await api.post('/feedback', formData);
       setSubmitted(true);
-      setFormData({ name: '', rating: 5, comment: '' });
+      setFormData({ rating: 5, comment: '' });
       setTimeout(() => { setSubmitted(false); setShowForm(false); }, 3000);
     } catch {
       alert('Failed to submit. Please try again.');
@@ -70,8 +95,16 @@ const FeedbackSection = () => {
     el.scrollBy({ left: dir * 340, behavior: 'smooth' });
   };
 
+  const handleShareExperience = () => {
+    if (!user) {
+      navigate(ROUTES.login, { state: { redirectTo: ROUTES.homeSection('feedback') } });
+      return;
+    }
+    setShowForm((value) => !value);
+  };
+
   return (
-    <section className="py-24 md:py-36 bg-luxury-bg relative overflow-hidden">
+    <section id="feedback" className="py-24 md:py-36 bg-luxury-bg relative overflow-hidden">
       <div className="absolute top-0 left-0 w-96 h-96 bg-luxury-green/5 rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-luxury-gold/5 rounded-full blur-[130px] pointer-events-none" />
 
@@ -89,10 +122,10 @@ const FeedbackSection = () => {
           </div>
 
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={handleShareExperience}
             className="btn-outline py-3 px-8 text-xs self-start md:self-auto"
           >
-            {showForm ? 'View Stories' : 'Share Your Experience'}
+            {showForm ? 'View Stories' : user ? 'Share Your Experience' : 'Login to Share'}
           </button>
         </div>
 
@@ -134,12 +167,12 @@ const FeedbackSection = () => {
                         </p>
 
                         <div className="flex items-center gap-3 border-t border-white/6 pt-5">
-                          <div className="w-9 h-9 rounded-full bg-luxury-dark border border-luxury-gold/20 flex items-center justify-center text-luxury-gold font-serif text-sm">
-                            {item.name?.[0]?.toUpperCase()}
-                          </div>
+                          <FeedbackAvatar name={item.name} email={item.email} avatarUrl={item.avatarUrl} />
                           <div>
                             <h4 className="text-luxury-cream font-medium text-sm">{item.name}</h4>
-                            <p className="text-luxury-text/35 text-[9px] tracking-widest uppercase">Verified Guest</p>
+                            <p className="text-luxury-text/35 text-[9px] tracking-widest uppercase">
+                              {item.email || 'Verified Guest'}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -171,17 +204,18 @@ const FeedbackSection = () => {
                 </div>
               ) : (
                 <div className="glass-card p-8 md:p-12 rounded-2xl">
+                  <div className="mb-6 flex items-center gap-4 rounded-2xl border border-white/8 bg-luxury-dark/35 px-4 py-4">
+                    <FeedbackAvatar name={user?.name} email={user?.email} avatarUrl={user?.avatarUrl} />
+                    <div>
+                      <p className="text-sm font-medium text-luxury-cream">{user?.name}</p>
+                      <p className="text-[10px] uppercase tracking-[0.28em] text-luxury-text/40">{user?.email}</p>
+                    </div>
+                  </div>
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase tracking-widest text-luxury-gold/80">Your Name</label>
-                        <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="input-field" placeholder="e.g. Priya Menon" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase tracking-widest text-luxury-gold/80">Rating</label>
-                        <div className="flex items-center gap-2 p-3.5 bg-luxury-dark/40 rounded-xl border border-white/8">
-                          <StarRow interactive value={formData.rating} onChange={r => setFormData({ ...formData, rating: r })} />
-                        </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest text-luxury-gold/80">Rating</label>
+                      <div className="flex items-center gap-2 p-3.5 bg-luxury-dark/40 rounded-xl border border-white/8">
+                        <StarRow interactive value={formData.rating} onChange={r => setFormData({ ...formData, rating: r })} />
                       </div>
                     </div>
                     <div className="space-y-2">

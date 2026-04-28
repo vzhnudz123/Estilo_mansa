@@ -43,7 +43,7 @@ const Hero = () => {
         >
           <OptimizedImage
             src={images[current]}
-            alt={`Slide ${current + 1}`}
+            alt={`EstiloMansa homestay in Wayanad scenic view ${current + 1}`}
             priority={current === 0}
             aspectRatio="unset"
             className="h-full w-full"
@@ -76,6 +76,7 @@ const Hero = () => {
             className="font-script text-5xl sm:text-7xl md:text-[6.5rem] lg:text-[8rem] leading-none text-luxury-cream mb-5 drop-shadow-2xl"
           >
             Estilo Mansa
+            <span className="sr-only"> Homestay in Wayanad</span>
           </motion.h1>
 
           {/* Tagline */}
@@ -84,7 +85,7 @@ const Hero = () => {
             animate={{ opacity: 0.75 }}
             className="mb-10 max-w-xl text-base md:text-lg font-light leading-relaxed text-luxury-text"
           >
-            Where the mist meets the mountains. A sanctuary crafted for those who seek quiet luxury in the heart of Wayanad.
+            Affordable homestay in Wayanad for travelers seeking scenic views, comfortable rooms, and a memorable budget stay in Kerala.
           </motion.p>
 
           {/* CTAs */}

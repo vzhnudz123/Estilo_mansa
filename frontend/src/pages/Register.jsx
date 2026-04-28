@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api/axios';
 import { ArrowRight, Lock, Mail, User, Sparkles, Leaf } from 'lucide-react';
+import SEO from '../components/SEO';
+import { ROUTES } from '../utils/routes';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -12,13 +14,15 @@ const Register = () => {
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.redirectTo || ROUTES.home;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await api.post('/auth/register', { name, email, password });
       login(response.data.token, response.data.user);
-      navigate('/');
+      navigate(redirectTo);
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed');
     }
@@ -26,6 +30,12 @@ const Register = () => {
 
   return (
     <div className="page-shell flex min-h-screen items-center justify-center px-4 py-28 sm:px-6">
+      <SEO
+        title="Create Account | EstiloMansa"
+        description="Create an EstiloMansa account to manage reservations and guest access."
+        path={ROUTES.register}
+        noindex
+      />
       <motion.div
         className="panel relative grid w-full max-w-6xl overflow-hidden lg:grid-cols-[0.96fr_1.04fr]"
         initial={{ opacity: 0, y: 28 }}
@@ -126,7 +136,7 @@ const Register = () => {
         
           <div className="gold-divider mt-8" />
           <p className="mt-6 text-center text-sm text-cream/45">
-            Already have an account? <Link to="/login" className="font-medium text-gold transition-colors hover:text-gold-light">Log in</Link>
+            Already have an account? <Link to={ROUTES.login} className="font-medium text-gold transition-colors hover:text-gold-light">Log in</Link>
         </p>
         </div>
       </motion.div>

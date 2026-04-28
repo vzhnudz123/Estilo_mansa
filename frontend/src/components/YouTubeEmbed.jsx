@@ -18,14 +18,13 @@ const YouTubeEmbed = ({ url, title }) => {
     <div className="w-full h-full relative group">
       <iframe
         className="w-full h-full absolute inset-0"
-        src={`https://www.youtube.com/embed/${videoId}?autoplay=0&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&rel=0`}
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=0&controls=1&modestbranding=1&rel=0&playsinline=1`}
         title={title || "YouTube video player"}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         loading="lazy"
       />
-      {/* Overlay to catch clicks and prevent navigation if needed, or just for styling */}
       <div className="absolute inset-0 bg-transparent pointer-events-none group-hover:bg-black/10 transition-colors duration-500" />
     </div>
   );

@@ -28,9 +28,8 @@ const InstagramEmbed = ({ url }) => {
         frameBorder="0"
         scrolling="no"
         title="Instagram Reel"
+        loading="lazy"
         onLoad={(e) => {
-          // If iframe loads but stays empty or blocked, we might not know,
-          // but we can at least ensure it takes up space.
           e.target.style.opacity = '1';
         }}
         style={{ opacity: 0, transition: 'opacity 0.3s' }}

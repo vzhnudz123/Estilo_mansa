@@ -40,7 +40,7 @@ const HeroManager = () => {
     if (isSubmitting) return;
     
     if (form.images.length === 0 && !editingId) {
-      form.images = ['/src/assets/IMG_8813.jpeg']; // Default fallback asset
+      form.images = ['/src/assets/IMG_8813.webp']; // Default fallback asset
     }
 
     setIsSubmitting(true);

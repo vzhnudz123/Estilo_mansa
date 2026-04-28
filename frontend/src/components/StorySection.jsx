@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import api from '../api/axios';
 import { STORY_BG } from '../assets/index.js';
 
-import storyImg1 from '../assets/WhatsApp Image 2026-04-22 at 07.37.14.jpeg';
-import storyImg2 from '../assets/WhatsApp Image 2026-04-22 at 07.37.09.jpeg';
-import storyImg3 from '../assets/WhatsApp Image 2026-04-22 at 07.36.53.jpeg';
-import storyImg4 from '../assets/WhatsApp Image 2026-04-22 at 07.36.26 (2).jpeg';
+import storyImg1 from '../assets/WhatsApp Image 2026-04-22 at 07.37.14.webp';
+import storyImg2 from '../assets/WhatsApp Image 2026-04-22 at 07.37.09.webp';
+import storyImg3 from '../assets/WhatsApp Image 2026-04-22 at 07.36.53.webp';
+import storyImg4 from '../assets/WhatsApp Image 2026-04-22 at 07.36.26 (2).webp';
 
 const DEFAULT_STORY = {
   title: 'Where the Clouds Come to Rest',
@@ -46,7 +46,7 @@ const StorySection = () => {
       <div className="absolute inset-0 z-0">
         <img
           src={STORY_BG}
-          alt=""
+          alt="Scenic background at EstiloMansa homestay in Wayanad"
           className="w-full h-full object-cover"
           loading="lazy"
           decoding="async"
@@ -87,8 +87,9 @@ const StorySection = () => {
               <img 
                 src={src} 
                 className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" 
-                alt="Estilo Mansa Story" 
+                alt={`EstiloMansa homestay in Wayanad story view ${idx + 1}`} 
                 loading="lazy" 
+                decoding="async"
               />
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-700" />
             </div>

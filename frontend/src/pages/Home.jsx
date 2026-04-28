@@ -2,6 +2,10 @@ import React, { useRef, useEffect, useState, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
+import SEO from '../components/SEO';
+import { HERO_IMAGE } from '../assets';
+import { createLodgingSchema, createWebsiteSchema } from '../seo/site';
+import { ROUTES } from '../utils/routes';
 
 import Hero from '../components/Hero';
 import HomeVideo from '../components/HomeVideo';
@@ -75,6 +79,22 @@ const Home = () => {
 
   return (
     <>
+      <SEO
+        title="EstiloMansa Homestay in Wayanad | Budget Stay Kerala"
+        description="Affordable homestay in Wayanad with scenic views, comfortable rooms, and easy booking."
+        path={ROUTES.home}
+        image={HERO_IMAGE}
+        imageAlt="EstiloMansa homestay in Wayanad with scenic valley views"
+        structuredData={[
+          createWebsiteSchema(),
+          createLodgingSchema({
+            url: ROUTES.home,
+            image: HERO_IMAGE,
+            description: 'Affordable homestay in Wayanad with scenic views, comfortable rooms, and easy booking.',
+          }),
+        ]}
+      />
+
       <AnimatePresence>
         {isLoading && (
           <Suspense fallback={null}>
@@ -126,7 +146,7 @@ const Home = () => {
         <SectionWrapper>
           <GallerySection limit={9} />
           <div className="flex justify-center pb-16 -mt-8">
-            <Link to="/gallery" className="btn-outline group">
+            <Link to={ROUTES.gallery} className="btn-outline group">
               <span>View Full Gallery</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -167,7 +187,7 @@ const Home = () => {
                   <span>Secure Your Sanctuary</span>
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
-                <Link to="/rooms" className="btn-outline !px-12 !py-5 group">
+                <Link to={ROUTES.rooms} className="btn-outline !px-12 !py-5 group">
                   <span>Explore Rooms</span>
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
