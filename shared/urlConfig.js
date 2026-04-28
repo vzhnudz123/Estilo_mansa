@@ -8,7 +8,7 @@ export const URLS = {
     serverOrigin: 'http://localhost:3000',
   },
   production: {
-    frontendOrigin: 'https://estilo-mansa.vercel.app',
+    frontendOrigin: 'https://www.estilomansa.in',
     serverOrigin: 'https://estilo-mansa.onrender.com',
   },
 };
