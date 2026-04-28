@@ -1,70 +1,50 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const InstagramEmbed = ({ url }) => {
-  useEffect(() => {
-    // Check if script is already in document
-    let script = document.getElementById('instagram-embed-script');
-    
-    if (!script) {
-      script = document.createElement('script');
-      script.async = true;
-      script.defer = true;
-      script.src = "https://www.instagram.com/embed.js";
-      script.id = "instagram-embed-script";
-      document.body.appendChild(script);
-    }
-
-    // Process embeds
-    const process = () => {
-      if (window.instgrm) {
-        window.instgrm.Embeds.process();
-      }
-    };
-
-    process();
-    // Also try after a short delay to ensure DOM is ready
-    const timer = setTimeout(process, 500);
-    return () => clearTimeout(timer);
-  }, [url]);
-
-  // Handle various instagram URL formats
+  // Extract ID and build embed URL
   const getEmbedUrl = (url) => {
     try {
       const u = new URL(url);
       const cleanPath = u.pathname.split('?')[0].replace(/\/$/, '');
-      return `https://www.instagram.com${cleanPath}/`;
+      // Ensure it ends with /embed
+      return `https://www.instagram.com${cleanPath}/embed/`;
     } catch {
       return url;
     }
   };
 
-  const finalUrl = getEmbedUrl(url);
+  const embedUrl = getEmbedUrl(url);
 
   return (
-    <div className="w-full h-full flex flex-col items-start justify-start bg-white overflow-y-auto hide-scrollbar">
-      <blockquote
-        className="instagram-media"
-        data-instgrm-permalink={finalUrl}
-        data-instgrm-version="14"
-        style={{ 
-          width: '100%',
-          margin: '0',
-          padding: '0',
-          border: 'none',
-          minWidth: '100%'
+    <div className="w-full h-full bg-white relative flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center -z-10">
+        <div className="w-8 h-8 border-2 border-luxury-gold/20 border-t-luxury-gold rounded-full animate-spin" />
+      </div>
+      <iframe
+        src={embedUrl}
+        className="w-full h-full border-0"
+        allowTransparency="true"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        frameBorder="0"
+        scrolling="no"
+        title="Instagram Reel"
+        onLoad={(e) => {
+          // If iframe loads but stays empty or blocked, we might not know,
+          // but we can at least ensure it takes up space.
+          e.target.style.opacity = '1';
         }}
-      >
-        <div className="p-4 flex flex-col items-center justify-center min-h-[400px]">
-          <a
-            href={finalUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[#3897f0] text-sm font-semibold"
-          >
-            View on Instagram
-          </a>
-        </div>
-      </blockquote>
+        style={{ opacity: 0, transition: 'opacity 0.3s' }}
+      />
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="pointer-events-auto bg-black/60 backdrop-blur-md text-white/80 text-[10px] px-3 py-1 rounded-full uppercase tracking-widest hover:bg-luxury-gold hover:text-black transition-all"
+        >
+          Open in Instagram
+        </a>
+      </div>
     </div>
   );
 };

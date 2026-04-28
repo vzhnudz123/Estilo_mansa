@@ -5,7 +5,7 @@ import { UPLOAD_DIR, buildUploadUrl, ensureUploadDir } from '../config/uploads.j
 
 export default async function uploadRoutes(fastify, options) {
   // Use preHandler for authentication
-  fastify.post('/', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+  fastify.post('/', { preHandler: [fastify.requireAdmin] }, async (request, reply) => {
     try {
       ensureUploadDir();
       const parts = request.files();
@@ -48,9 +48,15 @@ export default async function uploadRoutes(fastify, options) {
     }
   });
 
-  fastify.delete('/:filename', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+  fastify.delete('/:filename', { preHandler: [fastify.requireAdmin] }, async (request, reply) => {
     try {
       const { filename } = request.params;
+      
+      // Basic path traversal protection
+      if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+        return reply.code(400).send({ error: 'Invalid filename' });
+      }
+
       const filePath = path.join(UPLOAD_DIR, filename);
 
       if (fs.existsSync(filePath)) {

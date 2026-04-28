@@ -6,7 +6,7 @@ export const getActiveVideos = async (req, reply) => {
     const videos = await Video.find({ isActive: true }).sort({ order: 1 });
     return reply.send(videos.map(normalizeVideoPayload));
   } catch (err) {
-    return reply.status(500).send({ error: err.message });
+    return reply.status(500).send({ error: 'Failed to fetch videos' });
   }
 };
 
@@ -15,7 +15,7 @@ export const getAllVideos = async (req, reply) => {
     const videos = await Video.find().sort({ order: 1 });
     return reply.send(videos.map(normalizeVideoPayload));
   } catch (err) {
-    return reply.status(500).send({ error: err.message });
+    return reply.status(500).send({ error: 'Failed to fetch all videos' });
   }
 };
 

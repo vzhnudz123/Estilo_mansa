@@ -74,10 +74,12 @@ const VideoCard = ({ video, index }) => {
       >
         {loading ? (
           <SkeletonLoader />
-        ) : isInstagram ? (
-          <InstagramEmbed url={video.url} />
         ) : active ? (
-          <YouTubeEmbed url={video.url} title={video.title} />
+          isInstagram ? (
+            <InstagramEmbed url={video.url} />
+          ) : (
+            <YouTubeEmbed url={video.url} title={video.title} />
+          )
         ) : (
           <>
             <div className="w-full h-full relative">
@@ -92,9 +94,13 @@ const VideoCard = ({ video, index }) => {
                 }}
               />
               <div className="hidden w-full h-full flex-col items-center justify-center bg-gradient-to-br from-black/40 to-black/80 gap-4">
-                <Youtube size={48} className="text-red-600/30" />
+                {isInstagram ? (
+                  <Instagram size={48} className="text-pink-600/30" />
+                ) : (
+                  <Youtube size={48} className="text-red-600/30" />
+                )}
                 <span className="text-[10px] text-white/40 uppercase tracking-widest">
-                  YouTube Video
+                  {isInstagram ? 'Instagram Reel' : 'YouTube Video'}
                 </span>
               </div>
             </div>
@@ -107,10 +113,14 @@ const VideoCard = ({ video, index }) => {
               aria-label="Play video"
             >
               <div className="w-16 h-16 rounded-full border-2 border-luxury-gold/60 flex items-center justify-center bg-black/50 backdrop-blur-sm group-hover:border-luxury-gold group-hover:bg-luxury-gold/20 transition-all duration-400 group-hover:scale-110">
-                <Youtube size={26} className="text-luxury-gold" />
+                {isInstagram ? (
+                  <Play size={22} fill="#c8a96e" className="text-luxury-gold ml-1" />
+                ) : (
+                  <Youtube size={26} className="text-luxury-gold" />
+                )}
               </div>
               <span className="text-white/70 text-[10px] tracking-[0.3em] uppercase">
-                Watch Short
+                {isInstagram ? 'View Reel' : 'Watch Short'}
               </span>
             </button>
           </>

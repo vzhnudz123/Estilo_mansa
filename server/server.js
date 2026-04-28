@@ -32,17 +32,36 @@ const app = Fastify({
   ignoreTrailingSlash: true 
 })
 
+const allowedOrigins = [
+  'https://www.estilomansa.in',
+  'https://estilomansa.in',
+  'http://localhost:5173', // Keep for development
+];
+
 // Security & Utility Plugins
 app.register(helmet, { crossOriginResourcePolicy: { policy: 'cross-origin' } })
 app.register(cors, {
-  origin: true,
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+      return;
+    }
+    cb(new Error('Not allowed by CORS'), false);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
 })
-app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
+app.register(rateLimit, { 
+  max: 100, 
+  timeWindow: '1 minute',
+  errorResponseBuilder: () => ({ error: 'Too many requests', message: 'Please try again later' })
+})
 app.register(jwt, {
-  secret: process.env.JWT_SECRET || 'super-secret-key-estilo-mansa',
+  secret: process.env.JWT_SECRET || (() => {
+    if (process.env.NODE_ENV === 'production') throw new Error('JWT_SECRET must be set in production');
+    return 'dev-secret-only-not-for-prod';
+  })(),
 })
 
 // Custom auth middleware
