@@ -67,7 +67,7 @@ const Footer = () => {
                     <MapPin size={14} />
                     <span className="text-[11px] font-semibold uppercase tracking-[0.24em]">Location</span>
                   </div>
-                  <p className="text-sm leading-7 text-luxury-text/58">Lakkidi, Kunnathidavaka, Wayanad, Kerala 673576</p>
+                  <p className="text-sm leading-7 text-luxury-text/58">Mansa Hills ,Lakkidi, Kunnathidavaka, Wayanad, Kerala 673576</p>
                 </div>
                 <div className="panel-soft px-4 py-4">
                   <div className="mb-2 flex items-center gap-3 text-luxury-gold">

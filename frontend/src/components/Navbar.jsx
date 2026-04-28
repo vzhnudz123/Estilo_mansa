@@ -8,6 +8,7 @@ import KasaLogo from '../assets/image.png';
 const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/rooms', label: 'Rooms' },
+  { to: '/#tents', label: 'Tents' },
   { to: '/gallery', label: 'Gallery' },
   { to: '/contact', label: 'Contact' },
 ];

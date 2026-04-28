@@ -18,7 +18,7 @@ import sideview from './Sideview.jpeg';
 import wa0 from './WhatsApp Image 2026-04-22 at 07.36.03.jpeg';
 import wa1 from './WhatsApp Image 2026-04-22 at 07.36.03 (1).jpeg';
 import wa2 from './WhatsApp Image 2026-04-22 at 07.36.03 (2).jpeg';
-import wa3 from './WhatsApp Image 2026-04-22 at 07.36.04.jpeg';
+import wa3 from './WhatsApp Image 2026-04-22 at 07.36.04 (1).jpeg';
 import wa4 from './WhatsApp Image 2026-04-22 at 07.36.09.jpeg';
 import wa5 from './WhatsApp Image 2026-04-22 at 07.36.10.jpeg';
 import wa6 from './WhatsApp Image 2026-04-22 at 07.36.10 (1).jpeg';
@@ -81,8 +81,8 @@ import jeepVideo from './WhatsApp Video 2026-04-22 at 07.38.37.mp4';
 // ─── Named Exports ─────────────────────────────────────────────────────────────
 
 /** Hero / main property shots */
-export const HERO_IMAGE     = img8813;
-export const SIDEVIEW       = sideview;
+export const HERO_IMAGE = img8813;
+export const SIDEVIEW = sideview;
 
 /** Hero Carousel Images */
 export const HERO_CAROUSEL_IMAGES = [
@@ -113,6 +113,20 @@ export const STORY_BG = img8823;
 /** Jeep experience video */
 export const JEEP_VIDEO = jeepVideo;
 
+import tent1 from './image copy.png';
+// wa12: WhatsApp Image 2026-04-22 at 07.36.16.jpeg
+// wa17: WhatsApp Image 2026-04-22 at 07.36.22.jpeg
+// wa19: WhatsApp Image 2026-04-22 at 07.36.24.jpeg
+// wa24: WhatsApp Image 2026-04-22 at 07.36.27.jpeg
+
+export const TENT_IMAGES = [
+  tent1,
+  wa12,
+  wa17,
+  wa19,
+  wa24
+];
+
 /** All gallery images (used on Gallery page + GallerySection) */
 export const ALL_GALLERY_IMAGES = [
   { src: img8813, label: 'The Estate' },
@@ -128,18 +142,17 @@ export const ALL_GALLERY_IMAGES = [
   { src: img8823, label: 'Valley Vista' },
   { src: img8824, label: 'Night View' },
   { src: img8825, label: 'Sunrise' },
-  { src: wa7,     label: 'Mountain Path' },
-  { src: wa11,    label: 'Garden Walk' },
-  { src: wa21,    label: 'Sunset Deck' },
-  { src: wa27,    label: 'Pool Area' },
-  { src: wa31,    label: 'Open Kitchen' },
-  { src: wa35,    label: 'Forest Trail' },
-  { src: wa39,    label: 'Wayanad Mist' },
-  { src: wa44,    label: 'Hammock View' },
-  { src: wa49,    label: 'Firepit Evening' },
-  { src: wa54,    label: 'Rock Garden' },
-  { src: wa58,    label: 'Creek Side' },
-  { src: wa3,     label: 'Hidden Path' },
-  { src: wa10,    label: 'Morning Brew' },
-  { src: wa16,    label: 'Cloud Valley' },
+  { src: wa7, label: 'Mountain Path' },
+  { src: wa11, label: 'Garden Walk' },
+  { src: wa21, label: 'Sunset Deck' },
+  { src: wa27, label: 'Pool Area' },
+  { src: wa31, label: 'Open Kitchen' },
+  { src: wa35, label: 'Forest Trail' },
+  { src: wa39, label: 'Wayanad Mist' },
+  { src: wa44, label: 'Hammock View' },
+  { src: wa49, label: 'Firepit Evening' },
+  { src: wa54, label: 'Rock Garden' },
+  { src: wa58, label: 'Creek Side' },
+  { src: wa10, label: 'Morning Brew' },
+  { src: wa16, label: 'Cloud Valley' },
 ];
