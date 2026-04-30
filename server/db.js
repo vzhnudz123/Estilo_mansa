@@ -10,7 +10,7 @@ const connectDB = async () => {
     console.log('✅ MongoDB Connected')
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message)
-    process.exit(1)
+    console.warn('⚠️ Continuing to serve lightweight routes such as /health without a database connection')
   }
 }
 

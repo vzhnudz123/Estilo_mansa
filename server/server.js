@@ -64,6 +64,10 @@ app.register(jwt, {
   })(),
 })
 
+app.get('/health', { config: { rateLimit: false } }, async (_request, reply) => {
+  return reply.code(200).send({ status: 'ok' })
+})
+
 // Custom auth middleware
 app.register(authMiddleware)
 
