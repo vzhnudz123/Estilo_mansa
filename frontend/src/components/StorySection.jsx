@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import api from '../api/axios';
-import { STORY_BG } from '../assets/index.js';
+// import { STORY_BG } from '../assets/index.js';
+import STORY_BG from '../assets/WhatsApp Image 2026-04-22 at 07.37.10 (1).webp';
 
-import storyImg1 from '../assets/WhatsApp Image 2026-04-22 at 07.37.14.webp';
-import storyImg2 from '../assets/WhatsApp Image 2026-04-22 at 07.37.09.webp';
+
+import storyImg1 from '../assets/Kasa.webp';
+import storyImg2 from '../assets/kasaarea.webp';
 import storyImg3 from '../assets/WhatsApp Image 2026-04-22 at 07.36.53.webp';
 import storyImg4 from '../assets/WhatsApp Image 2026-04-22 at 07.36.26 (2).webp';
 
@@ -51,7 +53,7 @@ const StorySection = () => {
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-luxury-bg via-luxury-bg/90 to-luxury-bg/60" />
+        <div className="absolute  from-luxury-bg via-luxury-bg/90 to-luxury-bg/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-luxury-bg via-transparent to-luxury-bg/80" />
       </div>
 

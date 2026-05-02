@@ -7,9 +7,13 @@ import { createBreadcrumbSchema, createLodgingSchema } from '../seo/site';
 import { ROUTES } from '../utils/routes';
 
 import estiloRoomVideo from '../assets/estiloroom.mp4';
-import roomWideViewVideo from '../assets/roomwideview.mp4';
+import djarea from '../assets/djareav.mp4';
 import roomImage from '../assets/room.webp';
 import washroomImage from '../assets/whashroom.webp';
+import tvroom from '../assets/tvroom.mp4';
+import room2 from '../assets/room2.webp';
+import widepartyarea from '../assets/widepartyarea.webp';
+
 
 const rooms = [
   {
@@ -20,12 +24,20 @@ const rooms = [
     poster: roomImage,
     isVideo: true
   },
+    {
+    id: 1,
+    title: "Room View",
+    description: "A comfortable room experience for travelers searching for a homestay in Wayanad with scenic valley calm.",
+    src: tvroom,
+    poster: room2,
+    isVideo: true
+  },
   {
     id: 2,
     title: "Wide Horizon",
     description: "Panoramic Wayanad views and easy Wayanad rooms booking for couples, families, and budget stay Kerala plans.",
-    src: roomWideViewVideo,
-    poster: washroomImage,
+    src: djarea,
+    poster: widepartyarea,
     isVideo: true
   },
   {
