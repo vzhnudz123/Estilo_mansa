@@ -17,6 +17,7 @@ const FeaturedRooms = lazy(() => import('../components/FeaturedRooms'));
 const ImmersiveSection = lazy(() => import('../components/ImmersiveSection'));
 const JeepExperience = lazy(() => import('../components/JeepExperience'));
 const EventsOffersSection = lazy(() => import('../components/EventsOffersSection'));
+const HomeHighlightsSection = lazy(() => import('../components/HomeHighlightsSection'));
 const GallerySection = lazy(() => import('../components/GallerySection'));
 const VideoSection = lazy(() => import('../components/VideoSection'));
 const FeedbackSection = lazy(() => import('../components/FeedbackSection'));
@@ -140,7 +141,12 @@ const Home = () => {
           <EventsOffersSection />
         </SectionWrapper>
 
-        {/* 6. GALLERY PREVIEW */}
+        {/* 6. HOME HIGHLIGHTS */}
+        <SectionWrapper>
+          <HomeHighlightsSection />
+        </SectionWrapper>
+
+        {/* 7. GALLERY PREVIEW */}
         <SectionWrapper>
           <GallerySection limit={9} />
           <div className="flex justify-center pb-16 -mt-8">
@@ -151,17 +157,17 @@ const Home = () => {
           </div>
         </SectionWrapper>
 
-        {/* 7. YOUTUBE SHORTS */}
+        {/* 8. YOUTUBE SHORTS */}
         <SectionWrapper>
           <VideoSection />
         </SectionWrapper>
 
-        {/* 8. GUEST REVIEWS */}
+        {/* 9. GUEST REVIEWS */}
         <SectionWrapper>
           <FeedbackSection />
         </SectionWrapper>
 
-        {/* 9. FINAL CTA */}
+        {/* 10. FINAL CTA */}
         <section className="py-32 md:py-52 relative overflow-hidden">
           <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_50%_60%,rgba(200,169,110,0.07),transparent_55%)]" />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">

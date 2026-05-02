@@ -68,7 +68,7 @@ const JeepExperience = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[70vh] md:min-h-screen w-full overflow-hidden flex items-center py-20 md:py-32"
+      className="relative min-h-0 sm:min-h-[58vh] md:min-h-[72vh] lg:min-h-[78vh] w-full overflow-hidden flex items-start md:items-center py-10 sm:py-16 md:py-24 lg:py-28"
     >
       {/* ── Video background ── */}
       <div
@@ -90,19 +90,19 @@ const JeepExperience = () => {
         />
 
         {/* Overlays */}
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-luxury-bg/90 via-transparent to-luxury-bg/90" />
+        <div className="absolute inset-0 bg-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-b from-luxury-bg/80 via-transparent to-luxury-bg/55" />
       </div>
 
       {/* ── Content ── */}
       <div className="max-w-7xl mx-auto px-6 lg:px-16 relative z-10 w-full">
         <div className="max-w-3xl">
-          <div className="jeep-reveal fade-up flex items-center gap-4 mb-8">
+          <div className="jeep-reveal fade-up flex items-center gap-4 mb-6 md:mb-8">
             <div className="w-10 h-px bg-luxury-gold/60" />
             <span className="section-label">Your Adventure</span>
           </div>
 
-          <h2 className="jeep-reveal fade-up font-serif text-5xl md:text-7xl lg:text-8xl text-luxury-cream leading-[0.92] mb-8 drop-shadow-2xl">
+          <h2 className="jeep-reveal fade-up font-serif text-[2.7rem] sm:text-5xl md:text-7xl lg:text-8xl text-luxury-cream leading-[0.92] mb-6 md:mb-8 drop-shadow-2xl">
             Your Journey
             <br />
             <em className="font-script text-luxury-gold not-italic">
@@ -110,7 +110,7 @@ const JeepExperience = () => {
             </em>
           </h2>
 
-          <p className="jeep-reveal fade-up text-lg md:text-xl text-luxury-text/85 max-w-lg leading-relaxed font-light mb-10">
+          <p className="jeep-reveal fade-up text-base sm:text-lg md:text-xl text-luxury-text/85 max-w-lg leading-relaxed font-light">
             The road to Estilo Mansa is an experience in itself. Our custom
             off-road jeep will carry you through the misty highlands to your
             sanctuary.

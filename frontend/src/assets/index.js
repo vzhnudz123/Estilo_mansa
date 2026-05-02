@@ -140,8 +140,24 @@ export const TENT_IMAGES = [
   wa24
 ];
 
+const galleryImageModules = import.meta.glob(['./*.webp', './*.jpeg', './*.jpg', './*.png'], {
+  eager: true,
+  import: 'default',
+});
+
+const formatGalleryLabel = (path) => {
+  const filename = path.split('/').pop() || '';
+  return filename
+    .replace(/\.[^.]+$/, '')
+    .replace(/^WhatsApp Image\s*/, '')
+    .replace(/^IMG_/, 'IMG ')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 /** All gallery images (used on Gallery page + GallerySection) */
-export const ALL_GALLERY_IMAGES = [
+const curatedGalleryImages = [
   { src: img8813, label: 'The Estate' },
   { src: img8814, label: 'Lakkidi View' },
   { src: img8815, label: 'Forest Edge' },
@@ -168,4 +184,19 @@ export const ALL_GALLERY_IMAGES = [
   { src: wa58, label: 'Creek Side' },
   { src: wa10, label: 'Morning Brew' },
   { src: wa16, label: 'Cloud Valley' },
+];
+
+const curatedGallerySrcs = new Set(curatedGalleryImages.map((item) => item.src));
+
+const additionalGalleryImages = Object.entries(galleryImageModules)
+  .sort(([pathA], [pathB]) => pathA.localeCompare(pathB, undefined, { numeric: true }))
+  .map(([path, src]) => ({
+    src,
+    label: formatGalleryLabel(path),
+  }))
+  .filter((item) => !curatedGallerySrcs.has(item.src));
+
+export const ALL_GALLERY_IMAGES = [
+  ...curatedGalleryImages,
+  ...additionalGalleryImages,
 ];
