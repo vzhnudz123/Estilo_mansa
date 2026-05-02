@@ -14,7 +14,7 @@ const navLinks = [
   { to: ROUTES.contact, label: 'Contact' },
 ];
 
-const Navbar = () => {
+const Navbar = ({ onNavigateWithLoader }) => {
   const { user, logout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -43,6 +43,12 @@ const Navbar = () => {
   };
 
   const handleNavClick = (e, link) => {
+    if (link.to === ROUTES.gallery && onNavigateWithLoader) {
+      e.preventDefault();
+      onNavigateWithLoader(ROUTES.gallery);
+      return;
+    }
+
     if (link.to.includes('#')) {
       e.preventDefault();
       const [basePath, hash] = link.to.split('#');

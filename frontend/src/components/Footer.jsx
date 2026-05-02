@@ -5,7 +5,7 @@ import { ROUTES } from '../utils/routes';
 
 const WHATSAPP_NUMBER = '919037706644';
 
-const Footer = () => {
+const Footer = ({ onNavigateWithLoader }) => {
   return (
     <footer className="relative overflow-hidden border-t border-luxury-gold/10 bg-[#09100d]/90 pt-20 pb-8">
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-luxury-gold/8 to-transparent blur-3xl" />
@@ -51,6 +51,12 @@ const Footer = () => {
                   <Link
                     key={link.to}
                     to={link.to}
+                    onClick={(event) => {
+                      if (link.to === ROUTES.gallery && onNavigateWithLoader) {
+                        event.preventDefault();
+                        onNavigateWithLoader(ROUTES.gallery);
+                      }
+                    }}
                     className="flex items-center justify-between rounded-[1.1rem] border border-white/6 bg-white/[0.03] px-4 py-3 text-sm text-luxury-text/62 transition-all hover:border-luxury-gold/20 hover:text-luxury-cream"
                   >
                     <span>{link.label}</span>

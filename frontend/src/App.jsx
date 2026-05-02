@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { Suspense, lazy, useCallback, useContext, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthContext } from './context/AuthContext';
 import { ROUTES } from './utils/routes';
@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import ScrollToTop from './components/ScrollToTop';
 import SmoothScroll from './components/SmoothScroll';
+import LoadingScreen from './components/LoadingScreen';
 import { PageTransition } from './components/ui';
 
 const Home          = lazy(() => import('./pages/Home'));
@@ -28,10 +29,45 @@ const AdminRoute = ({ children }) => {
 
 const AppContent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [pendingRoute, setPendingRoute] = useState(null);
+
+  const navigateWithLoader = useCallback((path, options = {}) => {
+    const destination = typeof path === 'string' ? path : '';
+    const currentLocation = `${location.pathname}${location.hash}`;
+
+    if (!destination || destination === currentLocation) {
+      return;
+    }
+
+    setPendingRoute({
+      path: destination,
+      replace: options.replace ?? false,
+      state: options.state,
+    });
+  }, [location.hash, location.pathname]);
+
+  const handleLoaderComplete = useCallback(() => {
+    if (!pendingRoute) {
+      return;
+    }
+
+    const { path, replace, state } = pendingRoute;
+    setPendingRoute(null);
+    navigate(path, { replace, state });
+  }, [navigate, pendingRoute]);
 
   return (
     <>
       <ScrollToTop />
+      <AnimatePresence>
+        {pendingRoute && (
+          <LoadingScreen
+            key={pendingRoute.path}
+            onComplete={handleLoaderComplete}
+          />
+        )}
+      </AnimatePresence>
       
       {/* Premium Nature/Sky Background Mockup Effect */}
       <div className="fixed inset-0 z-0 bg-[#050706]">
@@ -43,13 +79,13 @@ const AppContent = () => {
 
       <SmoothScroll>
         <div className="app-shell relative z-10 flex min-h-screen flex-col bg-transparent">
-          <Navbar />
+          <Navbar onNavigateWithLoader={navigateWithLoader} />
           <main className="flex-grow">
             <Suspense fallback={null}>
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
-                  <Route path={ROUTES.legacyHome} element={<PageTransition><Home /></PageTransition>} />
-                  <Route path={ROUTES.home} element={<PageTransition><Home /></PageTransition>} />
+                  <Route path={ROUTES.legacyHome} element={<PageTransition><Home onNavigateWithLoader={navigateWithLoader} /></PageTransition>} />
+                  <Route path={ROUTES.home} element={<PageTransition><Home onNavigateWithLoader={navigateWithLoader} /></PageTransition>} />
                   <Route path={ROUTES.legacyRooms} element={<PageTransition><Rooms /></PageTransition>} />
                   <Route path={ROUTES.rooms} element={<PageTransition><Rooms /></PageTransition>} />
                   <Route path={ROUTES.legacyRoomDetails()} element={<PageTransition><RoomDetails /></PageTransition>} />
@@ -72,7 +108,7 @@ const AppContent = () => {
             </Suspense>
           </main>
           <FloatingWhatsApp />
-          <Footer />
+          <Footer onNavigateWithLoader={navigateWithLoader} />
         </div>
       </SmoothScroll>
     </>

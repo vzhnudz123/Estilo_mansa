@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Instagram, Youtube } from 'lucide-react';
 import api from '../api/axios';
 import YouTubeEmbed from './YouTubeEmbed';
 import InstagramEmbed from './InstagramEmbed';
@@ -50,19 +49,20 @@ const VideoCard = ({ video, index }) => {
   return (
     <div
       ref={ref}
-      className="fade-up flex-shrink-0 w-[280px] md:w-[320px]"
-      style={{ transitionDelay: `${index * 0.12}s` }}
+      className="fade-up flex-shrink-0 snap-center"
+      style={{
+        transitionDelay: `${index * 0.12}s`,
+        width: 'min(340px, calc(100vw - 4rem))',
+      }}
     >
       <div
-        className="relative rounded-2xl overflow-hidden shadow-2xl border border-luxury-gold/10 group bg-black"
+        className="relative min-h-0 overflow-hidden rounded-2xl border border-luxury-gold/10 bg-black shadow-2xl group"
         style={{ aspectRatio: '9/16' }}
       >
         {loading ? (
           <SkeletonLoader />
         ) : isInstagram ? (
-          <div className="w-full h-full overflow-y-auto">
-            <InstagramEmbed url={video.url} />
-          </div>
+          <InstagramEmbed url={video.url} />
         ) : (
           <YouTubeEmbed url={video.url} title={video.title} />
         )}
@@ -143,7 +143,7 @@ const VideoSection = () => {
           </p>
         </div>
 
-        <div className="flex gap-6 overflow-x-auto pb-8 px-4 hide-scrollbar justify-center md:justify-start">
+        <div className="hide-scrollbar -mx-2 flex snap-x snap-mandatory gap-5 overflow-x-auto px-2 pb-8 sm:mx-0 sm:px-4">
           {videos.map((v, i) => (
             <VideoCard key={v._id || i} video={v} index={i} />
           ))}

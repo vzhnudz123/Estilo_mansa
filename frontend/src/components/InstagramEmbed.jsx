@@ -16,13 +16,13 @@ const InstagramEmbed = ({ url }) => {
   const embedUrl = getEmbedUrl(url);
 
   return (
-    <div className="w-full h-full bg-white relative flex items-center justify-center">
+    <div className="relative flex h-full w-full min-w-0 items-center justify-center overflow-hidden bg-white">
       <div className="absolute inset-0 flex items-center justify-center -z-10">
         <div className="w-8 h-8 border-2 border-luxury-gold/20 border-t-luxury-gold rounded-full animate-spin" />
       </div>
       <iframe
         src={embedUrl}
-        className="w-full h-full border-0"
+        className="h-full w-full min-w-0 border-0 bg-white"
         allowTransparency="true"
         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
         frameBorder="0"

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
+import LoadingScreen from '../components/LoadingScreen';
 import { HERO_IMAGE } from '../assets';
 import { createLodgingSchema, createWebsiteSchema } from '../seo/site';
 import { ROUTES } from '../utils/routes';
@@ -21,7 +22,6 @@ const HomeHighlightsSection = lazy(() => import('../components/HomeHighlightsSec
 const GallerySection = lazy(() => import('../components/GallerySection'));
 const VideoSection = lazy(() => import('../components/VideoSection'));
 const FeedbackSection = lazy(() => import('../components/FeedbackSection'));
-const LoadingScreen = lazy(() => import('../components/LoadingScreen'));
 
 const WHATSAPP_NUMBER = '919037706644';
 
@@ -31,7 +31,7 @@ const SectionWrapper = ({ children }) => (
   </Suspense>
 );
 
-const Home = () => {
+const Home = ({ onNavigateWithLoader }) => {
   const [isLoading, setIsLoading] = useState(() => {
     return !sessionStorage.getItem('home_loaded');
   });
@@ -40,6 +40,15 @@ const Home = () => {
   const handleLoadingComplete = () => {
     setIsLoading(false);
     sessionStorage.setItem('home_loaded', 'true');
+  };
+
+  const handleGalleryClick = (event) => {
+    if (!onNavigateWithLoader) {
+      return;
+    }
+
+    event.preventDefault();
+    onNavigateWithLoader(ROUTES.gallery);
   };
 
   useEffect(() => {
@@ -73,9 +82,7 @@ const Home = () => {
 
       <AnimatePresence>
         {isLoading && (
-          <Suspense fallback={null}>
-            <LoadingScreen onComplete={handleLoadingComplete} />
-          </Suspense>
+          <LoadingScreen onComplete={handleLoadingComplete} />
         )}
       </AnimatePresence>
 
@@ -125,7 +132,7 @@ const Home = () => {
         <SectionWrapper>
           <GallerySection limit={9} />
           <div className="flex justify-center pb-16 -mt-8">
-            <Link to={ROUTES.gallery} className="btn-outline group">
+            <Link to={ROUTES.gallery} onClick={handleGalleryClick} className="btn-outline group">
               <span>View Full Gallery</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </Link>
