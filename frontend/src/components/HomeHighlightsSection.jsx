@@ -113,10 +113,10 @@ const HomeHighlightsSection = () => {
                   poster={sofaArea}
                   alt="Stay walkthrough at Estilo Mansa"
                   buttonLabel="Play home walkthrough video"
-                  className="min-h-[24rem] sm:min-h-[26rem] lg:min-h-[30rem] w-full bg-black"
-                  videoClassName="h-full w-full object-contain bg-black"
+                  className="aspect-[4/5] min-h-[24rem] sm:aspect-[5/6] sm:min-h-[26rem] lg:aspect-[4/5] lg:min-h-[30rem] w-full overflow-hidden"
+                  videoClassName="h-full w-full object-cover"
                   muted
-                  posterObjectFit="contain"
+                  posterObjectFit="cover"
                   showCenterPlaybackButton
                   showButtonLabel={false}
                 >

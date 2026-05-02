@@ -25,36 +25,11 @@ const LoadingScreen = lazy(() => import('../components/LoadingScreen'));
 
 const WHATSAPP_NUMBER = '919037706644';
 
-// Component wrapper to handle visibility tracking
-const SectionWrapper = ({ children }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' } // Start loading before it enters the viewport
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={ref} className="min-h-[200px]">
-      {isVisible ? (
-        <Suspense fallback={<div className="h-40 w-full animate-pulse bg-white/5" />}>
-          {children}
-        </Suspense>
-      ) : null}
-    </div>
-  );
-};
+const SectionWrapper = ({ children }) => (
+  <Suspense fallback={<div className="h-40 w-full animate-pulse bg-white/5" />}>
+    {children}
+  </Suspense>
+);
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(() => {

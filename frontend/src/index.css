@@ -4,15 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-   PERFORMANCE OPTIMIZATION
-   Add content-visibility for heavy sections 
-*/
-section {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 5000px;
-}
-
 /* ─────────────────────────────────────────────────────────────────────────────
    DESIGN TOKENS
 ───────────────────────────────────────────────────────────────────────────── */
